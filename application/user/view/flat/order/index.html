@@ -1,0 +1,178 @@
+{include file="common/header" /}
+<script src="{$js}/bootstrap.min.js"></script>
+
+<link href="{$css}/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="{$css}/core.css" rel="stylesheet" type="text/css">
+<link href="{$css}/menu.css" rel="stylesheet" type="text/css">
+<link href="{$css}/nav.css" rel="stylesheet">
+<link href="{$css}/dropify.min.css" rel="stylesheet" type="text/css">
+<link href="{$css}/page.css" rel="stylesheet">
+
+<script src="{$js}/dropify.min.js"></script>
+<script src="{$laydate}/laydate.js"></script>
+<script>
+    //执行一个laydate实例
+    laydate.render({
+        elem: '#from_time' //指定元素
+    });
+    //执行一个laydate实例
+    laydate.render({
+        elem: '#to_time' //指定元素
+    });
+</script>
+<body class="fixed-left widescreen">
+<div id="wrapper">
+    {include file="common/top_nav" /}
+    {include file="common/left_nav" /}
+    <!-- Left Sidebar End -->
+
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="content-page">
+        <!-- Start content -->
+        <div class="content">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card-box">
+                            <div class="add-title clear">
+                                订单列表
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <form class="form-inline" role="form" action="" method="get">
+                                        <div class="form-group">
+                                            <select name="channelid" class="form-control">
+                                                <option value="">全部</option>
+                                                {volist name="paychannel_arr" id="vo"}
+                                                <option value="{$vo.channelid}" {:input('channelid')==$vo.channelid?"selected":'';}>{$vo.channelname}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select name="goodlistid" class="form-control">
+                                                <option value="">全部商品</option>
+                                                {volist name="goodlist_arr" id="vo"}
+                                                <option value="{$vo.goodlistid}" {:input('goodlistid')==$vo.goodlistid?"selected":'';}>{$vo.goodname}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select name="ktype" class="form-control">
+                                                <option value="order" {:input('ktype')=='order'?"selected":'';}>订单号</option>
+                                                <option value="contact" {:input('ktype')=='contact'?"selected":'';}>购买者信息</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" style="width:200px;" type="text" name="keyword" value="{:input('keyword')}" placeholder="请输入关键字">
+                                        </div>
+                                        <div class="form-group">
+                                            <span class="t1">开始日期：</span>
+                                            <input class="form-control input-daterange-datepicker" style="width:200px;cursor: pointer;" type="text" name="from_time" id="from_time" value="{:input('from_time')}" placeholder="请选择开始日期" readonly>
+                                            <span class="t1">结束日期：</span>
+                                            <input class="form-control input-daterange-datepicker" style="width:200px;cursor: pointer;" type="text" name="to_time" id="to_time" value="{:input('to_time')}" placeholder="请选择结束日期" readonly>
+                                        </div>
+                                        <button type="submit" class="btn btn-purple waves-effect waves-light"><i class="fa fa-search"></i> 搜索</button>
+                                        <input type="hidden" name="do" value="search">
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- end row -->
+                            <div class="row">
+                                <table class="table table-striped m-0">
+                                    <thead>
+                                    <tr>
+                                        <td style="text-align:left">交易时间</td>
+                                        <td style="text-align:left">订单编号</td>
+                                        <td>商品名称</td>
+                                        <td style="text-align:left">支付方式</td>
+                                        <td>金额</td>
+                                        <td>购买者信息</td>
+                                        <td>状态</td>
+                                        <td>管理</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {volist name="list" id="vo"}
+                                    <tr>
+                                        <td style="text-align:left">{$vo.addtime}</td>
+                                        <td style="text-align:left;cursor: pointer;"><span class="blue" onclick="window.open('/orderquery?kw={$vo.orderid}')">{$vo.orderid} </span> {$vo.is_sub==1?'<span style="background:#baddff;color:#fff;border-radius:999px;padding:2px 5px;">代理帮售</span>':''}</td>
+                                        <td>{$vo.goodname}（<span class="red">{$vo.quantity}</span> 张）</td>
+                                        <td style="text-align:left">{$vo.channelname}</td>
+                                        <td>{$vo.paymoney}</td>
+                                        <td>{$vo.contact}</td>
+                                        {if $vo.is_frozen=='0'}
+                                        <td>
+                                            <span class="state {$vo.is_buylist=='1'?'state1':'state2'}">{$vo.is_buylist=='1'?'已付款':'未付款'}</span>
+                                        </td>
+                                        {elseif $vo.is_frozen=='1'}
+                                        <td>
+                                            <span class="state" style="background-color: #0012e9">已冻结</span>
+                                        </td>
+                                        {/if}
+
+                                        <td>
+                                            {if $vo.is_state=='1'}
+                                            <span style="cursor: pointer;" class="state state2" onclick="togglestate({$vo.orderlistid},'0')">关</span>
+                                            {else/}
+                                            <span style="cursor: pointer;background-color: #33334f" class="state state2" onclick="togglestate({$vo.orderlistid},'1')">开</span>
+                                            {/if}
+                                            <span style="cursor: pointer" class="state state1" onclick="export_order('{$vo.orderlistid}')">导</span>
+                                        </td>
+                                    </tr>
+                                    {/volist}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- end row -->
+                        </div>
+                        <div class="pagination" style="width: 100%">
+                            {$page}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- container -->
+        </div>
+        <!-- content -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Right content here -->
+    <!-- ============================================================== -->
+</div>
+<!-- END wrapper -->
+<script>
+    function togglestate(id,is_state) {
+        $.post(
+            "{:url('order/togglestate')}",
+            {
+                orderlistid: id,
+                is_state: is_state,
+            },
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg('操作成功', {time: 1000, icon: 6});
+                    // $('#record_'+id).fadeOut();
+                    parent.location.reload();
+                } else {
+                    layer.msg('操作失败', {time: 1000, icon: 5});
+                }
+            }
+            ,"json"
+        );
+    }
+</script>
+<script>
+    function export_order(orderlistid) {
+        window.location.href = "{:url('order/exportorder')}?orderlistid="+orderlistid;
+    }
+</script>
+
+{include file="common/footer" /}

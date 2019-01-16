@@ -1,0 +1,52 @@
+{include file="common/header" /}
+<link rel="stylesheet" href="{$css}/style.css">
+<link rel="stylesheet" href="{$css}/page.css">
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+
+<section class="box-right">
+    <div class="Journal">
+        <div class="jrl-title clear">提现列表
+            <div class="cash-btn">
+                <button type="button" onclick="window.location.href='{:url('/withdraw')}'" class="btn btn-purple1 waves-effect waves-light">申请提现</button>
+            </div>
+        </div>
+        <div class="row">
+            <table class="table table-striped m-0">
+                <thead>
+                <tr>
+                    <td>流水号</td>
+                    <td>支付日期</td>
+                    <td>转账金额</td>
+                    <td>手续费</td>
+                    <td>到账金额</td>
+                    <td>清算方式</td>
+                    <td>状态</td>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td>{$vo.id}</td>
+                    <td>{$vo.addtime}</td>
+                    <td class="orange">￥{$vo.usermoney==''?'0.00':$vo.usermoney}</td>
+                    <td>￥{$vo.fee}</td>
+                    <td class="orange">￥{$vo.settlement==''?'0.00':$vo.settlement}</td>
+                    <td>{$vo.is_user=='1'?'手动提现':'自动结算'}</td>
+                    <td><span class="done">{$vo.is_state=='1'?'已结算':'未结算'}</span></td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="pagination">
+        {$page}
+    </div>
+</section>
+{include file="common/footer" /}

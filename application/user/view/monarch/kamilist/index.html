@@ -1,0 +1,190 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+
+<div class="main clearfix">
+    {include file="common/left_nav" /}
+
+    <div class="container kamilist scroll">
+        <div class="box init b1">
+            <div class="title">库存卡密
+                <span>Inventory cards close</span></div>
+            <div class="table">
+                <form action="" method="get">
+                    <div class="bar">
+                        <span class="t1">选择商品：</span>
+                        <select name="goodlistid">
+                            <option value="">全部商品</option>
+                            {volist name="goodlist_arr" id="vo"}
+                            <option value="{$vo.goodlistid}" {:input('goodlistid')==$vo.goodlistid?"selected":'';}>{$vo.goodname}</option>
+                            {/volist}
+                        </select>
+                        <button class="btn1">
+                            <i class="xcFont ico-search"></i>立即查询
+                        </button>
+                        <button class="btn2" type="button" onclick="export_kami()">
+                            <i class="xcFont ico-export"></i>导出卡密
+                        </button>
+                    </div>
+                    <input type="hidden" name="do" value="search">
+                </form>
+                <form action="{:url('kamilist/delall')}" method="post" id="ajaxform">
+                    <table class="tab2">
+                        <thead>
+                        <td>
+                            <input type="checkbox" id="t1">
+                        </td>
+                        <td style="text-align: left">商品名称</td>
+                        <td style="text-align: left">库存卡信息</td>
+                        <td>商品价格</td>
+                        <td style="text-align: left">添加时间</td>
+                        <td></td>
+                        </thead>
+                        <tbody>
+                        {volist name="list" id="vo"}
+                        <tr class="checked">
+                            <td>
+                                <input name="listid[]" type="checkbox" id="t{$vo.productid}" value="{$vo.productid}" >
+                                <label for="t{$vo.productid}"></label>
+                            </td>
+                            <td style="text-align: left">{$vo.goodname}</td>
+                            <td style="text-align: left">{$vo.cardnumber} {$vo.cardpassword}</td>
+                            <td>￥{$vo.price}</td>
+                            <td style="text-align: left">{$vo.addtime}</td>
+                            <td onclick="del('{$vo.productid}')" style="cursor: pointer">
+                                <i class="xcFont ico-del"></i>
+                            </td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                    <div class="btn">
+                        <input type="checkbox" id="b1">
+                        <label for="b1" class="all_check"></label>
+                        <button type="button" onclick="delall()">
+                            <i class="xcFont ico-del"></i>删除
+                        </button>
+                        <!--<button  >-->
+                        <!--<i class="xcFont ico-del"></i>跳转删除-->
+                        <!--</button>-->
+                    </div>
+                </form>
+                <div class="pagination">
+                    {$page}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    function delall() {
+        // var test = $("#ajaxform").serialize();
+        $.post(
+            "{:url('kamilist/delall')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+
+    function togglestate(id,is_state) {
+        $.post(
+            "{:url('goodlist/togglestate')}",
+            {
+                goodlistid: id,
+                is_state: is_state,
+            },
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg('操作成功', {time: 1000, icon: 6});
+                    // $('#record_'+id).fadeOut();
+                    parent.location.reload();
+                } else {
+                    layer.msg('操作失败', {time: 1000, icon: 5});
+                }
+            }
+            ,"json"
+        );
+    }
+
+</script>
+<script>
+    function del(id) {
+        $.post(
+            "{:url('kamilist/del')}",
+            {productid:id},
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+<script>
+    $(".all_check").click(function(){
+        $(".tab2").find("input:checkbox").prop("checked", true);
+    });
+    $(".back_check").click(function(){
+        $(".tab2 input:checkbox").each(function() {
+            if($(this).is(':checked')){
+                // console.log("1");
+                $(this).prop("checked",false);
+                // $(this).removeAttr("checked");
+            }
+            else{
+                // console.log("12");
+                $(this).prop("checked",true);
+            }
+        });
+    });
+</script>
+<script>
+    function export_kami() {
+        var goodlistid = $('select[name="goodlistid"]').val();
+        if(goodlistid==''||isNaN(goodlistid)){
+            layer.msg('请先选择商品，再进行导出卡密');
+        }else {
+            window.location.href = "{:url('kamilist/exportkami')}?goodlistid="+goodlistid;
+        }
+
+
+    }
+</script>
+{include file="common/footer" /}

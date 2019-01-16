@@ -1,0 +1,20 @@
+1、确认sql_mode 中 不包括“only_full_group_by”
+否则会在某种加密环境下产生错误
+
+以下为lnmp1.4运行环境配置方法：
+sql_mode=only_full_group_by
+
+配置修改
+
+配置/usr/local/mysql/my.cnf
+sql_mode=
+
+如果没有这个文件 /usr/local/mysql/my.cnf
+那就创建一个，然后输入：
+[mysqld]
+sql_mode =''
+
+同时确认
+
+在/etc/my.conf
+sql_mode =''

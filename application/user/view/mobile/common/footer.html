@@ -1,0 +1,27 @@
+<div class="main_shadow" style="display:none"></div>
+<!-- 用户导航 -->
+<div class="main_slide">
+    <ul>
+        <li onclick="location='{:url('/useruuserinfo')}'">商家设置</li>
+        <li onclick="location='{:url('/safety')}'">修改密码</li>
+        <li onclick="location='{:url('/withdraw')}'">申请提现</li>
+        <li onclick="location='{:url('/paymoney')}'">结算记录</li>
+    </ul>
+    <a class="sign_out" href="{:url('index/logout')}">退出登录</a>
+</div>
+<script src="{$js}/user_mobile.js"></script>
+<script>
+    var showContent=function(title,url,height,width){
+        layer.open({
+            type: 2,
+            title: title,
+            shadeClose: true,
+            skin: 'layui-layer-rim', //加上边框
+            area: [height, width], //宽高
+            content: url //获取商品链接
+        });
+    };
+</script>
+
+</body>
+</html>

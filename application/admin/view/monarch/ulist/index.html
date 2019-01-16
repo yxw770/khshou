@@ -1,0 +1,97 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<link rel="stylesheet" href="{$flag}/font-awesome.min.css">
+<style>
+    .icon{
+        text-align: center;
+    }
+</style>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<div class="main auto">
+    <div class="main_wrap">
+        <div class="m_top clearfix">
+            <a href="javascript:;" class="build_cat" id="buildChanButton" onclick="showContent('新建管理员','{:url('ulist/add')}','820px','614px')">+ 新建管理员</a>
+        </div>
+        <div class="m_content">
+            <table class="pub_table">
+                <thead>
+                <th width="7%">管理员ID</th>
+                <th width="7%">类型</th>
+                <th width="14%">名称</th>
+                <th width="10%">帐户状态</th>
+                <th width="10%">真实姓名</th>
+                <th width="14%">操作</th>
+                </thead>
+                {volist name="list" id="vo"}
+                <!--<form action="{:url('channel/del')}" method="post">-->
+                <tr>
+                    <td>{$vo.adminid}</td>
+                    <td>
+                        {if $vo.utype=='1'}
+                        <em class="c_green">总管理员</em>
+                        {elseif $vo.utype=='2'}
+                        <em style="color: #999">子管理员</em>
+                        {elseif $vo.utype=='0'}
+                        <em style="color: #999">未设置</em>
+                        {/if}
+                    </td>
+                    <td>{$vo.adminname}</td>
+                    <td>
+                        {if $vo.is_state=='1'}
+                        <em class="c_green">已开启</em>
+                        {elseif $vo.is_state=='0'}
+                        <em style="color: #999">已关闭</em>
+                        {/if}
+                    </td>
+                    <td>{$vo.realname}</td>
+                    <td>
+                        <a href="javascript:void(0);" class="icon edit" onclick="showContent('编辑管理员','{:url('ulist/edit','adminid='.$vo.adminid)}','820px','614px')"></a>
+                        <!--<a href="#" class="icon email"></a>-->
+                        <a href="javascript:void(0);" class="icon delete" onclick="del({$vo.adminid})"></a>
+                        <!--<button type="submit">123</button>-->
+                    </td>
+                </tr>
+                <!--</form>-->
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form'], function () {
+    });
+</script>
+<script>
+    function del(adminid) {
+        $.post(
+            "{:url('ulist/del')}",
+            {
+                adminid:adminid
+            },
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}

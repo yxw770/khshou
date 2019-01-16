@@ -1,0 +1,142 @@
+{include file="common/header" /}
+<link rel="stylesheet" href="{$css}/style.css">
+<link rel="stylesheet" href="{$css}/page.css">
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+<script src="{$open}/clipboard.min.js"></script>
+<script src="{$open}/jquery.qrcode.min.js"></script>
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<section class="box-right">
+	<div class="Journal clear">
+		<div class="jrl-title">店铺链接</div>
+		<div class="col-lg-12 m-b-30">
+			<h4 class="header-title m-t-0">1、系统单一支付地址</h4>
+			<a href="{$long_url}" target="_blank" id="a1">{$long_url}</a>
+			<a href="javascript:;" data-clipboard-action="copy" data-clipboard-target="#a1" class="btn btn-purple1 waves-effect waves-light copy_btn">复制链接</a>
+			<p class="form-control-static">商品和分类的独立链接请在商品分类和商品列表中获取</p>
+			<br>
+
+			<h4 class="header-title m-t-0">2、店铺开启或关闭</h4>
+			{if $link_state=='1'}
+			<p class="form-control-static">当前状态：已开启店铺
+				<a href="javascript:;" onclick="togglestate(0)" class="btn btn-purple1 waves-effect waves-light">关闭店铺</a>
+			</p>
+			{else/}
+			<p class="form-control-static">当前状态：已关闭店铺
+				<a href="javascript:;" onclick="togglestate(1)" class="btn btn-purple1 waves-effect waves-light">开启店铺</a>
+			</p>
+			{/if}
+			<br>
+
+			<h4 class="header-title m-t-0">3、重置店铺链接</h4>
+			<p class="form-control-static">重置链接后，之前的链接将失效！
+				<a href="javascript:;" onclick="submitform();return false;" class="btn btn-purple1 waves-effect waves-light">&nbsp;重置链接</a>
+			</p>
+		</div>
+		<div class="col-lg-12">
+			<h4 class="header-title m-t-0">4、短网址</h4>
+			<a href="{$short_url}" target="_blank" id="a2">{$short_url}</a>
+			<a href="javascript:;" data-clipboard-action="copy" data-clipboard-target="#a2" class="btn btn-purple1 waves-effect waves-light copy_btn">复制链接</a>
+			<br>
+			<br>
+
+			<br>
+			<h4 class="header-title m-t-0">5、二维码地址</h4>
+			<div id="qrcode" style="width: 210px;height: 210px;"></div>
+		</div>
+	</div>
+</section>
+<script>
+    function submitform() {
+        layer.confirm('确认要重置店铺链接吗，重置链接后，之前的链接将失效？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                // var test = $("#ajaxform").serialize();
+                $.post(
+                    "{:url('shop/resetlink')}",
+                    // $("#ajaxform").serialize(),
+                    function (data) {
+                        // console.log(data);
+                        data = eval("(" + data + ")");
+                        if (data.status == '1') {
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                window.parent.location.reload();
+                            });
+                        } else if (data.status == '0') {
+                            layer.msg(data.msg, {
+                                icon: 5,
+                                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                            });
+                        }
+                    }
+                    , "json"
+                )
+            }, function () {
+                layer.msg('容我三思', {
+                    time: 500 //20s后自动关闭
+                });
+            }
+        )
+    }
+</script>
+<script>
+    var clipboard = new Clipboard('.copy_btn');
+
+    clipboard.on('success', function(e) {
+        // console.log(e);
+        layer.msg('复制链接成功', {icon: 6, time: 2000});
+    });
+
+    clipboard.on('error', function(e) {
+        // console.log(e);
+        layer.msg('复制链接失败', {icon: 6, time: 2000});
+    });
+</script>
+<script>
+    function togglestate(to_state) {
+        $.post(
+            "{:url('shop/togglestate')}",
+            {
+                to_state: to_state,
+            },
+            function (data) {
+                console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg('操作成功', {time: 1000, icon: 6});
+                    // $('#record_'+id).fadeOut();
+                    parent.location.reload();
+                } else {
+                    layer.msg('操作失败', {time: 1000, icon: 5});
+                }
+            }
+            ,"json"
+        );
+    }
+
+</script>
+<script>
+	$(function () {
+        jQuery(function(){
+            var url = $('#a1').attr('href');
+            console.log(url);
+            jQuery('#qrcode').qrcode(
+                {
+                    render : "canvas",    //设置渲染方式，有table和canvas，使用canvas方式渲染性能相对来说比较好
+                    width: 140,				//二维码的宽度
+                    height: 140,				//二维码的高度
+                    // foreground: "#cc674a",				//二维码的后景色
+                    background: "#FFF",				//二维码的前景色
+                    text:<?php echo "'".$long_url."'"; ?>,				//扫描二维码后显示的内容,可以直接填一个网址，扫描二维码后自动跳向该链接
+                    // src: 'photo.jpg'             //二维码中间的图片
+                });
+        })
+    })
+</script>
+{include file="common/footer" /}

@@ -1,0 +1,76 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<link rel="stylesheet" href="{$flag}/font-awesome.min.css">
+<style>
+    .icon{
+        text-align: center;
+    }
+    .laydate-set-ym {
+        height: 30px;
+        line-height: 30px;
+        margin-top: -3px;
+    }
+</style>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<div class="main auto">
+    <div class="main_wrap">
+        <div class="m_top clearfix">
+            <div class="m_search fl clearfix">
+                <form class="layui-form" action="">
+                    <div class="s_box clearfix fl">
+                        <div class="s_input fl">
+                            <input type="text" name="adminname" class="ipt ipt_txt" placeholder="用户名" value="{:input('adminname')}"/>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_input fl">
+                            <input type="text" name="loginip" class="ipt ipt_txt" placeholder="IP地址" value="{:input('loginip')}"/>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_input fl">
+                            <input style="cursor: pointer" type="text" name="to_time" id="to_time" class="ipt ipt_txt" value="{:input('to_time')}" placeholder="请选择日期" readonly>
+                        </div>
+                    </div>
+                    <button class="search_btn fl">搜索</button>
+                    <input type="hidden" name="do" value="search">
+                </form>
+            </div>
+        </div>
+        <div class="m_content">
+
+            <table class="pub_table">
+                <thead>
+                <th width="30%">用户名</th>
+                <th width="30%">IP</th>
+                <th width="35%">日期</th>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td>{$vo.adminname}</td>
+                    <td style="cursor: pointer;" onclick='window.open("http://www.baidu.com/s?wd={$vo.loginip}&rsv_spt=1&issp=1&rsv_bp=0&ie=utf-8&tn=baiduhome_pg")'>
+                        <em class="c_purple">{$vo.loginip}</em>
+                    </td>
+                    <td>{$vo.logintime}</td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {$page}
+</div>
+
+<script>
+    layui.use(['form','laydate'], function () {
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#to_time' //指定元素
+        });
+    });
+</script>
+{include file="common/footer" /}

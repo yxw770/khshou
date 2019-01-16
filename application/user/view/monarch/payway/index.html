@@ -1,0 +1,40 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+
+<div class="main clearfix">
+    {include file="common/left_nav" /}
+
+    <div class="container payway scroll">
+        <div class="box init b1">
+            <div class="title">付款方式<span>Payment method</span>
+            </div>
+            <div class="table">
+                <table>
+                    <thead>
+                    <tr>
+                        <td style="text-align:left">支付方式</td>
+                        <td>商户费率</td>
+                        <td>状态</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="list" id="vo"}
+                    <tr class="{$vo.is_state=='1'?'checked':''}">
+                        <td style="text-align:left">{$vo.channelname}</td>
+                        <td>{$vo.userrate*100}%</td>
+                        <td><i class="xcFont ico-ok"></i></td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{include file="common/footer" /}

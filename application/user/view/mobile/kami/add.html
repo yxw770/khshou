@@ -1,0 +1,86 @@
+{include file="common/header" /}
+<body>
+<!-- 顶部 -->
+<!--部分页面top后面有style样式添加-->
+<div class="top" style="padding-bottom: 0">
+    <div class="top_con">
+        <span>添加卡密</span>
+        <a class="back" href="{:url('/')}"><img src="{$images}/back.png" width="7" height="11"></a>
+        <a class="user_name"><i class="iconfont icon-mine"></i></a>
+    </div>
+</div><div class="list_bg">
+    <form action="{:url('kami/addsave')}" method="post" id="ajaxform" class="clearfix" enctype="multipart/form-data">
+        <table border="0" cellspacing="0" cellpadding="0" class="tab1">
+            <tbody><tr>
+                <td>商品名称</td>
+                <td>
+                    <select name="goodlistid">
+                        {volist name="goodlist_arr" id="vo"}
+                        <option value="{$vo.goodlistid}" {:input('goodlistid')==$vo.goodlistid?"selected":'';}>{$vo.goodname}</option>
+                        {/volist}
+                    </select>
+                </td>
+            </tr>
+            <tr class="kmgs">
+                <td>添加方式</td>
+                <td>
+                    <label class="checked" id="gs1">用" "分隔</label>
+                </td>
+            </tr>
+            <tr>
+                <td>卡密演示</td>
+                <td class="yanshi"><span>AAAAAAAAAAA BBBBBBBBBBBB</span></td>
+
+            </tr>
+            <tr class="mode1">
+                <td>卡密内容</td>
+                <td><textarea name="kami" cols="" rows=""></textarea></td>
+            </tr>
+            </tbody>
+        </table>
+        <input type="hidden" name="ktype" value="input">
+    </form>
+</div>
+<button class="btn2" onclick="submitform();return false;">确认提交</button>
+
+<script>
+    function submitform() {
+        // var ajax_data = new FormData($("#ajaxform"));
+        // var ajax_data = new FormData(document.querySelector("form"));
+        var ajax_data = new FormData(document.getElementById("ajaxform"));
+        var goodlistid = $('[name="goodlistid"]').val();
+
+        $.ajax({
+            type: "POST",
+            url: "{:url('kami/addsave')}",
+            data: ajax_data,
+            processData: false,  // 不处理数据
+            contentType: false,   // 不设置内容类型
+            // dataType: "json",
+            //5.获取数 据
+            error: function (res) {
+                console.log("发送失败");
+                console.log(res);
+            },
+            success: function (data) {
+                console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.href = "{:url('/kamilist')}?goodlistid="+goodlistid+"&do=search";
+                        // window.location.href = "{:url('/kamilist')}";
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+        });
+    }
+</script>
+{include file="common/footer" /}

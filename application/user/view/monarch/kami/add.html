@@ -1,0 +1,116 @@
+{include file="common/header" /}
+<script type="text/javascript" src="{$js}/addkami8f91.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+
+<div class="main clearfix">
+    {include file="common/left_nav" /}
+
+    <div class="container addkami scroll">
+        <div class="box init b1">
+            <div class="title">添加卡密
+                <span>Add a secret</span></div>
+            <form action="{:url('kami/addsave')}" method="post" id="ajaxform" class="clearfix" enctype="multipart/form-data">
+                <div class="item clearfix">
+                    <span class="left">商品名称</span>
+                    <div class="right">
+                        <select name="goodlistid">
+                            {volist name="goodlist_arr" id="vo"}
+                            <option value="{$vo.goodlistid}" {:input('goodlistid')==$vo.goodlistid?"selected":'';}>{$vo.goodname}</option>
+                            {/volist}
+                        </select>
+                        <div class="info-tip">格式：卡号+空格+密码，一行一张卡，如：A1B2C3D4F5E8 9876543210</div></div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">添加方式</span>
+                    <div class="right">
+                        <div class="radio">
+                            <input class="chooseType" type="radio" name="ktype" checked="checked" id="a1" value="txt">
+                            <label for="a1">使用TXT文件导入</label>
+                        </div>
+                        <div class="radio">
+                            <input type="radio" class="chooseType" name="ktype" id="a2" value="input">
+                            <label for="a2">使用输入框添加</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">商品名称</span>
+                    <div class="right way1 j-way">
+                        <input type="file" id="file" name="uploadfile" accept="text/plain" class="a-upload">
+                        <label class="upload"  for="file">请选择文件</label>
+                        <p>注意：上传的TXT文件最大2MB</p>
+                    </div>
+                    <div class="right way2 j-way" style="display:none">
+                        <textarea name="kami" id="" cols="30" rows="10"></textarea>
+                        <div class="info-tip">输入框添加卡密最多一次添加10000张(1万行)，TXT文件上传最多支持2MB，单个商品最多添加100000（10万行）。</div>
+                    </div>
+                </div>
+                <script>
+                    $(function () {
+
+                        $(".a-upload").on("change",function(){
+                            var filePath=$(this).val();
+                            if(filePath.toLowerCase().indexOf("txt")!=-1){
+                                var arr=filePath.split('\\');
+                                var fileName=arr[arr.length-1];
+                                $(".a-upload").siblings('label').html(fileName);
+                            }else{
+                                alert("您未上传文件，或者您上传文件类型有误！");
+                                return false
+                            }
+                        });
+
+                    })
+                </script>
+                <div class="btn">
+                    <!--<button class="t1">保存设置</button>-->
+                    <button class="t1" onclick="submitform();return false;">保存设置</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+<script>
+    function submitform() {
+        // var ajax_data = new FormData($("#ajaxform"));
+        // var ajax_data = new FormData(document.querySelector("form"));
+        var ajax_data = new FormData(document.getElementById("ajaxform"));
+        var goodlistid = $('[name="goodlistid"]').val();
+
+        $.ajax({
+            type: "POST",
+            url: "{:url('kami/addsave')}",
+            data: ajax_data,
+            processData: false,  // 不处理数据
+            contentType: false,   // 不设置内容类型
+            // dataType: "json",
+            //5.获取数 据
+            error: function (res) {
+                console.log("发送失败");
+                console.log(res);
+            },
+            success: function (data) {
+                console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.href = "{:url('/kamilist')}?goodlistid="+goodlistid+"&do=search";
+                        // window.location.href = "{:url('/kamilist')}";
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+        });
+    }
+</script>
+{include file="common/footer" /}

@@ -1,0 +1,301 @@
+{include file="common/header" /}
+<body>
+{include file="common/top_nav" /}
+	<div class="main clearfix">
+		{include file="common/left_nav" /}
+        <div class="container userinfo scroll">
+            <div class="box init b2 j-edit" style="display: block;">
+                <div class="title">用户信息
+                    <span>User information</span>
+                </div>
+                <form action="{:url('userinfo/edituserpaysave')}" class="clearfix" id="ajaxform">
+                    <div class="subtitle">修改基本信息</div>
+                    <div class="item">
+                        <p class="tip">
+                            <i class="xcFont ico-alert"></i>您当前的操作属于敏感操作，需要验证您的手机短信，验证成功以后 该手机号将做为您的密保手机，不可修改
+                        </p>
+                    </div>
+                    <div class="item clearfix">
+                        <span class="left">收款方式</span>
+                        <div class="right">
+                            <select name="ptype" style="width: 170px" onchange="selectptype()">
+                                <option value="1" {$userpay_row.ptype=="1"?"selected":'';}>支付宝收款</option>
+                                <option value="2" {$userpay_row.ptype=="2"?"selected":'';}>银行卡收款</option>
+                                <option value="3" {$userpay_row.ptype=="3"?"selected":'';}>微信收款</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="item clearfix" id="alipay1" style="display: {$userpay_row.ptype=="1"?"":'none';}">
+                        <span class="left">支付宝账号</span>
+                        <div class="right"><input name="alipay" type="text" value="{$userpay_row.alipay?$userpay_row.alipay:'';}"></div>
+                    </div>
+                    <div class="item clearfix" id="alipay2" style="height: auto;display: {$userpay_row.ptype=="1"?"":'none';}">
+                        <span class="left">支付宝二维码</span>
+                        <div class="right">
+                            <label style="background:none;display:inline-block;height:36px;line-height:36px;padding:0px 16px;text-align:center;cursor:pointer;border-radius:3px;width: 170px;border: 1px solid #6a9cf0 !important;color: #6a9cf0 !important;">
+                                上传图片
+                                <input name="alipayimg" value="{$userpay_row.alipayimg?$userpay_row.alipayimg:'';}" type="file" accept=".jpg,.jpeg,.bmp,.png,.gif" style="display: none" id="alipayimg" onchange="Uploadimg('alipayimg_img_show','alipayimg')">
+                                <img id="alipayimg_img_show" style="width: 200px;display: {$userpay_row.alipayimg?'':'none';};margin-top: 20px;max-height: 200px;" src="{$userpay_row.alipayimg?$userpay_row.alipayimg:'';}" alt="" onclick="window.open(this.src)">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="item clearfix" style="display: {$userpay_row.ptype=="3"?"":'none';}" id="weixin1">
+                    <span class="left">微信账号</span>
+                        <div class="right"><input name="weixin" type="text" value="{$userpay_row.weixin?$userpay_row.weixin:'';}"></div>
+                    </div>
+                    <div class="item clearfix" style="height: auto;display: {$userpay_row.ptype=="3"?"":'none';}" id="weixin2">
+                        <span class="left">微信二维码</span>
+                        <div class="right">
+                            <label style="background: none;display:inline-block;height:36px;line-height:36px;padding:0px 16px;text-align:center;cursor:pointer;border-radius:3px;width: 170px;border: 1px solid #6a9cf0 !important;color: #6a9cf0 !important;">
+                                上传图片
+                                <input name="weixinimg" value="{$userpay_row.weixinimg?$userpay_row.weixinimg:'';}" type="file" accept=".jpg,.jpeg,.bmp,.png,.gif" style="display: none" id="weixinimg" onchange="Uploadimg('weixinimg_img_show','weixinimg')">
+                                <img id="weixinimg_img_show" style="width: 200px;display: {$userpay_row.weixinimg?'':'none';};margin-top: 20px;max-height: 200px;" src="{$userpay_row.weixinimg?$userpay_row.weixinimg:'';}" alt="" onclick="window.open(this.src)">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="item clearfix" id="bank2" style="display: {$userpay_row.ptype=="2"?"":'none';}">
+                        <span class="left">银行卡号</span>
+                        <div class="right"><input name="card" type="text" value="{$userpay_row.card?$userpay_row.card:'';}"></div>
+                    </div>
+                    <div class="item clearfix" id="bank3" style="display: {$userpay_row.ptype=="2"?"":'none';}">
+                        <span class="left">开户地址</span>
+                        <div class="right"><input name="bankaddr" type="text" value="{$userpay_row.bankaddr?$userpay_row.bankaddr:'';}"></div>
+                    </div>
+                    <div class="item clearfix">
+                        <span class="left">收款人姓名</span>
+                        <div class="right">
+                            <input name="realname" type="text" value="{$userpay_row.realname?$userpay_row.realname:'';}">
+                        </div>
+                    </div>
+                    <div class="item clearfix">
+                        <span class="left">身份证号</span>
+                        <div class="right">
+                            <input name="idcard" type="text" value="{$userpay_row.idcard?$userpay_row.idcard:'';}" maxlength="18">
+                        </div>
+                    </div>
+
+                    {if (cache('adminconfig')['is_sms_userpay']==1)}
+                    <div class="item clearfix">
+                        <span class="left">手机号</span>
+                        <div class="right">
+                            <input type="text" name="tel" id="tel" value="{$userdefine_row.tel}" readonly>
+                            <div class="ext" onclick="getCode();" id="click_checkcode">发送验证码</div>
+                        </div>
+                    </div>
+                    <div class="item clearfix">
+                        <span class="left">验证码</span>
+                        <div class="right">
+                            <input type="text" name="chkcode" style="width: 120px" placeholder="短信验证码">
+                        </div>
+                    </div>
+                    <script>
+                        function getCode(){
+                            var phone=$('[name="tel"]').val();
+                            var reg=/\d{11}/;
+                            if(phone=='' || !reg.test(phone)){
+                                layer.msg('请填写正确的手机号码！');
+                                $('[name="tel"]').focus();
+                                return false;
+                            }
+                            $.post(
+                                "{:url('userinfo/sms_userinfo')}",
+                                {phone:phone,t:new Date().getTime()},
+                                function(data){
+                                    data = eval("(" + data + ")");
+                                    if (data.status == '1') {
+                                        layer.msg(data.msg);
+                                        $('#click_checkcode').removeAttr('onclick');
+                                        $('#click_checkcode').html('<i class="times">80</i>秒后重发');
+                                        timeC(80);
+                                    } else {
+                                        layer.msg(data.msg);
+                                        $('#click_checkcode').attr('onclick','getCode()');
+                                    }
+                                },'json');
+                        }
+
+                        function timeC(t){
+                            if(t==0){
+                                $('#click_checkcode').attr('onclick','getCode()');
+                                $('#click_checkcode').text('获取验证码');
+                            } else {
+                                t=t-1;
+                                $('#click_checkcode .times').text(t);
+                                setTimeout('timeC('+t+')',1000);
+                            }
+                        }
+                    </script>
+                    {/if}
+                </form>
+                <div class="btn">
+                    <button type="button" class="t1" onclick="submitform();return false;">立即修改</button>
+                </div>
+                <script>
+                    var selectptype = function () {
+                        var ptype = $('[name=ptype]').val();
+                        if (ptype == '1') {
+                            $('#bank1').hide();
+                            $('#bank2').hide();
+                            $('#bank3').hide();
+                            $('#weixin1').hide();
+                            $('#weixin2').hide();
+                            $('#alipay1').show();
+                            $('#alipay2').show();
+                        } else if (ptype == '2') {
+                            $('#bank1').show();
+                            $('#bank2').show();
+                            $('#bank3').show();
+                            $('#weixin1').hide();
+                            $('#weixin2').hide();
+                            $('#alipay1').hide();
+                            $('#alipay2').hide();
+                        } else if (ptype == '3') {
+                            $('#bank1').hide();
+                            $('#bank2').hide();
+                            $('#bank3').hide();
+                            $('#weixin1').show();
+                            $('#weixin2').show();
+                            $('#alipay1').hide();
+                            $('#alipay2').hide();
+                        }
+                    }
+                </script>
+            </div>
+        </div>
+<script>
+    function submitform() {
+
+        {if (cache('adminconfig')['is_sms_userpay']==1)}
+        var chkcode=$('[name="chkcode"]').val();
+        if(chkcode==''){
+            layer.msg('请输入短信验证码！');
+            $('[name="chkcode"]').focus();
+            return false;
+        }
+        {/if}
+
+        var ptype=$('[name="ptype"]').val();
+        if(ptype==''){
+            layer.msg('请选择收款方式！');
+            $('[name="ptype"]').focus();
+            return false;
+        }
+
+        if (ptype == '1') {
+            var alipay=$('[name="alipay"]').val();
+            if(alipay==''){
+                layer.msg('请填写支付宝账号！');
+                $('[name="alipay"]').focus();
+                return false;
+            }
+            var alipayimg=$('#alipayimg').attr('value');
+            var alipayimg_siblings = $('#alipayimg_img_show').attr('src');
+            if(alipayimg==''||alipayimg==undefined||alipayimg==null){
+                if(alipayimg_siblings==''||alipayimg_siblings==undefined||alipayimg_siblings==null) {
+                    layer.msg('请上传支付宝二维码！');
+                    $('#alipayimg').focus();
+                    return false;
+                }
+            }
+        } else if (ptype == '2') {
+            var bankaddr=$('[name="bankaddr"]').val();
+            if(bankaddr==''){
+                layer.msg('请填写开户地址！');
+                $('[name="bankaddr"]').focus();
+                return false;
+            }
+            var card=$('[name="card"]').val();
+            if(card==''){
+                layer.msg('请填写银行卡号！');
+                $('[name="card"]').focus();
+                return false;
+            }
+        } else if (ptype == '3') {
+            var weixin=$('[name="weixin"]').val();
+            if(weixin==''){
+                layer.msg('请填写微信账号！');
+                $('[name="weixin"]').focus();
+                return false;
+            }
+            var weixinimg=$('#weixinimg').attr('value');
+            var weixinimg_siblings = $('#weixinimg_img_show').attr('src');
+            if(weixinimg==''||weixinimg==undefined||weixinimg==null){
+                if(weixinimg_siblings==''||weixinimg_siblings==undefined||weixinimg_siblings==null) {
+                    layer.msg('请上传微信二维码！');
+                    $('#weixinimg').focus();
+                    return false;
+                }
+            }
+        }
+
+        var realname=$('[name="realname"]').val();
+        if(realname==''){
+            layer.msg('请填写正确的收款人姓名！');
+            $('[name="realname"]').focus();
+            return false;
+        }
+
+        var idcard=$('[name="idcard"]').val();
+        if(idcard==''){
+            layer.msg('请填写正确的身份证号！');
+            $('[name="idcard"]').focus();
+            return false;
+        }
+
+        var formData = new FormData($( "#ajaxform" )[0]);//找到input，作为参数传递给FormData构造函数
+        $.ajax({
+            url: "{:url('userinfo/edituserpaysave')}",
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.href = "{:url('/useruuserinfo')}";
+                        // window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+        });
+    }
+</script>
+<script>
+
+    /**
+     * 上传缩略图版本
+     */
+    function Uploadimg(showimgid,fileid) {
+        var eImg = $('#'+showimgid);
+//        console.log(getObjectURL($('#'+inputid)[0].files[0]));
+        eImg.show().attr('src', getObjectURL($('#'+fileid)[0].files[0])); // 或 this.files[0] this->input $(this).after(eImg);});
+    }
+
+    /*
+     * 获取文件绝对路径
+     */
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjectURL != undefined) {
+            url = window.createObjectURL(file) ;
+        } else if (window.URL!=undefined) {
+            url = window.URL.createObjectURL(file) ;
+        } else if (window.webkitURL!=undefined) {
+            url = window.webkitURL.createObjectURL(file) ;
+        } return url ;
+    }
+</script>
+{include file="common/footer" /}
+

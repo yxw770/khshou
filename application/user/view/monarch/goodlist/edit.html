@@ -1,0 +1,284 @@
+{include file="common/header" /}
+<body>
+{include file="common/top_nav" /}
+
+<div class="main clearfix">
+    {include file="common/left_nav" /}
+
+    <div class="container addgood scroll">
+        <div class="box init b1">
+            <div class="title">修改商品 <span>Add goods</span></div>
+            <form action="{:url('goodlist/editsave')}" method="post" id="ajaxform" class="clearfix">
+                <div class="subtitle">修改商品</div>
+                <div class="item clearfix">
+                    <span class="left">商品分类</span>
+                    <div class="right">
+                        <select name="cateid">
+                            {volist name="cate_arr" id="vo"}
+                            <option value="{$vo.goodcateid}" {$vo.goodcateid==$list.cateid?"selected":'';}>{$vo.catename}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">页面风格</span>
+                    <div class="right">
+                        <select name="paytheme">
+                            <?php foreach($paytheme_arr as $k => $v): ?>
+                            <option value="{$k}" {$k==$list.paytheme?"selected":'';}>{$v}</option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">商品排序</span>
+                    <div class="right">
+                        <input type="text" placeholder="数字越小越靠前！" name="sortid" value="{$list.sortid}">
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">商品名称</span>
+                    <div class="right"><input type="text" placeholder="好的名字有利于销售哦！" name="goodname" value="{$list.goodname}"></div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">销售价格</span>
+                    <div class="right">
+                        <input type="text" placeholder="商品对外出售的价格即零售价格！" name="price" value="{$list.price}">
+                        <span class="ext">元</span>
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">批发优惠</span>
+                    <div class="right">
+                        <div class="radio">
+                            <input type="radio" name="is_wholesale" id="a1" value="1" class="shiyong" {$list.is_wholesale=='1'?"checked":'';}>
+                            <label for="a1">使用</label>
+                        </div>
+                        <div class="radio">
+                            <input type="radio" name="is_wholesale" id="a2" value="0" class="bushiyong" {$list.is_wholesale=='0'?"checked":'';} >
+                            <label for="a2">不使用</label>
+                        </div>
+                        <a href="" class="tip">
+                            <i class="xcFont ico-tip"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="item clearfix shiyong_out" style="width: 100%;display: none">
+                    <div class="part" style="width: 270px;float: right;margin-right: 10px">
+                        <span class="left" style="width: 60px">优惠价格</span>
+                        <div class="right">
+                            <input type="text" style="width: 110px" name="define_price[]">
+                            <span class="ext">元</span>
+                        </div>
+                        <a class="delete_btn" style="margin-right: 10px"><i class="xcFont ico-del"></i></a>
+                        <a class="add_btn"><i class="xcFont ico-add" style="font-size: 18px"></i></a>
+                    </div>
+                    <div class="part" style="width: 240px;float: right;">
+                        <span class="left" style="width: 60px">购买数量</span>
+                        <div class="right">
+                            <input type="text" style="padding-left: 50px" name="define_quantity[]">
+                            <span class="bext">大于</span>
+                            <span class="ext">张</span>
+                        </div>
+                    </div>
+                </div>
+                {volist name="wholesale_arr" id="vo"}
+                <div class="item clearfix shiyong_out" style="width: 100%;display: {$list.is_wholesale=='1'?'':'none';}">
+                    <div class="part" style="width: 270px;float: right;margin-right: 10px">
+                        <span class="left" style="width: 60px">优惠价格</span>
+                        <div class="right">
+                            <input type="text" style="width: 110px" name="define_price[]" value="{$vo.define_price}">
+                            <span class="ext">元</span>
+                        </div>
+                        <a class="delete_btn" style="margin-right: 10px;cursor: pointer;" onclick="del_discount(this)"><i class="xcFont ico-del"></i></a>
+                        <a class="add_btn" style="margin-left: -4px;cursor: pointer;" onclick="add_discount(this)"><i class="xcFont ico-add" style="font-size: 18px"></i></a>
+                    </div>
+                    <div class="part" style="width: 240px;float: right;">
+                        <span class="left" style="width: 60px">购买数量</span>
+                        <div class="right">
+                            <input type="text" style="padding-left: 50px" name="define_quantity[]" value="{$vo.define_quantity}">
+                            <span class="bext">大于</span>
+                            <span class="ext">张</span>
+                        </div>
+                    </div>
+                </div>
+                {/volist}
+                <div class="item clearfix">
+                    <span class="left">成本价格</span>
+                    <div class="right">
+                        <input type="text" placeholder="商品进货价，可以不填，填写有利于商户系统的利润统计分析！" name="cost" value="{$list.cost}">
+                        <span class="ext">元</span>
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">起购数量</span>
+                    <div class="right">
+                        <input type="text" placeholder="每次购买，最少购买多少件！" name="low_limit" value="{$list.low_limit}">
+                        <span class="ext">件</span>
+                    </div>
+                </div>
+                <!--<div class="item clearfix grid">-->
+                    <!--<span class="left">库存警告</span>-->
+                    <!--<div class="right">-->
+                        <!--<input type="text" placeholder="为0表示不报警，设置后请确保邮箱正确，否则无法接收邮件">-->
+                        <!--<div class="select">-->
+                            <!--<div class="f">-->
+                                <!--<input type="radio" name="info" id="c1" checked="checked">-->
+                                <!--<label for="c1">站内短信</label>-->
+                            <!--</div>-->
+                            <!--<div class="f">-->
+                                <!--<input type="radio" name="info" id="c2">-->
+                                <!--<label for="c2">发邮件</label>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="item clearfix grid">
+                    <span class="left">优惠券</span>
+                    <div class="right">
+                        <div class="radio">
+                            <input type="radio" name="is_coupon" id="a3" value="1" {$list.is_coupon=='1'?'checked':''}>
+                            <label for="a3">支持</label>
+                        </div>
+                        <div class="radio">
+                            <input type="radio" name="is_coupon" id="a4" value="0" {$list.is_coupon=='0'?'checked':''}>
+                            <label for="a4">不支持</label>
+                        </div>
+                        <a href="" class="tip">
+                            <i class="xcFont ico-tip"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!--<div class="item clearfix">-->
+                    <!--<span class="left">售卡通知</span>-->
+                    <!--<div class="right">-->
+                        <!--<div class="radio">-->
+                            <!--<input type="radio" name="r1" checked="checked" id="a5">-->
+                            <!--<label for="a5">关闭</label>-->
+                        <!--</div>-->
+                        <!--<div class="radio">-->
+                            <!--<input type="radio" name="r1" id="a6">-->
+                            <!--<label for="a6">开启</label>-->
+                        <!--</div>-->
+                        <!--<a href="" class="tip">-->
+                            <!--<i class="xcFont ico-tip"></i>-->
+                        <!--</a>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="item clearfix">
+                    <span class="left">提卡密码</span>
+                    <div class="right">
+                        <div class="radio">
+                            <input type="radio" name="psd_limit" value="0" {$list.psd_limit=='0'?'checked':''} id="a7">
+                            <label for="a7">关闭</label>
+                        </div>
+                        <div class="radio">
+                            <input type="radio" name="psd_limit" value="1" {$list.psd_limit=='1'?'checked':''} id="a8">
+                            <label for="a8">必填</label>
+                        </div>
+                        <div class="radio">
+                            <input type="radio" name="psd_limit" value="2" {$list.psd_limit=='2'?'checked':''} id="a9">
+                            <label for="a9">选填</label>
+                        </div>
+                        <a href="" class="tip">
+                            <i class="xcFont ico-tip"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">客户信息</span>
+                    <div class="right">
+                        <select name="contact_limit">
+                            <?php foreach($contact_limit_arr as $k => $v): ?>
+                            <option value="{$k}" {$k==$list.contact_limit?"selected":'';}>{$v}</option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">商品说明</span>
+                    <div class="right">
+                        <input type="text" placeholder="建议填写该商品的使用方法，文字不超过200字" name="remark" value="{$list.remark}">
+                        <div class="info-tip">商品说明将显示在商品购买页面，一般填写商品特点等信息</div>
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">使用说明</span>
+                    <div class="right">
+                        <input type="text" placeholder="建议填写该商品的使用方法，文字不超过200字" name="instrucation" value="{$list.instrucation}">
+                        <div class="info-tip" style="width: 418px">使用说明将显示在订单查询结果中，一般设置售后QQ群，或者下载地址类</div>
+                    </div>
+                </div>
+                <div class="btn">
+                    <!--<button class="t1" >保存设置</button>-->
+                    <button class="t1" onclick="submitform();return false;">保存设置</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+<script>
+    $(".shiyong").click(function(){
+        $(".shiyong_out").fadeIn();
+    });
+
+    $(".bushiyong").click(function(){
+        $(".shiyong_out").fadeOut();
+    });
+    var add_discount=function(id){
+        $(id).parent("div").parent("div").after(
+            '<div class="item clearfix shiyong_out" style="width: 100%;">\n' +
+            '                    <div class="part" style="width: 270px;float: right;margin-right: 10px">\n' +
+            '                        <span class="left" style="width: 60px">优惠价格</span>\n' +
+            '                        <div class="right">\n' +
+            '                            <input type="text" style="width: 110px" name="define_price[]">\n' +
+            '                            <span class="ext">元</span>\n' +
+            '                        </div>\n' +
+            '                        <a class="delete_btn" style="margin-right: 10px;cursor: pointer;" onclick="del_discount(this)"><i class="xcFont ico-del"></i></a>\n' +
+            '                        <a class="add_btn" style="margin-left: -4px;cursor: pointer;" onclick="add_discount(this)"><i class="xcFont ico-add" style="font-size: 18px"></i></a>\n' +
+            '                    </div>\n' +
+            '                    <div class="part" style="width: 240px;float: right;">\n' +
+            '                        <span class="left" style="width: 60px">购买数量</span>\n' +
+            '                        <div class="right">\n' +
+            '                            <input type="text" style="padding-left: 50px" name="define_quantity[]">\n' +
+            '                            <span class="bext">大于</span>\n' +
+            '                            <span class="ext">张</span>\n' +
+            '                        </div>\n' +
+            '                    </div>\n' +
+            '                </div>'
+        );
+    };
+    var del_discount=function(id){
+        $(id).parent("div").parent("div").remove();
+    };
+</script>
+<script>
+    function submitform() {
+        $.post(
+            "{:url('goodlist/editsave','goodlistid='.$list.goodlistid)}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.href = "{:url('goodlist/index')}";
+                        // window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}

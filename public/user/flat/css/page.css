@@ -1,0 +1,79 @@
+.pagination {
+    /*padding: 32px 40px 0;*/
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+}
+
+.pagination p {
+    text-align-last: left;
+    font-size: 13px;
+    color: #333;
+    height: 32px;
+    line-height: 32px;
+}
+
+.pagination p.left {
+    float: left;
+}
+
+.pagination p.right {
+    float: right;
+}
+
+.pagination p span.orange {
+    color: #ff7f00;
+    margin: 0 4px;
+}
+
+.pagination p span.blue {
+    color: #409fff;
+    margin: 0 4px;
+}
+
+.pagination .m-pages {
+    vertical-align: top;
+    font-size: 0;
+    overflow: hidden;
+    display: inline-block;
+    float: left;
+}
+
+.pagination .m-pages i {
+    font-style: normal;
+}
+
+.pagination .m-pages a, .pagination .m-pages u, .pagination .m-pages .prev, .pagination .m-pages .next, .pagination .m-pages .current {
+    border-bottom: 1px solid #e3e5eb;
+    border-left: 1px solid #e3e5eb;
+    border-top: 1px solid #e3e5eb;
+    display: inline-block;
+    font-size: 12px;
+    height: 30px;
+    line-height: 30px;
+    overflow: hidden;
+    text-align: center;
+    vertical-align: top;
+    width: 30px;
+}
+
+.pagination .m-pages .prev, .pagination .m-pages .next {
+    width: 60px;
+}
+
+.pagination .m-pages .next {
+    border-right: 1px solid #e3e5eb;
+}
+
+.pagination .m-pages .current {
+    color: #409fff;
+}
+
+.pagination .m-pages u {
+    text-decoration: none;
+}
+.pagination {
+    width: 100%;
+    position: relative;
+    /*top: -45px;*/
+}

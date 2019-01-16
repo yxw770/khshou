@@ -1,0 +1,25 @@
+{include file="common/header" /}
+<body>
+<!-- 顶部 -->
+<!--部分页面top后面有style样式添加-->
+<div class="top" style="padding-bottom: 0">
+    <div class="top_con">
+        <span>付款方式</span>
+        <a class="back" href="{:url('/')}"><img src="{$images}/back.png" width="7" height="11"></a>
+        <a class="user_name"><i class="iconfont icon-mine"></i></a>
+    </div>
+</div><!-- 列表 -->
+<table border="0" cellspacing="0" cellpadding="0" class="channels tab2">
+    <tbody>
+    {volist name="list" id="vo"}
+    <tr>
+        <td>{$vo.channelname}</td>
+        <td>{$vo.userrate*100}%</td>
+        <td>
+            <span>{$vo.is_state=='1'?'开启':'关闭'}</span>
+        </td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+{include file="common/footer" /}

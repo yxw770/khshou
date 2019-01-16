@@ -1,0 +1,207 @@
+<!--头部-->
+<div class="header clearfix">
+    <a href="./" class="logo"><img src="{$images}/logo2.png" alt="" style="width: 185px"></a>
+    <a href="./" class="info">
+        <img src="{$images}/logo1.png" alt="" style="height: 15px;">
+    </a>
+    <div class="statebar">
+        <a href="{:url('/index')}"><i class="xcFont ico-home"></i>首页</a>
+        <a href="/" target="_blank"><i class="xcFont ico-pc"></i>返回网站</a>
+        <a href="/orderquery" target="_blank"><i class="xcFont ico-list"></i>订单查询</a>
+        <div class="user">
+		  <span class="avatar">
+			<img src="{$images}/avataraf73.png" alt="">
+			<!--<span>15</span>-->
+		  </span>
+            <a class="name j-username" href="javascript:;">
+                {:session('user.username')} <i class="xcFont ico-arrow"></i>
+            </a>
+            <a href="{:url('index/logout')}"><i class="xcFont ico-out"></i></a>
+            <div class="dropdown j-dropdown" style="height: auto">
+                <ul>
+                    <li>
+                        <a href="{:url('/useruuserinfo')}">
+                            <img src="{$images}/ico-d15461.png" alt="">基本信息</a>
+                    </li>
+                    <li>
+                        <a href="{:url('/safety')}">
+                            <img src="{$images}/ico-d4d87c.png" alt="">修改密码
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{:url('/goodlist')}">
+                            <img src="{$images}/ico-d20adb.png" alt="">商品列表
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{:url('/sold')}" style="display: inline-block;margin-top: 5px;">
+                            <img src="{$images}/ico-d33574.png" alt="">最近卖出
+                        </a>
+                    </li>
+                    <li style="padding-top: 4px">
+                        <a href="javascript:;" class="m-zt">
+                            <img src="{$images}/ico-d4d87c.png" alt="">切换主题</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="showdao_show" style="display: none"></div>
+<div class="modal in modal-zt" id="waModal" role="dialog" aria-labelledby="waModalLable" style="display: none; padding-right: 17px;">
+    <div class="modal-dialog modal-lg modal-ztd" style="border:none;border-radius:99px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <div class="modal-title">切换主题</div>
+            </div>
+            <div class="modal-body">
+                <div class="list-group">
+                    <?php foreach (unserialize(qttheme) as $k => $v): ?>
+                    <a href="{:url('index/changeTheme')}?theme={$k}" class="list-group-item {$k==session('user.usertheme')?'zt-active':''}">{$v}
+                        {if($k==session('user.usertheme'))}
+                        <span class="badge">
+                            <i class="glyphicon glyphicon-ok"></i>
+                        </span>
+                        {/if}
+                    </a>
+                    <?php endforeach; ?>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .modal {
+        /*position:fixed;*/
+        /*top:0;*/
+        /*right:0;*/
+        /*bottom:0;*/
+        /*left:0;*/
+        z-index:1000;
+        /*background:rgba(0,0,0,0.5);*/
+        overflow-x:hidden;
+        overflow-y:auto;
+    }
+    .showdao_show {
+        position:fixed;
+        top:0;
+        right:0;
+        bottom:0;
+        left:0;
+        z-index:1000;
+        background:rgba(0,0,0,0.5);
+        overflow-x:hidden;
+        overflow-y:auto;
+    }
+    .modal-ztd {
+        width:850px;
+        margin:30px auto;
+    }
+    .modal-dialog {
+        width:550px;
+        margin:30px auto;
+        background:#fff;
+        border-color:#dddddd;
+        border-radius:2px;
+        padding:25px;
+    }
+    .modal .modal-dialog .modal-content .modal-header {
+        border-bottom-width:2px;
+        margin:0;
+        padding:0;
+        padding-bottom:15px;
+        border-bottom:2px solid #e5e5e5;
+    }
+    .close {
+        float:right;
+        font-size:21px;
+        font-weight:700;
+        line-height:1;
+        color:#000;
+        text-shadow:0 1px 0 #fff;
+        filter:alpha(opacity=20);
+        opacity:.2;
+        -webkit-appearance:none;
+        padding:0;
+        cursor:pointer;
+        background:0 0;
+        border:0;
+    }
+    .modal-title {
+        color:#505458;
+        font-size:20px;
+    }
+    .modal .modal-dialog .modal-content .modal-body {
+        padding:20px 0;
+        color:#797979;
+    }
+    .modal .modal-dialog .modal-content .modal-body {
+        padding:20px 0;
+        color:#797979;
+    }
+    .list-group-item {
+        position:relative;
+        display:block;
+        padding:10px 15px;
+        margin-bottom:-1px;
+        background-color:#fff;
+        border:1px solid #ddd;
+        color:#555;
+    }
+    .list-group-item:first-child {
+        border-top-left-radius:4px;
+        border-top-right-radius:4px;
+    }
+    .zt-active {
+        color: #fff;
+        background-color: #337ab7;
+        border-color: #337ab7;
+    }
+    .zt-active .badge {
+        color: #337ab7;
+        background-color: #fff;
+        float: right;
+        display: inline-block;
+        min-width: 10px;
+        padding: 3px 7px;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        border-radius: 10px;
+    }
+    .glyphicon-ok {
+        background-image: url({$images}/glyphicon-ok.png);
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+    }
+</style>
+<script>
+    $(function() {
+        $(document).on('click', '.m-zt', function() {
+            $(".modal-zt").css('display', 'block');
+            $(".showdao_show").css('display', 'block')
+        });
+        $(document).on('click', '.modal1', function() {
+            $(".dmodal1").css('display', 'block')
+        });
+        $(document).on('click', '.modal2', function() {
+            $(".dmodal2").css('display', 'block')
+        });
+        $(document).on('click', '.modal3', function() {
+            $(".dmodal3").css('display', 'block')
+        });
+        $(document).on('click', '.close', function() {
+            $(".modal").css('display', 'none')
+            $(".showdao_show").css('display', 'none')
+        });
+        $(document).on('click', '.btn-default', function() {
+            $(".modal").css('display', 'none')
+        });
+    });
+</script>

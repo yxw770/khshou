@@ -1,0 +1,80 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<link rel="stylesheet" href="{$flag}/font-awesome.min.css">
+<style>
+    .icon{
+        text-align: center;
+    }
+    .laydate-set-ym {
+        height: 30px;
+        line-height: 30px;
+        margin-top: -3px;
+    }
+</style>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<div class="main auto">
+    <div class="main_wrap">
+        <div class="m_top clearfix">
+            <div class="m_search fl clearfix">
+                <form class="layui-form" action="">
+                    <div class="s_box clearfix fl">
+                        <div class="s_input fl">
+                            <input style="cursor: pointer" type="text" name="to_time" id="to_time" class="ipt ipt_txt" value="{:input('to_time')}" placeholder="请选择日期" readonly>
+                        </div>
+                    </div>
+                    <button class="search_btn fl">搜索</button>
+                    <input type="hidden" name="do" value="search">
+                </form>
+            </div>
+        </div>
+        <div class="m_content">
+
+            <table class="pub_table">
+                <thead>
+                <th width="15%">时间段</th>
+                <th width="13%">提交订单</th>
+                <th width="12%">成功订单</th>
+                <th width="10%">失败订单</th>
+                <th width="10%">提交金额</th>
+                <th width="12%">成功金额</th>
+                <th width="13%">商户收入</th>
+                <th width="10%">平台收入</th>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td>
+                        <em class="c_purple">{$vo.time}</em>
+                    </td>
+                    <td>{$vo.count_all}</td>
+                    <td>{$vo.count_success}</td>
+                    <td>
+                        <em class="c_red">{$vo.count_failed}</em>
+                    </td>
+                    <td>{$vo.sum_ordermoney}</td>
+                    <td>
+                        <em class="c_blue">{$vo.sum_paymoney}</em>
+                    </td>
+                    <td>{$vo.sum_usergain}</td>
+                    <td>{$vo.sum_ptgain}</td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form','laydate'], function () {
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#to_time' //指定元素
+        });
+    });
+</script>
+{include file="common/footer" /}

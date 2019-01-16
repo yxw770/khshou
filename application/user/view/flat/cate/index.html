@@ -1,0 +1,117 @@
+{include file="common/header" /}
+<link rel="stylesheet" href="{$css}/style.css">
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<section class="box-right">
+    <form action="{:url('cate/add')}" method="post" id="ajaxform">
+    <div class="Journal">
+        <div class="jrl-title">商品分类</div>
+        <div class="gc-title clear">
+            <div style="width: 47%;">分类名称</div>
+            <div style="width: 20%;">分类排序</div>
+            <div style="width: 30%;">分类管理</div>
+        </div>
+        {volist name="list" id="vo"}
+        <div class="gc-form clear">
+            <input type="text" style="outline: none;border: none;" readonly class="gc-mc" value="{$vo.catename}" maxlength="20">
+            <input type="text" style="outline: none;border: none;" readonly class="gc-px" value="{$vo.sortid}" maxlength="3">
+            <ul class="clear">
+                <li>
+                    <a href="{:url('cate/edit','goodcateid='.$vo.goodcateid)}">修改</a>
+                </li>
+                <li class="gc-red">
+                    <a href="javascript:;" onclick="showContent('分类链接','{:url('cate/link','goodcateid='.$vo.goodcateid)}','900px','289px')">链接</a>
+                </li>
+                <li>
+                    <a href="{:url('/goodlist')}?cateid={$vo.goodcateid}&do=search">商品</a>
+                </li>
+                <li>
+                    <a href="{:url('/kamilist')}">库存卡</a>
+                </li>
+                <li>
+                    <a href="javascript:;" onclick="del('{$vo.goodcateid}');return false;">删除</a>
+                </li>
+            </ul>
+        </div>
+        {/volist}
+        <div id="addNewCate1" class="gc-form clear" style="display: none;"></div>
+        <div id="addNewCate2" class="gc-form clear" style="display: none;"></div>
+        <div id="addNewCate3" class="gc-form clear" style="display: none;"></div>
+        <script>
+            var addNew=function(){
+                $('#addNewCate2').before(
+                    '\n' +
+                    '        <div class="gc-form clear">\n' +
+                    '            <input type="text" class="gc-mc" name="catename[]" maxlength="20">\n' +
+                    '            <input type="text" class="gc-px" value="100" name="sortid[]" maxlength="3">\n' +
+                    '        </div>'
+                );
+            };
+        </script>
+        <div class="gc-btn">
+            <button type="button" onclick="addNew()" class="btn btn-purple1 waves-effect waves-light">添加分类</button>
+            <button type="button" onclick="submitform()" class="btn btn-purple1 waves-effect waves-light">保存配置</button>
+            <span>(当前操作需要保存设置后才能生效)</span>
+        </div>
+    </div>
+    </form>
+</section>
+<script>
+    function submitform() {
+        var test = $("#ajaxform").serialize();
+        $.post(
+            "{:url('cate/add')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+</script>
+<script>
+    function del(id) {
+        $.post(
+            "{:url('cate/del')}",
+            {goodcateid:id},
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}

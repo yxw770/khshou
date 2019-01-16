@@ -1,0 +1,276 @@
+{include file="common/header" /}
+<script src="{$js}/sj.js"></script>
+<!--<script type="text/javascript"  src="{$js}/jquery-1.8.3.min.js"></script>-->
+<script src="{$js}/highcharts.js"></script>
+<style>
+
+    .idx_bottom{margin-top: 30px;}
+    .idx_bottom .item{width: 620px;height: 425px;border-radius:6px;box-shadow:0 0 10px #ddd;}
+    .idx_bottom .item .title{font-size: 16px;color: #585962;font-weight: bold;padding:0 40px 0 30px;line-height: 70px;border-bottom:1px solid #eaecf2;}
+    .idx_bottom .item .icon{background: url({$images}/icon_70.png) no-repeat center;background-size:cover;width: 22px;height: 22px;display: block;margin-top: 25px;}
+    .idx_bottom .item .box{padding:15px 20px;}
+    .idx_bottom .item .img{}
+
+    .zst{margin-bottom: 15px;overflow: hidden;}
+    .zst li{float: left;margin-left: 30px}
+    .zst li div{width: 15px;height: 15px;float: left;margin-right: 10px;}
+
+
+    #my_container{position: relative;}
+    .sj{width: 280px;float: right;}
+    .td{position: absolute;left: 21%;top: 40%;width: 60px;font-size: 30px;color: #dbdbdf;font-family: "黑体";}
+    .sj li{line-height: 16px; margin-top:40px;font-size: 14px;color: #a5a7a9;}
+    .sj li div{width: 30px;height: 10px;border-radius:5px ;float: left;margin:3px  30px 0 0;}
+</style>
+<script>
+    window.onload = function() {
+        var canvas = document.getElementById("pie_canvas");
+        var seriesData = [
+            {if $count==0}
+            {name:"jd/qq", value:0.2, color:"#f5506c"},
+            {name:"zfb", value:0.2, color:"#ffb726"},
+            {name:"zfbwap", value:0.2, color:"#991cf5"},
+            {name:"wxwap", value:0.2, color:"#08c5dd"},
+            {name:"wx", value:0.2, color:"#706acb"}]
+        {else/}
+            {name:"jd/qq/tenpay", value:<?php echo ($sum_channel['count_5']+$sum_channel['count_6']+$sum_channel['count_9']+$sum_channel['count_7'])/$count; ?>, color:"#f5506c"},
+            {name:"zfb", value:{$sum_channel.count_1/$count}, color:"#ffb726"},
+            {name:"zfbwap", value:{$sum_channel.count_2/$count}, color:"#991cf5"},
+            {name:"wxwap", value:<?php echo ($sum_channel['count_4']+$sum_channel['count_8'])/$count; ?>, color:"#08c5dd"},
+            {name:"wx", value:{$sum_channel.count_3/$count}, color:"#706acb"}]
+            {/if}
+        var config = {
+            width : 300,
+            height: 300,
+            series: seriesData,
+            canvas: canvas,
+            title:"Fruit Sales",
+            callback:function(obj){
+                console.log(obj.label1);
+            }
+        };
+        pieChart.initSettings(config);
+        pieChart.render();
+
+
+    }
+</script>
+<script>
+    $(function () {
+        var chart = Highcharts.chart('container3', {
+            //走势图标题
+            title: {
+                text: '实时数据分析',
+                x: 20 ,
+                style:{display:"none"}//可显示
+            },
+            //走势图来源
+            subtitle: {
+                x: 20,
+                style:{display:"none"}//可隐藏
+            },
+            //X轴分类
+            xAxis: {
+                categories: [
+                    {volist name="list_week" id="vo"}
+                    '{$vo.time}',
+                    {/volist}
+                ]
+            },
+            //Y轴会根据series的data数值自动分格并划分上下限
+            yAxis: {
+                title: {
+                    text: '(元)',//Y轴表示的文本
+                    //style:{display:"none"}可隐藏
+                }
+            },
+            tooltip: {
+                valueSuffix: '(元)'//数据的后辍
+            },
+            //线条所表示的品种分类
+            legend:{
+                enabled:0,//0为隐藏1为显示
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            //可以为多个品种
+            series: [{
+                name: '付款总额',
+                data: [
+                    {volist name="list_week" id="vo"}
+                    {$vo.sum_ispay},
+                    {/volist}
+                ]
+            },{
+                name: '结算总额',
+                data: [
+                    {volist name="list_week" id="vo"}
+                    {$vo.sum_isst},
+                    {/volist}
+                ]
+            }]
+        });
+    });
+</script>
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+
+<style>
+    .idx_main{
+        padding-top: 154px;
+    }
+</style>
+<div class="idx_main">
+    <div class="auto">
+        <h5 class="t_tit">后台主页</h5>
+        <div class="idx_list clearfix">
+            <li class="item item_01">
+                <div class="li_t clearfix">
+                    <div class="left fl">
+                        <img src="{$images}/icon_66.png" alt="" class="icon"/>
+                        <p class="fz">今日注册</p>
+                    </div>
+                    <div class="right fr">
+                        <em class="num">{$count_today_register}</em>
+                    </div>
+                </div>
+                <div class="li_b">
+                    <p class="font">
+                        昨日注册 <em>{$count_yesterday_register}</em>
+                    </p>
+                    <p class="font">
+                        未审核 <em>{$un_user}</em>
+                    </p>
+                    <p class="font">
+                        已冻结<em>{$fr_user}</em>
+                    </p>
+                </div>
+            </li>
+            <li class="item item_02">
+                <div class="li_t clearfix">
+                    <div class="left fl">
+                        <img src="{$images}/icon_67.png" alt="" class="icon"/>
+                        <p class="fz">今日提交（笔）</p>
+                    </div>
+                    <div class="right fr">
+                        <em class="num">{$count_today_submit}</em>
+                    </div>
+                </div>
+                <div class="li_b">
+                    <p class="font">
+                        今日未付款 <em>{$count_today_unpay}</em>
+                    </p>
+                    <p class="font">
+                        今日成功订单 <em>{$count_today_ispay}</em>
+                    </p>
+                    <p class="font">
+                        昨日成功订单<em>{$count_yesterday_ispay}</em>
+                    </p>
+                </div>
+            </li>
+            <li class="item item_03">
+                <div class="li_t clearfix">
+                    <div class="left fl">
+                        <img src="{$images}/icon_68.png" alt="" class="icon"/>
+                        <p class="fz">今日付款总额（元）</p>
+                    </div>
+                    <div class="right fr">
+                        <em class="num">{$sum_today_ispay}</em>
+                    </div>
+                </div>
+                <div class="li_b">
+                    <p class="font">
+                        今日用户收入 <em>{$sum_today_usergain}</em>
+                    </p>
+                    <p class="font">
+                        昨日付款总额 <em>{$sum_yesterday_ispay}</em>
+                    </p>
+                    <p class="font">
+                        昨日用户收入<em>{$sum_yesterday_usergain}</em>
+                    </p>
+                </div>
+            </li>
+            <li class="item item_04">
+                <div class="li_t clearfix">
+                    <div class="left fl">
+                        <img src="{$images}/icon_69.png" alt="" class="icon"/>
+                        <p class="fz">今日提现总额（元）</p>
+                    </div>
+                    <div class="right fr">
+                        <em class="num">{$sum_today_isuser}</em>
+                    </div>
+                </div>
+                <div class="li_b">
+                    <p class="font">
+                        昨日提现总额 <em>{$sum_yesterday_isuser}</em>
+                    </p>
+                    <p class="font">
+                        今日结算总额 <em>{$sum_today_isst}</em>
+                    </p>
+                    <p class="font">
+                        昨日结算总额<em>{$sum_yesterday_isst}</em>
+                    </p>
+                </div>
+            </li>
+        </div>
+        <div class="idx_bottom clearfix">
+            <li class="item fl">
+                <h5 class="title">
+                    实时数据分析<em class="icon fr"></em>
+                </h5>
+                <div class="box">
+                    <ul class="zst">
+                        <li>
+                            <div style="background:rgb(47, 126, 216)"></div>
+                            付款总额
+                        </li>
+                        <li>
+                            <div style="background:rgb(13, 35, 58)"></div>
+                            结算总额
+                        </li>
+                    </ul>
+                    <div id="container3" style="width:600px;height:300px;margin:0 auto"></div>
+                </div>
+            </li>
+            <li class="item fr">
+                <h5 class="title">
+                    通道分析<em class="icon fr"></em>
+                </h5>
+                <div class="box">
+                    <div id="my_container">
+                        <div class="td">通道分析</div>
+                        <canvas id="pie_canvas"></canvas>
+                        <ul class="sj">
+                            <li>
+                                <div style="background:#706acb"></div>
+                                微信扫码
+                            </li>
+                            <li>
+                                <div style="background:#08c5dd"></div>
+                                微信wap/微信公众号
+                            </li>
+                            <li>
+                                <div style="background:#ffb726"></div>
+                                支付宝
+                            </li>
+                            <li>
+                                <div style="background:#991cf5"></div>
+                                支付宝wap
+                            </li>
+                            <li>
+                                <div style="background:#f5506c"></div>
+                                京东支付/QQ扫码/财付通
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </div>
+    </div>
+</div>
+<script type="text/javascript"  src="{$js}/common.js"></script>
+{include file="common/footer" /}
+

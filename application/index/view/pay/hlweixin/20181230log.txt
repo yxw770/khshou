@@ -1,0 +1,17 @@
+
+ 请求结果：{"status":"200","data":{"order_id":"20181230205634485674","trade_amount":10,"attach":"","out_trade_id":"14FCA48B09C1BE61","QRCodeUrl":"weixin:\/\/wxpay\/bizpayurl?pr=eUuWiYn","type":"qrcode"},"msg":"\u8bf7\u6c42\u6210\u529f"}
+ 请求结果：{"status":"error","msg":"订单号重复","data":{"orderid":"14FCA48B09C1BE61"}}
+ 请求结果：{"status":"200","data":{"order_id":"20181230205911949466","trade_amount":10,"attach":"","out_trade_id":"C9B39DFFDCDCDBC5","QRCodeUrl":"weixin:\/\/wxpay\/bizpayurl?pr=l197zsp","type":"qrcode"},"msg":"\u8bf7\u6c42\u6210\u529f"}
+ 请求结果：{"status":"error","msg":"订单号重复","data":{"orderid":"C9B39DFFDCDCDBC5"}}
+ 请求结果：{"status":"error","msg":"订单号重复","data":{"orderid":"c9b39dffdcdcdbc5"}}
+ 请求结果：{"status":"200","data":{"order_id":"20181230212444499912","trade_amount":10,"attach":"","out_trade_id":"7E5A20BD107A9B3F","QRCodeUrl":"weixin:\/\/wxpay\/bizpayurl?pr=LV0CQax","type":"qrcode"},"msg":"\u8bf7\u6c42\u6210\u529f"}
+ 请求结果：{"status":"error","msg":"订单号重复","data":{"orderid":"7E5A20BD107A9B3F"}}
+ 请求结果：{"status":"error","msg":"订单号重复","data":{"orderid":"7e5a20bd107a9b3f"}}
+ 请求结果：{"status":"200","data":{"order_id":"20181230213734999762","trade_amount":10,"attach":"","out_trade_id":"0D43C94FDCD40756","QRCodeUrl":"weixin:\/\/wxpay\/bizpayurl?pr=VjSwu9G","type":"qrcode"},"msg":"\u8bf7\u6c42\u6210\u529f"}
+ 请求结果：{"status":"error","msg":"订单号重复","data":{"orderid":"0D43C94FDCD40756"}}
+ 请求结果：{"status":"200","data":{"order_id":"20181230213855997524","trade_amount":10,"attach":"","out_trade_id":"A6EEB31A2E409243","QRCodeUrl":"weixin:\/\/wxpay\/bizpayurl?pr=e2hMPem","type":"qrcode"},"msg":"\u8bf7\u6c42\u6210\u529f"}
+ 请求结果：{"status":"error","msg":"订单号重复","data":{"orderid":"A6EEB31A2E409243"}}
+ 请求结果：{"status":"200","data":{"order_id":"20181230221627519868","trade_amount":0.01,"attach":"","out_trade_id":"CD3DCEF5443977CA","QRCodeUrl":"weixin:\/\/wxpay\/bizpayurl?pr=7LDJwbN","type":"qrcode"},"msg":"\u8bf7\u6c42\u6210\u529f"}
+ 请求结果：{"status":"error","msg":"订单号重复","data":{"orderid":"CD3DCEF5443977CA"}}
+ 请求结果：{"status":"200","data":{"order_id":"20181230221858561017","trade_amount":0.01,"attach":"","out_trade_id":"67A3C5B9354A943F","QRCodeUrl":"weixin:\/\/wxpay\/bizpayurl?pr=ykjXEWx","type":"qrcode"},"msg":"\u8bf7\u6c42\u6210\u529f"}
+ 请求结果：{"status":"error","msg":"订单号重复","data":{"orderid":"67A3C5B9354A943F"}}

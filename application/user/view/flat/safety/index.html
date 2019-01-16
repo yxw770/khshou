@@ -1,0 +1,127 @@
+{include file="common/header" /}
+<link rel="stylesheet" href="{$css}/style.css">
+<link rel="stylesheet" href="{$css}/page.css">
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<section class="box-right">
+    <div class="Journal clear">
+        <div class="jrl-title">修改密码</div>
+        <form class="form-horizontal" role="form" action="" method="post" id="ajaxform">
+            <div class="form-group2 clear">
+                <label class="col-md-2 control-label">旧密码</label>
+                <div class="col-md-10">
+                    <input name="old_password" type="text" class="form-control"  minlength="6" maxlength="20" value="">
+                </div>
+            </div>
+            <div class="form-group2 clear">
+                <label class="col-md-2 control-label">新密码</label>
+                <div class="col-md-10">
+                    <input name="password" type="text" class="form-control" minlength="6" maxlength="20" value="">
+                </div>
+            </div>
+            <div class="form-group2 clear">
+                <label class="col-md-2 control-label">确认新密码</label>
+                <div class="col-md-10">
+                    <input name="confirm_password" type="text" class="form-control" minlength="6" maxlength="20" value="">
+                </div>
+            </div>
+            <div class="form-group2 clear">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <button type="button" onclick="submitform();return false;" class="btn btn-purple1 waves-effect waves-light">保存设置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+<script>
+    function submitform() {
+        var old_password = $('input[name="old_password"]').val();
+        var password = $('input[name="password"]').val();
+        var confirm_password = $('input[name="confirm_password"]').val();
+        if(old_password=='') {
+            layer.msg('请输入原密码', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="old_password"]').focus();
+            return false;
+        }
+        if(old_password.length<6) {
+            layer.msg('原密码至少6位', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="old_password"]').focus();
+            return false;
+        }
+        if(password=='') {
+            layer.msg('请输入新密码', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="password"]').focus();
+            return false;
+        }
+        if(password.length<6) {
+            layer.msg('新密码至少6位', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="password"]').focus();
+            return false;
+        }
+        if(confirm_password=='') {
+            layer.msg('请输入确认新密码', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="confirm_password"]').focus();
+            return false;
+        }
+        if(confirm_password.length<6) {
+            layer.msg('确认新密码至少6位', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="confirm_password"]').focus();
+            return false;
+        }
+        if(password!=confirm_password) {
+            layer.msg('新密码输入和确认新密码不一致', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="confirm_password"]').focus();
+            return false;
+        }
+        $.post(
+            "{:url('safety/retsave')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                data = eval("(" + data + ")");
+                // console.log(data);
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.reload();
+                        // window.location.href = "{:url('/login')}";
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}

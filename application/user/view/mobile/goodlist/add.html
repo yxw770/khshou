@@ -1,0 +1,125 @@
+{include file="common/header" /}
+<body>
+<!-- 顶部 -->
+<!--部分页面top后面有style样式添加-->
+<div class="top" style="padding-bottom: 0">
+    <div class="top_con">
+        <span>添加新商品</span>
+        <a class="back" onclick="history.go(-1)"><img src="{$images}/back.png" width="7" height="11"></a>
+        <a class="user_name"><i class="iconfont icon-mine"></i></a>
+    </div>
+</div><div class="list_bg">
+    <form action="{:url('goodlist/addsave')}" method="post" id="ajaxform" class="clearfix">
+        <table border="0" cellspacing="0" cellpadding="0" class="tab1">
+            <tbody><tr>
+                <td>商品分类</td>
+                <td>
+                    <select name="cateid">
+                        {volist name="cate_arr" id="vo"}
+                        <option value="{$vo.goodcateid}">{$vo.catename}</option>
+                        {/volist}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>页面风格</td>
+                <td>
+                    <select name="paytheme">
+                        <?php foreach($paytheme_arr as $k => $v): ?>
+                        <option value="{$k}">{$v}</option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>商品排序</td>
+                <td><input type="text" placeholder="数字越小越靠前！" name="sortid" value="1"></td>
+            </tr>
+            <tr>
+                <td>商品名称</td>
+                <td><input type="text" placeholder="好的名字有利于销售哦！[必填]" name="goodname" value=""></td>
+            </tr>
+            <tr>
+                <td>销售价格</td>
+                <td><input type="text" placeholder="商品对外出售的价格即零售价格！[必填]" name="price" value=""></td>
+            </tr>
+            <tr>
+                <td>批发优惠</td>
+                <td>
+                    <label><input type="radio" name="is_wholesale" value="1" id="shiyong" >使用</label>
+                    <label class="checked"><input type="radio" name="is_wholesale" value="0" id="bushiyong" checked >不使用</label>
+                </td>
+            </tr>
+            <tr id="shiyong_out" style="display:none">
+                <td></td>
+                <td>
+                    <a class="add_btn"><i class="fa fa-plus-circle"></i> 添加优惠</a>
+                </td>
+            </tr>
+            <tr>
+                <td>成本价格</td>
+                <td><input name="cost" type="text" placeholder="单位(元)"></td>
+            </tr>
+            <tr>
+                <td>起购数量</td>
+                <td><input name="low_limit" type="text" placeholder="单位(件)" value="1"></td>
+            </tr>
+            <tr>
+                <td>优惠券</td>
+                <td><label><input name="is_coupon" type="radio" value="1">支持</label> <label class="checked"><input name="is_coupon" type="radio" value="0" checked>不支持</label></td>
+            </tr>
+            <tr>
+                <td>提卡密码</td>
+                <td><label class="checked"><input name="psd_limit" type="radio" value="0" checked="">关闭</label> <label><input name="psd_limit" type="radio" value="1">必填</label> <label><input name="psd_limit" type="radio" value="2">选填</label></td>
+            </tr>
+            <tr>
+                <td>客户信息</td>
+                <td>
+                    <select name="contact_limit">
+                        <?php foreach($contact_limit_arr as $k => $v): ?>
+                        <option value="{$k}">{$v}</option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>商品说明</td>
+                <td><textarea name="remark" cols="" rows="" placeholder="商品说明将显示在商品购买页面，一般填写商品特点等信息"></textarea></td>
+            </tr>
+            <tr>
+                <td>使用说明</td>
+                <td><textarea name="instrucation" cols="" rows="" placeholder="使用说明将显示在订单查询结果中，一般填写使用方法、售后QQ群或者下载地址等信息"></textarea></td>
+            </tr>
+            </tbody>
+        </table>
+        <button class="btn2" onclick="submitform();return false;">确认提交</button>
+    </form>
+</div>
+<script>
+    function submitform() {
+        $.post(
+            "{:url('goodlist/addsave')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.href = "{:url('goodlist/index')}";
+                        // window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}

@@ -1,0 +1,27 @@
+<?php
+define('APP_PATH_INDEX', (dirname(__DIR__)) . '/application/index/view/');
+define('APP_PATH_USER', (dirname(__DIR__)) . '/application/user/view/');
+define('APP_PATH_ADMIN', (dirname(__DIR__)) . '/application/admin/view/');
+define('WX_LOG', (dirname(__DIR__)) . '/application/wx/log/');
+define('test_index', APP_PATH . 'index/view/');
+define('userpass_token', 'fspmxue8g354z4ooz19');
+define('usertoken_token', 'qeejlqds5yhpqhui6c2');
+define('usercard_token', 'wtz85idxxmz9gyruhv7');
+define('adminpass_token', 'p88ahdcfa53noaser0a');
+define('admintoken_token', 'n51xvwkk0mbjkfjohvx');
+define('admincard_token', 'd93oeunk5porfsp0mmw');
+define('urlRoot', 'adminoperat');
+$qttheme = serialize(array('flat' => '扁平化风格',));
+define('qttheme', $qttheme);
+$usertheme_arr = serialize(array('monarch' => 'Monarch', 'flat' => '扁平化风格',));
+define('usertheme_arr', $usertheme_arr);
+$contact_limit_arr = serialize(array('0' => '任意字符', '1' => 'QQ号', '2' => '手机号',));
+define('contact_limit_arr', $contact_limit_arr);
+$paytheme_arr = serialize(array('default' => '默认页面', 'wing' => '隐形的翅膀', 'Battlegrounds' => '绝地逃生', 'xcdefault' => '清新风格', 'nishuihan' => '逆水寒',));
+define('paytheme_arr', $paytheme_arr);
+$viewlimit = serialize(array('00' => 'Accessinfo', '10' => 'Arccat', '20' => 'Arclist', '30' => 'Busanalysis', '40' => 'Channel', '50' => 'Channelanalysis', '60' => 'Goodslist', '70' => 'Index', '80' => 'Log', '90' => 'Orderlist', '100' => 'Paychannel', '110' => 'Psd', '120' => 'Set', '130' => 'Settlement', '131' => 'DlSettlement', '140' => 'Settlementlog', '150' => 'Settlementsum', '160' => 'Timedata', '170' => 'Tousu', '180' => 'Ulist', '190' => 'Userlist', '200' => 'Userloglist', '210' => 'Userpaylist', '220' => 'Withdraw',));
+define('viewlimit', $viewlimit);
+$viewlimit_json = serialize(array('Accessinfo' => '接入商信息', 'Arccat' => '文章分类', 'Arclist' => '文章列表', 'Busanalysis' => '商户分析', 'Channel' => '通道列表', 'Channelanalysis' => '通道分析', 'Goodslist' => '商品管理', 'Index' => '首页', 'Log' => '登陆日志', 'Orderlist' => '订单管理', 'Psd' => '修改密码', 'Set' => '系统设置', 'Settlement' => '商户结算', 'DlSettlement' => '代理结算', 'Settlementlog' => '结算记录', 'Settlementsum' => '结算统计', 'Timedata' => '实时数据', 'Tousu' => '投诉举报', 'Ulist' => '管理员列表', 'Userlist' => '用户列表', 'Userloglist' => '用户日志', 'Userpaylist' => '接入信息', 'Withdraw' => '用户提现',));
+define('viewlimit_json', $viewlimit_json);
+$dwz_arr = serialize(array('suoim' => 'suo.im', 'ft12' => 'ft12.com', 'weibo' => 'weibo',));
+define('dwz_arr', $dwz_arr);

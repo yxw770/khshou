@@ -1,0 +1,80 @@
+<!--<link href="{$css}/main8621.css" rel="stylesheet">-->
+<script src="{$js}/jquery-2.2.1.min.js"></script>
+<script src="{$layer}/layer.js"></script>
+<script src="{$open}/clipboard.min.js"></script>
+
+<style>
+    *{
+        margin:0;padding:0;border:0;font-weight:normal;vertical-align:baseline;background:transparent;
+    }
+    /*顶部显示圆角显示*/
+    #layui-layer-iframe2{
+        border-radius: 6px;
+
+    }
+    .infoDetail-modal .title {
+        border-bottom: 1px solid #e8e8e8;
+        background: #fff;
+        padding: 0 15px 0 18px;
+        line-height: 55px;
+    }
+    .infoDetail-modal .title .close {
+        width: 12px;
+        height: 12px;
+        background: url({$images}/close.png) no-repeat 50% 50%;
+        top: 24px;
+        cursor: pointer;
+        right: 15px;
+        position: absolute;
+    }
+    .infoDetail-modal.kami-modal .info {
+        padding: 20px;
+    }
+    .infoDetail-modal .info p input {
+        color: #ff7f00;
+        width: 285px;
+    }
+    .copy_btn {
+        cursor: pointer;
+    }
+</style>
+<div class="infoDetail-modal kami-modal modal j-kamiModal">
+    <div class="title">查看卡密
+        <span class="close" onclick="back_url()"></span>
+
+    </div>
+    <div class="info">
+        {volist name="list" id="vo"}
+        <p>
+            卡密：<a style="color: #ff7f00;" id="a{$i}">{$vo.cardnumber} {$vo.cardpassword}</a>
+            <!--<input type="text" id="#a1" value="{$vo.cardnumber} {$vo.cardpassword}">-->
+            <span class="copy_btn" data-clipboard-action="copy" data-clipboard-target="#a{$i}">一键复制</span>
+        </p>
+        {/volist}
+    </div>
+</div>
+<script>
+    $(function () {
+        var clipboard = new Clipboard('.copy_btn');
+
+        clipboard.on('success', function (e) {
+            // console.log(e);
+            layer.msg('复制成功', {icon: 6, time: 2000});
+        });
+
+        clipboard.on('error', function (e) {
+            // console.log(e);
+            layer.msg('复制失败', {icon: 6, time: 2000});
+        });
+
+    });
+</script>
+<script>
+    /*
+     * 关闭窗口
+     */
+    function back_url() {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    }
+</script>

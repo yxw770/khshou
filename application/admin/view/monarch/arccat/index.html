@@ -1,0 +1,76 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<link rel="stylesheet" href="{$flag}/font-awesome.min.css">
+<style>
+    .icon{
+        text-align: center;
+    }
+</style>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<div class="main auto">
+    <div class="main_wrap">
+        <div class="m_top clearfix">
+            <a href="javascript:;" class="build_cat" id="buildCatButton" onclick="showContent('新建分类','{:url('arccat/add')}','420px','210px')">+ 新建分类</a>
+        </div>
+        <div class="m_content">
+            <table class="pub_table">
+                <thead>
+                <th width="30%">分类ID</th>
+                <th width="30%">分类名称</th>
+                <th width="30%">操作</th>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td>{$vo.articlecateid}</td>
+                    <td>{$vo.catename}</td>
+                    <td>
+                        <a href="javascript:;" class="icon edit" onclick="showContent('编辑分类','{:url('arccat/edit','articlecateid='.$vo.articlecateid)}','420px','210px')"></a>
+                        <a href="javascript:;" class="icon delete" onclick="del({$vo.articlecateid})"></a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {$page}
+</div>
+<script>
+    function del(articlecateid) {
+        $.post(
+            "{:url('arccat/del')}",
+            {
+                articlecateid:articlecateid
+            },
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+
+<script>
+    layui.use(['form'], function () {
+    });
+</script>
+{include file="common/footer" /}

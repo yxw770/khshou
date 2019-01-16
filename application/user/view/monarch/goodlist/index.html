@@ -1,0 +1,151 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+
+<div class="main clearfix">
+    {include file="common/left_nav" /}
+
+    <div class="container goodlist scroll">
+        <div class="box init b1">
+            <div class="title">商品管理
+                <span>Commodity management</span></div>
+            <div class="table">
+                <div class="bar">
+                    <form action="" method="get">
+                        <select name="cateid">
+                            <option value="">全部分类</option>
+                            {volist name="cate_arr" id="vo"}
+                            <option value="{$vo.goodcateid}" {:input('cateid')==$vo.goodcateid?"selected":'';}>{$vo.catename}</option>
+                            {/volist}
+                        </select>
+                        <button class="btn1">
+                            <i class="xcFont ico-search"></i>查询商品
+                        </button>
+                        <button class="btn2" type="button" onclick='window.location.href="{:url('goodlist/add')}"'>
+                            <i class="xcFont ico-add"></i>添加商品
+                        </button>
+                        <input type="hidden" name="do" value="search">
+                    </form>
+                </div>
+                <table>
+                    <thead>
+                    <td style="text-align: left">商品名称</td>
+                    <td>商品价格</td>
+                    <td>库存卡</td>
+                    <td>已卖出</td>
+                    <td>商品管理</td></thead>
+                    <tbody>
+                    {volist name="list" id="vo"}
+                    <tr>
+                        <td style="text-align: left">{$vo.goodname}</td>
+                        <td>￥{$vo.price}</td>
+                        <td>
+                            <a href="{:url('/kamilist')}?goodlistid={$vo.goodlistid}&do=search" class="orange">{$vo.count_onsell_kami}张</a>
+                            <a href="{:url('/kamilist')}?goodlistid={$vo.goodlistid}&do=search">查看</a></td>
+                        <td>
+                            <a href="{:url('/sold')}?goodlistid={$vo.goodlistid}&ktype=order&keyword=&do=search" class="orange">{$vo.count_selled_kami}张</a>
+                            <a href="{:url('/sold')}?goodlistid={$vo.goodlistid}&ktype=order&keyword=&do=search">查看</a></td>
+                        <td>
+                            {if $vo.is_state=='1'}
+                            <a onclick="togglestate({$vo.goodlistid},'0')" class="blue" style="cursor: pointer;">上架中</a>
+                            {else/}
+                            <a onclick="togglestate({$vo.goodlistid},'1')" class="red" style="cursor: pointer;">已下架</a>
+                            {/if}
+                            <a class="orange" onclick="showContent('分类链接','{:url('goodlist/link','goodlistid='.$vo.goodlistid)}','900px','289px')" style="cursor: pointer;">链接</a>
+                            <a href="{:url('kami/add','goodlistid='.$vo.goodlistid)}">加卡</a>
+                            <a href="{:url('goodlist/edit','goodlistid='.$vo.goodlistid)}">修改商品</a>
+                            <a href="javascript:;" onclick="del('{$vo.goodlistid}');return false;">删除商品</a></td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+
+                <div class="pagination">
+                    {$page}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    function submitform() {
+        // var test = $("#ajaxform").serialize();
+        $.post(
+            "{:url('cate/add')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+
+    function togglestate(id,is_state) {
+        $.post(
+            "{:url('goodlist/togglestate')}",
+            {
+                goodlistid: id,
+                is_state: is_state,
+            },
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg('操作成功', {time: 1000, icon: 6});
+                    // $('#record_'+id).fadeOut();
+                    parent.location.reload();
+                } else {
+                    layer.msg('操作失败', {time: 1000, icon: 5});
+                }
+            }
+            ,"json"
+        );
+    }
+
+</script>
+<script>
+    function del(id) {
+        $.post(
+            "{:url('goodlist/del')}",
+            {goodlistid:id},
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}

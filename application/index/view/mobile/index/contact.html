@@ -1,0 +1,180 @@
+{include file="common/header" /}
+	<body>
+	<div class="top_bg">
+		{include file="common/orhter_top_nav" /}
+	</div>
+		<style>
+			.contact_list {
+				margin-bottom: 40px;
+				padding-bottom: 40px;
+				border-bottom: 1px dashed #eee
+			}
+			
+			.contact_list li {
+				float: left;
+				width: 33.3%;
+				text-align: center
+			}
+			
+			.contact_list li a {
+				cursor: text;
+				display: inline-block;
+				padding: 0 15px;
+				height: 40px;
+				border: 1px solid #eee;
+				background: #f8f8f8;
+				color: #666;
+				font-weight: 700;
+				font-size: 18px;
+				font-family: Arial;
+				line-height: 40px
+			}
+			
+			.contact_list li p {
+				margin: 20px 0 0 0;
+				font-size: 14px;
+				line-height: 30px
+			}
+			
+			@media (max-width:800px) {
+				.contact_list li {
+					float: none;
+					margin-top: 40px;
+					width: 100%
+				}
+			}
+		</style>
+		<div class="banner_bg">
+			<div class="container">
+				<h3>联系我们 <span class="mobile_hide">/ Contact</span></h3></div>
+		</div>
+		<div class="main_box" style="box-shadow: 0 0 40px #f5f6f9">
+			<div class="contact_list">
+				<ul>
+					<li>
+						<div class="title1">客服QQ
+							<div class="title_line"></div>
+						</div>
+						<a>{$qtarr.qq}</a>
+						<p><b>服务时间：</b>8:30 ~ 23:00<br><b>服务类型：</b>投诉、接待、查单、审核</p>
+					</li>
+					<li>
+						<div class="title1">客服电话
+							<div class="title_line"></div>
+						</div>
+						<a>{$qtarr.tel}</a>
+						<p><b>服务时间：</b>8:30 ~ 23:00<br><b>服务类型：</b>投诉、接待、商务</p>
+					</li>
+					<li>
+						<div class="title1">公司地址
+							<div class="title_line"></div>
+						</div>
+						<a>{$qtarr.address}</a>
+					</li>
+				</ul>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<style media="screen">
+			@media (max-width: 800px) {
+				.right_fix {
+					display: none;
+				}
+			}
+			
+			.right_fix {
+				position: fixed;
+				right: 2px;
+				height: 42px;
+				width: 42px;
+				line-height: 42px;
+				font-size: 12px;
+				text-align: center;
+				border-radius: 4px;
+				color: #fff;
+				background: rgba(51, 51, 79, .3);
+				z-index: 1001;
+				cursor: pointer;
+				transition: .2s
+			}
+			
+			.right_fix i {
+				font-size: 28px
+			}
+			
+			.right_fix:hover {
+				background: rgba(100, 143, 247, .9)
+			}
+			
+			.tel_fix {
+				bottom: 105px;
+				overflow: hidden;
+				font-size: 16px
+			}
+			
+			.tel_fix img {
+				margin: 0 10px
+			}
+			
+			.tel_fix:hover {
+				width: auto;
+				padding-right: 10px
+			}
+			
+			.qq_fix {
+				bottom: 150px;
+				overflow: hidden;
+				font-size: 16px
+			}
+			
+			.qq_fix img {
+				margin: 0 10px
+			}
+			
+			.qq_fix:hover {
+				width: auto;
+				padding-right: 10px
+			}
+			
+			.wx_fix {
+				bottom: 195px
+			}
+			
+			.ewm_show {
+				display: none;
+				position: absolute;
+				left: -330px;
+				top: 0;
+				width: 300px;
+				padding: 15px;
+				line-height: 24px;
+				text-align: right;
+				background: #fff;
+				color: #33334f;
+				box-shadow: 0 1px 4px rgba(0, 0, 0, .14)
+			}
+			
+			.ewm_show img {
+				float: left
+			}
+			
+			.ewm_show span {
+				float: right
+			}
+			
+			.ewm_show span h3 {
+				font-size: 18px;
+				margin-bottom: 20px
+			}
+			
+			.ewm_show span p {
+				font-size: 12px;
+				line-height: 24px;
+				color: rgba(51, 51, 79, .6)
+			}
+		</style>
+		<!--底部 pc-->
+	{include file="common/footer" /}
+	</div>
+</div>
+{include file="common/footer_mobile" /}

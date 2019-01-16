@@ -1,0 +1,70 @@
+{include file="common/header" /}
+<body>
+{include file="common/top_nav" /}
+
+<div class="main clearfix">
+    {include file="common/left_nav" /}
+    <div class="container complaint scroll">
+        <div class="box init b1">
+            <div class="title">投诉管理<span>Complaint management </span>
+                <span class="tip">{$sitename}非常在乎您的诚信经营，如果有用户投诉您，请您积极与买家进行联系，处理问题。如拖延、拒绝解决用户投诉，我们将严肃处理！</span>
+            </div>
+            <div class="table">
+                <table>
+                    <thead>
+                    <tr>
+                        <td>投诉订单</td>
+                        <td>投诉原因</td>
+                        <td>投诉内容</td>
+                        <td>联系方式</td>
+                        <td>投诉时间</td>
+                        <td>投诉状态</td>
+                        <td>处理结果</td>
+                        <td>查看详情</td>
+                        <!--<td>操作</td>-->
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="list" id="vo"}
+                    <tr>
+                        <td>{$vo.report_orderid}</td>
+                        <td>{$vo.report_type}</td>
+                        <td>{$vo.maijia_contact}</td>
+                        <td>{$vo.maijia_telephone}</td>
+                        <td>{$vo.report_creattime}</td>
+
+                        {if $vo.report_status=='1'}
+                        <td><span class="done">投诉结束</span></td>
+                        {elseif $vo.report_status=='2'}
+                        <td><span style="display:inline-block;padding:0 10px;height:24px;border-radius:4px;text-align:center;color:#fff;line-height:24px;background:#0EC879;">平台客服介入处理</span></td>
+                        {else}
+                        <td><span class="todo">买家卖家交流期限</span></td>
+                        {/if}
+
+                        {if $vo.result_status=='1'}
+                        <td><span class="done">支持买家</span></td>
+                        {elseif $vo.result_status=='2'}
+                        <td><span style="display:inline-block;padding:0 10px;height:24px;border-radius:4px;text-align:center;color:#fff;line-height:24px;background:#0EC879;">支持卖家</span></td>
+                        {else}
+                        <td><span class="todo">正在处理</span></td>
+                        {/if}
+
+                        <td><a href="javascript:void(0);" class="blue" onclick="layer.msg({$vo.maijia_remark},{time:5000})">查看</a></td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    {$page}
+
+                </div>
+                <div class="none-box">
+                    <img src="{$images}/award488c.png" alt="">
+                    <p>{$count>0?'您有'.$count.'笔投诉需要处理':'暂无客户投诉'}<br>{$sitename}感谢您的诚信经营！</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{$js}/main8f91.js"></script><script type="text/javascript" src="{$js}/settle8f91.js"></script></body>

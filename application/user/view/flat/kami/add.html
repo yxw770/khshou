@@ -1,0 +1,150 @@
+{include file="common/header" /}
+<script src="{$js}/bootstrap.min.js"></script>
+
+<link href="{$css}/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="{$css}/core.css" rel="stylesheet" type="text/css">
+<link href="{$css}/menu.css" rel="stylesheet" type="text/css">
+<link href="{$css}/nav.css" rel="stylesheet">
+<link href="{$css}/dropify.min.css" rel="stylesheet" type="text/css">
+
+<script src="{$js}/dropify.min.js"></script>
+<body class="fixed-left widescreen">
+<div id="wrapper">
+    {include file="common/top_nav" /}
+    {include file="common/left_nav" /}
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="content-page">
+        <!-- Start content -->
+        <div class="content">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card-box">
+                            <div class="add-title clear">
+                                添加虚拟卡
+                            </div>
+                            <div class="row">
+                                <form id="ajaxform" class="form-horizontal" role="form" action="{:url('kami/addsave')}" method="post" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">选择商品</label>
+                                        <div class="col-md-4">
+                                            <select name="goodlistid" class="form-control">
+                                                {volist name="goodlist_arr" id="vo"}
+                                                <option value="{$vo.goodlistid}" {:input('goodlistid')==$vo.goodlistid?"selected":'';}>{$vo.goodname}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">导入方式</label>
+                                        <div class="col-md-4">
+                                            <div class="radio radio-primary radio-inline">
+                                                <input type="radio" name="ktype" id="import_type1" value="input" checked="">
+                                                <label for="import_type1">
+                                                    手动输入
+                                                </label>
+                                            </div>
+                                            <div class="radio radio-primary radio-inline">
+                                                <input type="radio" name="ktype" id="import_type2" value="txt">
+                                                <label for="import_type2">
+                                                    TXT文件导入
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        $('#import_type1').click(function () {
+                                            $('.import_type_1').show();
+                                            $('.import_type_2').hide();
+                                        });
+                                        $('#import_type2').click(function () {
+                                            $('.import_type_2').show();
+                                            $('.import_type_1').hide();
+                                        });
+                                    </script>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">格式演示</label>
+                                        <div class="col-md-4">
+                                            <p class="form-control-static">AAAAAAAAAAA<span class="card_split" style="color:red"> </span>BBBBBBBBBBBB</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group import_type_1">
+                                        <label class="col-md-2 control-label">虚拟卡内容</label>
+                                        <div class="col-md-4">
+                                            <textarea name="kami" placeholder="" class="form-control" cols="30" rows="10"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group import_type_2" style="display:none">
+                                        <label class="col-md-2 control-label">虚拟卡内容</label>
+                                        <div class="col-md-4">
+                                            <input type="file" accept="text/plain" name="uploadfile" class="dropify" data-max-file-size="2000K">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label"></label>
+                                        <div class="col-md-4">
+                                            <button type="button" onclick="submitform();return false;" class="btn btn-purple waves-effect waves-light" id="clikck_submit">执行导入</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- container -->
+        </div>
+        <!-- content -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Right content here -->
+    <!-- ============================================================== -->
+</div>
+<!-- END wrapper -->
+<script>
+    function submitform() {
+        // var ajax_data = new FormData($("#ajaxform"));
+        // var ajax_data = new FormData(document.querySelector("form"));
+        var ajax_data = new FormData(document.getElementById("ajaxform"));
+        var goodlistid = $('[name="goodlistid"]').val();
+
+        $.ajax({
+            type: "POST",
+            url: "{:url('kami/addsave')}",
+            data: ajax_data,
+            processData: false,  // 不处理数据
+            contentType: false,   // 不设置内容类型
+            // dataType: "json",
+            //5.获取数 据
+            error: function (res) {
+                console.log("发送失败");
+                console.log(res);
+            },
+            success: function (data) {
+                console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.href = "{:url('/kamilist')}?goodlistid="+goodlistid+"&do=search";
+                        // window.location.href = "{:url('/kamilist')}";
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+        });
+    }
+</script>
+{include file="common/footer" /}

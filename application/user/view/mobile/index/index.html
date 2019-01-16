@@ -1,0 +1,48 @@
+{include file="common/header" /}
+<body>
+<div class="main">
+    <!-- 顶部 -->
+    <div class="top">
+        <div class="top_con top1">
+            <a href="{:url('/')}" class="logo">账户信息</a><a class="user_name"><i class="iconfont icon-mine"></i></a>
+            <div id="clear"></div>
+        </div>
+        <div class="top_con top2">
+            <span>{$unpaied_payment}</span><br>账户金额 (元)
+        </div>
+        <!-- 收益成交 -->
+        <div class="top_box">
+            <ul>
+                <li style="border-right:1px solid #edf2fa;width: calc(50% - 1px)"><span>今日成交 (元)</span><br>{$today_paymoney}</li>
+                <li style="width: calc(50% - 1px)"><span>今日成交订单 (笔)</span><br>{$today_buylist_count}</li>
+                <div id="clear"></div>
+            </ul>
+        </div>
+    </div>
+    <!-- 功能导航 -->
+    <div class="menu_bg">
+        <p>商品管理</p>
+        <ul>
+            <li><a href="{:url('goodlist/add')}"><i class="iconfont icon-service_fill" style="color: #f17d83"></i><br>添加商品</a></li>
+            <li><a href="{:url('/goodlist')}"><i class="iconfont icon-createtask_fill"></i><br>商品列表</a></li>
+            <li><a href="{:url('kami/add')}"><i class="iconfont icon-unlock_fill" style="color: #f17d83"></i><br>添加卡密</a></li>
+            <li><a href="{:url('/kamilist')}"><i class="iconfont icon-barrage_fill"></i><br>库存卡密</a></li>
+            <li><a href="{:url('/cate')}"><i class="iconfont icon-coupons_fill"></i><br>商品分类</a></li>
+            <li><a href="{:url('/shop')}"><i class="iconfont icon-coordinates_fill"></i><br>店铺链接</a></li>
+        </ul>
+        <div id="clear"></div>
+    </div>
+    <div class="menu_bg">
+        <p>交易管理</p>
+        <ul>
+            <li><a href="{:url('/sold')}"><i class="iconfont icon-task_fill"></i><br>最近卖出</a></li>
+            <li><a href="{:url('/order')}"><i class="iconfont icon-activity_fill"></i><br>订单记录</a></li>
+            <li><a href="{:url('/payway')}"><i class="iconfont icon-share_fill"></i><br>费率查询</a></li>
+            <li><a href="{:url('/complain')}"><i class="iconfont icon-remind_fill"></i><br>投诉管理</a></li>
+            <li><a href="{:url('/income')}"><i class="iconfont icon-dynamic_fill"></i><br>收益统计</a></li>
+            <li><a href="{:url('/withdraw')}"><i class="iconfont icon-financial_fill" style="color: #f17d83"></i><br>申请提现</a></li>
+        </ul>
+        <div id="clear"></div>
+    </div>
+</div>
+{include file="common/footer" /}

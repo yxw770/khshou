@@ -1,0 +1,223 @@
+<!--<link rel="stylesheet" href="{$flag}/font-awesome.min.css">-->
+<!--<link rel="stylesheet" href="{$flag}/layeropen.css?v=1">-->
+<link rel="stylesheet" href="{$layui}/css/layui.css">
+
+
+<script src="{$js}/jquery-2.2.1.min.js"></script>
+<script src="{$layer}/layer.js"></script>
+<script src="{$layui}/layui.js" charset="utf-8"></script>
+
+
+<style>
+    /**{*/
+        /*margin:0;padding:0;border:0;font-weight:normal;vertical-align:baseline;background:transparent;*/
+    /*}*/
+
+    body{
+        overflow-y: hidden;
+    }
+    /*顶部显示圆角显示*/
+    #layui-layer-iframe2{
+        border-radius: 6px;
+
+    }
+    .t_title {
+        font-size: 20px;
+        color: #333333;
+        text-align: center;
+        line-height: 48px;
+        border-bottom: 1px solid #ddd;
+    }
+    .clearfix{*zoom: 1;}
+    .clearfix:before,.clearfix:after
+    {display: table;line-height: 0;content: "";}
+    .clearfix:after{clear: both;}
+    .detail {
+        /*height: 370px;*/
+        overflow-y: hidden;
+        padding: 0;
+    }
+    body, input, h1, h2, h3, h4, h5, h6, p, textarea, table, div, ul, li, select {
+        font-family: Microsoft YaHei;
+        margin: 0;
+        padding: 0;
+        color: inherit;
+        line-height: 1;
+    }
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+    }
+    .pub_table th:first-child {
+        padding-left: 20px;
+    }
+    .pub_table th {
+        font-size: 14px;
+        color: #585962;
+        line-height: 55px;
+        background: #f4f3f8;
+        text-align: left;
+    }
+    .pop_divide .pub_table td:first-child {
+        padding-left: 20px;
+    }
+    .pop_divide .pub_table td {
+        padding: 10px 0;
+        line-height: initial;
+    }
+    .pub_table td {
+        font-size: 14px;
+        color: #6d7070;
+        padding: 12px 0;
+        line-height: 32px;
+    }
+    .pop_divide .ipt_txt {
+        width: 75px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0;
+        text-align: center;
+    }
+    .pop_form .ipt {
+        border: 1px solid #ddd;
+    }
+    .pop_divide .pop_select {
+        width: 65px;
+    }
+    .pop_select {
+        width: 100%;
+        text-align: left;
+    }
+    .pop_select .layui-input {
+        height: 35px;
+        line-height: 35px;
+        font-size: 14px;
+        color: #333;
+        padding: 0 20px;
+        border: 1px solid #ddd;
+    }
+    .layui-form-select dl dd.layui-this {
+        background-color: #706ac9;
+    }
+    .pop_divide .pop_select .layui-form-select dl {
+        top: 26px;
+    }
+    .pop_divide .pop_select .layui-input {
+        height: 24px;
+        line-height: 24px;
+        padding: 0;
+        text-align: left;
+        padding-left: 10px;
+    }
+    .layui-form-select .layui-edge {
+        background: url({$images}/icon_14.png) no-repeat right center;
+        background-size: cover;
+        width: 10px;
+        height: 6px;
+        margin-top: -3px;
+        border-style: initial;
+    }
+
+    .fl {
+        float: left;
+    }
+    .c_red {
+        color: #f4526c!important;
+    }
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+    .pub_table tbody tr:nth-child(even) {
+        background: #faf9fc;
+    }
+</style>
+<div class="pop pop_divide">
+    <a href="javascript:;" class="close"></a>
+    <h5 class="t_title">设置[{$username}]分成</h5>
+    <div class="detail">
+        <form class="layui-form" action="">
+            <div class="pop_form">
+                <table class="pub_table">
+                    <thead>
+                    <th width="20%">通道ID</th>
+                    <th width="20%">通道ID</th>
+                    <th width="25%">商户分成</th>
+                    <th width="25%">状态</th>
+                    <th width="10%">操作</th>
+                    </thead>
+                    <tbody>
+                    {volist name="list" id="vo"}
+                    <form action="" id="ajaxform_{$vo.channelid}">
+                    <tr>
+                        <td>{$vo.channelid}</td>
+                        <td>{$vo.channelname}</td>
+                        <td>
+                            <input type="text" name="userrate" id="userrate_{$vo.channelid}" class="ipt ipt_txt" placeholder="0.00" value="{$vo.userrate}">
+                        </td>
+                        <td>
+                            <div class="pop_select fl">
+                                <select name="is_state" id="is_state_{$vo.channelid}">
+                                    <option value="1" {$vo.is_state=='1'?'selected':''}>开启</option>
+                                    <option value="0" {$vo.is_state=='0'?'selected':''}>关闭</option>
+                                </select>
+                            </div>
+
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" class="c_red" onclick="submitform({$vo.userid},{$vo.channelid});return false;">更新</a>
+                        </td>
+                    </tr>
+                        <input type="hidden" name="userid" value="{$vo.userid}">
+                        <input type="hidden" name="channelid" value="{$vo.channelid}">
+                    </form>
+                    {/volist}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    layui.use(['form'], function () {
+    });
+</script>
+<script>
+    function submitform(userid,channelid) {
+        var userrate = $('#userrate_'+channelid).val();
+        var is_state = $('#is_state_'+channelid).val();
+        // var form_data = $("#ajaxform_" + userid).serialize();
+        $.post(
+            "{:url('userlist/userratesave')}",
+            {
+                userrate: userrate,
+                is_state: is_state,
+                userid: userid,
+                channelid:channelid
+
+            },
+            // $("#ajaxform_"+channelid).serialize(),
+            function (data) {
+                console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        // window.parent.location.reload();
+                        window.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>

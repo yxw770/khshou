@@ -1,0 +1,511 @@
+{include file="common/header" /}
+<script src="{$js}/bootstrap.min.js"></script>
+
+<link href="{$css}/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="{$css}/core.css" rel="stylesheet" type="text/css">
+<link href="{$css}/menu.css" rel="stylesheet" type="text/css">
+<link href="{$css}/nav.css" rel="stylesheet">
+<link href="{$css}/dropify.min.css" rel="stylesheet" type="text/css">
+
+<script src="{$js}/dropify.min.js"></script>
+<body class="fixed-left widescreen">
+<div id="wrapper">
+    {include file="common/top_nav" /}
+    {include file="common/left_nav" /}
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="content-page">
+        <!-- Start content -->
+        <div class="content">
+            <div class="container">
+                <div class="set-title clear">
+                    <div>商户基本信息</div>
+                    <div>商户收款信息</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card-box">
+                            <div class="row">
+                                <form class="form-horizontal" role="form" enctype="multipart/form-data" action="{:url('userinfo/editsave')}" method="post" id="ajaxform">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">商户编号</label>
+                                            <div class="col-md-9">
+                                                <p class="form-control-static">{:session('user.userid')}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">用户名</label>
+                                            <div class="col-md-9">
+                                                <p class="form-control-static">{:session('user.username')}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">电子邮箱</label>
+                                            <div class="col-md-9">
+                                                <p class="form-control-static">{$userdefine_row.email}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  手机号码</label>
+                                            <div class="col-md-9">
+                                                <p class="form-control-static">{$userdefine_row.tel}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  商户QQ</label>
+                                            <div class="col-md-9">
+                                                <input name="qq" type="text" class="form-control" value="{$userdefine_row.qq}" maxlength="11">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  店铺名称</label>
+                                            <div class="col-md-9">
+                                                <input name="sitename" type="text" class="form-control" value="{$userdefine_row.sitename}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">店铺地址</label>
+                                            <div class="col-md-9">
+                                                <input name="siteurl" type="text" class="form-control" value="{$userdefine_row.siteurl}">
+                                                <p class="stock_display_2_tips">设置店铺地址</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">店铺公告</label>
+                                            <div class="col-md-9">
+                                                <textarea name="usernotice" placeholder="" class="form-control" rows="5" maxlength="200">{$userdefine_row.usernotice}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">支付页面风格</label>
+                                            <div class="col-md-9">
+                                                <select name="paytheme" class="form-control">
+                                                    <?php foreach($paytheme_arr as $k => $v): ?>
+                                                    <option value="{$k}" {$userdefine_row.paytheme==$k?'selected':''}>{$v}</option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">售卡顺序</label>
+                                            <div class="col-md-9">
+                                                <select name="check_goods" class="form-control">
+                                                    <option value="1" {$userdefine_row.check_goods==1?'selected':''}>随机取卡</option>
+                                                    <option value="2" {$userdefine_row.check_goods==2?'selected':''}>从先往后取卡</option>
+                                                    <option value="3" {$userdefine_row.check_goods==3?'selected':''}>从后往前取卡</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">库存展示方式</label>
+                                            <div class="col-md-9">
+                                                <select name="kucun_show" class="form-control" onchange="$(this).val()==1?$('.stock_display_2_tips').show():$('.stock_display_2_tips').hide();" required="">
+                                                    <option value="0" {$userdefine_row['kucun_show']==0?'selected':'';}>实际库存</option>
+                                                    <option value="1" {$userdefine_row['kucun_show']==1?'selected':'';}>范围库存</option>
+                                                </select>
+                                                <p class="stock_display_2_tips" style="display: none">
+                                                    1. 库存大于100，显示 库存非常多<br> 2. 库存小于100、大于30，显示 库存很多<br> 3. 库存小于30、大于20，显示 库存较多<br> 4. 库存小于20、大于10，显示 库存一般<br> 5. 库存小于10，显示 库存少量<br>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label"></label>
+                                            <div class="col-md-9">
+                                                <button type="button" onclick="submitform();return false;" class="btn btn-purple waves-effect waves-light">保存设置</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end col -->
+
+                                    <!--如果没有设置收款信息-->
+                                    {if $userpay_row.ptype=='0'}
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">收款方式</label>
+                                            <div class="col-md-2">
+                                                <select name="ptype" style="width: 170px" onchange="selectptype()" class="form-control" id="ptype">
+                                                    <option value="1" {$userpay_row.ptype=="1"?"selected":'';}>支付宝收款</option>
+                                                    <option value="2" {$userpay_row.ptype=="2"?"selected":'';}>银行卡收款</option>
+                                                    <option value="3" {$userpay_row.ptype=="3"?"selected":'';}>微信收款</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-2"></div>
+                                        </div>
+                                        <div class="collect_type type_alipay">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">支付宝账号</label>
+                                                <div class="col-md-9">
+                                                    <input name="alipay" type="text" class="form-control" value="{$userpay_row.alipay?$userpay_row.alipay:'';}" placeholder="请认真填写收款帐号">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">支付宝二维码</label>
+                                                <div class="col-md-9">
+                                                    <input type="file" name="alipayimg" class="dropify" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" id="alipayimg">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="collect_type type_wxpay" style="display:none">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  微信账号</label>
+                                                <div class="col-md-9">
+                                                    <input name="weixin" type="text" class="form-control" value="{$userpay_row.weixin?$userpay_row.weixin:'';}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">微信二维码</label>
+                                                <div class="col-md-9">
+                                                    <input type="file" name="weixinimg" class="dropify" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" id="weixinimg">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="collect_type type_bank" style="display:none">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">开户地址</label>
+                                                <div class="col-md-9">
+                                                    <input name="bankaddr" type="text" class="form-control" value="{$userpay_row.bankaddr?$userpay_row.bankaddr:'';}" placeholder="开户行请精确到市">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  银行卡号</label>
+                                                <div class="col-md-9">
+                                                    <input name="card" type="text" class="form-control" value="{$userpay_row.card?$userpay_row.card:'';}" placeholder="请认真核对银行卡号">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="collect_type">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  收款人姓名</label>
+                                                <div class="col-md-9">
+                                                    <input name="realname" type="text" class="form-control" value="{$userpay_row.realname?$userpay_row.realname:'';}" placeholder="必须跟收款帐户名一致">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  身份证号</label>
+                                                <div class="col-md-9">
+                                                    <input name="idcard" type="text" class="form-control idcard_number" value="{$userpay_row.idcard?$userpay_row.idcard:'';}" placeholder="请填写真实的身份证号" maxlength="18">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="display: flex; align-items: center; color: red;">
+                                            <label class="col-md-3 control-label">*</label>
+                                            <div class="col-md-9">
+                                                请您确认以上信息填写正确
+                                            </div>
+                                        </div>
+                                        <script>
+                                            var selectptype = function () {
+                                                var ptype = $('#ptype').val();
+                                                if (ptype == '1') {
+                                                    $('div.type_alipay').show();
+                                                    $('div.type_bank').hide();
+                                                    $('div.type_wxpay').hide();
+                                                } else if (ptype == '2') {
+                                                    $('div.type_alipay').hide();
+                                                    $('div.type_bank').show();
+                                                    $('div.type_wxpay').hide();
+                                                } else if (ptype == '3') {
+                                                    $('div.type_alipay').hide();
+                                                    $('div.type_bank').hide();
+                                                    $('div.type_wxpay').show();
+                                                }
+                                            }
+                                        </script>
+                                        <script>
+                                            $('#alipayimg').dropify({
+                                                messages: {
+                                                    'default': '点击上传二维码',
+                                                    'replace': '点击替换二维码',
+                                                    'remove': '删除',
+                                                    'error': '上传错误'
+                                                },
+                                                error: {
+                                                    'fileSize': '文件太大超过（2M）'
+                                                }
+                                            });
+                                            $('#weixinimg').dropify({
+                                                messages: {
+                                                    'default': '点击上传二维码',
+                                                    'replace': '点击替换二维码',
+                                                    'remove': '删除',
+                                                    'error': '上传错误'
+                                                },
+                                                error: {
+                                                    'fileSize': '文件太大超过（2M）'
+                                                }
+                                            });
+                                        </script>
+                                    </div>
+                                    {/if}
+                                    <!--支付宝收款-->
+                                    {if $userpay_row.ptype=='1'}
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">收款方式</label>
+                                            <div class="col-md-2">
+                                                <p class="form-control-static">支付宝收款</p>
+                                            </div>
+                                            <div class="col-sm-2"><a href="{:url('userinfo/edituserpay')}" class="btn btn-info">修改收款信息</a></div>
+                                        </div>
+                                        <div class="collect_type type_alipay">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">支付宝账号</label>
+                                                <div class="col-md-9">
+                                                    <p class="form-control-static">{$userpay_row.alipay?$userpay_row.alipay:'';}</p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">支付宝二维码</label>
+                                                <div class="col-md-9">
+                                                    <img src="{$userpay_row.alipayimg?$userpay_row.alipayimg:'';}" width="320px" id="img_show" onclick="window.open('{$userpay_row.alipayimg?$userpay_row.alipayimg:'';}')">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="collect_type">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  收款人姓名</label>
+                                                <div class="col-md-9">
+                                                    <p class="form-control-static">{$userpay_row.realname?$userpay_row.realname:'';}</p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  身份证号</label>
+                                                <div class="col-md-9">
+                                                    <p class="form-control-static">{$userpay_row.idcard?substr($userpay_row.idcard,0,14):'';}****</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/if}
+                                    <!--银行卡收款-->
+                                    {if $userpay_row.ptype=='2'}
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">收款方式</label>
+                                            <div class="col-md-2">
+                                                <p class="form-control-static">银行卡收款</p>
+                                            </div>
+                                            <div class="col-sm-2"><a href="{:url('userinfo/edituserpay')}" class="btn btn-info">修改收款信息</a></div>
+                                        </div>
+                                        <div class="collect_type type_bank">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">开户地址</label>
+                                                <div class="col-md-9">
+                                                    <p class="form-control-static">{$userpay_row.bankaddr?$userpay_row.bankaddr:'';}</p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  银行卡号</label>
+                                                <div class="col-md-9">
+                                                    <p class="form-control-static">********{$userpay_row.card?substr($userpay_row.card,8,13):'';}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="collect_type">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  收款人姓名</label>
+                                                <div class="col-md-9">
+                                                    <p class="form-control-static">{$userpay_row.realname?$userpay_row.realname:'';}</p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  身份证号</label>
+                                                <div class="col-md-9">
+                                                    <p class="form-control-static">{$userpay_row.idcard?substr($userpay_row.idcard,0,14):'';}****</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/if}
+                                    <!--微信收款-->
+                                    {if $userpay_row.ptype=='3'}
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">收款方式</label>
+                                            <div class="col-md-2">
+                                                <p class="form-control-static">微信收款</p>
+                                            </div>
+                                            <div class="col-sm-2"><a href="{:url('userinfo/edituserpay')}" class="btn btn-info">修改收款信息</a></div>
+                                        </div>
+                                        <div class="collect_type type_wxpay">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  微信账号</label>
+                                                <div class="col-md-9">
+                                                    <p class="form-control-static">{$userpay_row.weixin?$userpay_row.weixin:'';}</p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">微信二维码</label>
+                                                <div class="col-md-9">
+                                                    <img src="{$userpay_row.weixinimg?$userpay_row.weixinimg:'';}" width="320px" id="img_show" onclick="window.open('{$userpay_row.weixinimg?$userpay_row.weixinimg:'';}')">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="collect_type">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  收款人姓名</label>
+                                                <div class="col-md-9">
+                                                    <p class="form-control-static">{$userpay_row.realname?$userpay_row.realname:'';}</p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  身份证号</label>
+                                                <div class="col-md-9">
+                                                    <p class="form-control-static">{$userpay_row.idcard?substr($userpay_row.idcard,0,14):'';}****</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {/if}
+                                </form>
+                                <!-- end col -->
+                            </div>
+                            <!-- end row -->
+                        </div>
+                    </div>
+                    <!-- end col -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function submitform() {
+
+        // var email=$('[name="email"]').val();
+        // var reg = /^([0-9a-zA-Z_-])+@([0-9a-zA-Z_-])+((\.[0-9a-zA-Z_-]{2,3}){1,2})$/;
+        // if (!reg.test(email)) {
+        //     layer.msg('请填写正确的邮箱地址！');
+        //     $('[name="email"]').focus();
+        //     return false;
+        // }
+        //
+        // var tel=$('[name="tel"]').val();
+        // var reg=/\d{11}/;
+        // if(tel=='' || !reg.test(tel) || tel.length!=11){
+        //     layer.msg('请填写正确的手机号码！');
+        //     $('[name="tel"]').focus();
+        //     return false;
+        // }
+
+        var qq=$('[name="qq"]').val();
+        var reg=/\d{5,11}/;
+        if(qq=='' || !reg.test(qq) ||qq.length<5 || qq.length>11){
+            layer.msg('请填写正确的QQ号码！');
+            $('[name="qq"]').focus();
+            return false;
+        }
+
+        var sitename=$('[name="sitename"]').val();
+        if(sitename==''){
+            layer.msg('请填写正确的店铺名称！');
+            $('[name="sitename"]').focus();
+            return false;
+        }
+
+        {if $userpay_row.ptype=='0'}
+        var ptype=$('[name="ptype"]').val();
+        if(ptype==''){
+            layer.msg('请选择收款方式！');
+            $('[name="ptype"]').focus();
+            return false;
+        }
+
+        if (ptype == '1') {
+            var alipay=$('[name="alipay"]').val();
+            if(alipay==''){
+                layer.msg('请填写支付宝账号！');
+                $('[name="alipay"]').focus();
+                return false;
+            }
+            var alipayimg=$('#alipayimg').attr('value');
+            var alipayimg_siblings = $('#alipayimg').siblings('div.dropify-preview').find('img').attr('src');
+            if(alipayimg==''||alipayimg==undefined||alipayimg==null){
+                if(alipayimg_siblings==''||alipayimg_siblings==undefined||alipayimg_siblings==null) {
+                    layer.msg('请上传支付宝二维码！');
+                    $('#alipayimg').focus();
+                    return false;
+                }
+            }
+        } else if (ptype == '2') {
+            var bankaddr=$('[name="bankaddr"]').val();
+            if(bankaddr==''){
+                layer.msg('请填写开户地址！');
+                $('[name="bankaddr"]').focus();
+                return false;
+            }
+            var card=$('[name="card"]').val();
+            if(card==''){
+                layer.msg('请填写银行卡号！');
+                $('[name="card"]').focus();
+                return false;
+            }
+        } else if (ptype == '3') {
+            var weixin=$('[name="weixin"]').val();
+            if(weixin==''){
+                layer.msg('请填写微信账号！');
+                $('[name="weixin"]').focus();
+                return false;
+            }
+            var weixinimg=$('#weixinimg').attr('value');
+            var weixinimg_siblings = $('#weixinimg').siblings('div.dropify-preview').find('img').attr('src');
+            if(weixinimg==''||weixinimg==undefined||weixinimg==null){
+                if(weixinimg_siblings==''||weixinimg_siblings==undefined||weixinimg_siblings==null) {
+                    layer.msg('请上传微信二维码！');
+                    $('#weixinimg').focus();
+                    return false;
+                }
+            }
+        }
+
+        var realname=$('[name="realname"]').val();
+        if(realname==''){
+            layer.msg('请填写正确的收款人姓名！');
+            $('[name="realname"]').focus();
+            return false;
+        }
+
+        var idcard=$('[name="idcard"]').val();
+        if(idcard==''){
+            layer.msg('请填写正确的身份证号！');
+            $('[name="idcard"]').focus();
+            return false;
+        }
+        {/if}
+        var formData = new FormData($( "#ajaxform" )[0]);//找到input，作为参数传递给FormData构造函数
+        $.ajax({
+            url: "{:url('userinfo/editsave')}",
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+        });
+    }
+</script>
+
+
+{include file="common/footer" /}
+

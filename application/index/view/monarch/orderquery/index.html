@@ -1,0 +1,55 @@
+{include file="common/header" /}
+<body style="background: url('{$images}/se5_bg.jpg')">
+{include file="common/orhter_top_nav" /}
+<div class="se5_card" style="margin-top: 120px;margin-bottom: 60px">
+    <div class="search_box" style="margin-top: 0px">
+        <form action="" method="get">
+        <i class="iconfont icon-sousuo"></i>
+        <input type="text" name="kw" value="{:input('kw')}" placeholder="请输入订单号或联系方式查询" class="order_input">
+        <button>查 询</button>
+        </form>
+    </div>
+
+
+    {volist name="list" id="vo"}
+    <div class="main_box">
+        <h3><i class="iconfont icon-dingdan"></i> 订单日期：{$vo.addtime}</h3>
+        <p>付款方式：<b>{$vo.channelname}</b></p>
+        {if $vo.is_frozen=='0'}
+            {if $vo.is_buylist=='1'}
+            <p>订单状态：<b>已付款</b></p>
+            {elseif $vo.is_buylist=='11'}
+            <p>订单状态：<b>卖家库存不足，请联系卖家上架卡密</b></p>
+            {elseif $vo.is_buylist=='3'}
+            <p>订单状态：<b>投诉中</b></p>
+            {elseif $vo.is_buylist=='7'}
+            <p>订单状态：<b>已退款</b></p>
+            {elseif $vo.is_buylist=='0'}
+            <p>订单状态：<b>未付款</b></p>
+            {/if}
+        {elseif $vo.is_frozen=='1'}
+            <p>订单状态：<b>已冻结</b></p>
+        {/if}
+        <p>付款金额：<b>{$vo.ordermoney}</b></p>
+        <p>实付金额：<b>{$vo.paymoney}</b></p>
+        <p>卖家QQ：<b><a href="http://wpa.qq.com/msgrd?v=3&uin={$vo.userqq}&site=qq&menu=yes" target="_blank">{$vo.userqq}</a></b></p>
+
+        {if $vo.is_buylist=='1'&&$vo.is_frozen=='0'}
+        <p style="white-space: pre-wrap;">使用说明：<b>{$vo.instrucation}</b></p>
+        <p style="float:none;clear:both;word-break: break-all;">卡密信息：
+            <br>
+            {volist name="$vo.kami" id="vo2"}
+            <b id="tips">{$vo2.cardnumber}</b><b id="cardinfo" style="white-space: normal;">{$vo2.cardpassword?"----".$vo2.cardpassword:''}</b>
+            <br>
+            {/volist}
+        </p>
+        {if strlen(input('kw'))=='16'}
+        <p>投诉该卖家(请当天投诉)：<b><a href="{:url('/tousu')}?orderid={:input('kw')}" target="_blank">点击投诉</a></b></p>
+        {/if}
+        {/if}
+
+        <div class="clear"></div>
+    </div>
+    {/volist}
+</div>
+{include file="common/footer" /}

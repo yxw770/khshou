@@ -1,0 +1,58 @@
+{include file="common/header" /}
+<body>
+<!-- 顶部 -->
+<!--部分页面top后面有style样式添加-->
+<div class="top" style="padding-bottom: 0">
+    <div class="top_con">
+        <span>修改分类</span>
+        <a class="back" href="{:url('/')}"><img src="{$images}/back.png" width="7" height="11"></a>
+        <a class="user_name"><i class="iconfont icon-mine"></i></a>
+    </div>
+</div>
+<form action="{:url('cate/edit')}" method="post" id="ajaxform">
+    <div class="list_bg">
+        <table border="0" cellspacing="0" cellpadding="0" class="tab1">
+            <tbody>
+            <tr>
+                <td>分类名称</td>
+                <td><input value="{$list.catename}" name="catename" type="text" maxlength="50"></td>
+            </tr>
+            <tr>
+                <td>分类排序</td>
+                <td><input value="{$list.sortid}" name="sortid" type="text" maxlength="3"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <button class="btn2" onclick="submitform();return false;">保存分类</button>
+    <input type="hidden" name="goodcateid" value="{$list.goodcateid}">
+</form>
+<script>
+    function submitform() {
+        var test = $("#ajaxform").serialize();
+        $.post(
+            "{:url('cate/editsave')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.href = "{:url('/cate')}";
+                        // window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}

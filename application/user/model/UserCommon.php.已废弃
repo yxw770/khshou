@@ -1,0 +1,77 @@
+<?php
+namespace app\user\model;
+use app\common\model\BaseModel;
+use think\Model;
+class UserCommon extends BaseModel
+{
+
+    private $pagesize = '20';
+
+    /**
+     * 根据查询条件 一条数据
+     * @param array $condition
+     * @return array|bool
+     */
+    public function get_one_by_condition_on_user($condition){
+        //****************思路1****************//
+//        $res=$this
+//            ->where($condition)
+//            ->find();
+//        if (!empty($res)) {
+//            return $res->toArray();
+//        }else{
+//            return false;
+//        }
+        //****************思路1****************//
+
+        //****************思路2****************//
+        $res = $this->get_one_by_condition_on_base($condition);//调用父类公共方法
+        return $res;
+        //****************思路2****************//
+    }
+    
+    public function update_one_by_condition_on_user($condition){
+        
+    }
+    
+
+
+    /**
+     * 根据查询条件 所有数据
+     * @param array $condition
+     * @return array|bool
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function get_all_by_condition_on_user($condition,$primaryKey){
+        $res=$this
+            ->where($condition)
+            ->order($primaryKey.' desc ')
+            ->select();
+        if (!empty($res)) {
+            return $res->toArray();
+        }else{
+            return false;
+        }
+    }
+
+
+    /**
+     * 根据查询条件 列表数据
+     * @param array $condition
+     * @return array|bool
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function get_list_by_condition_on_user($condition){
+        $res=$this
+            ->where($condition)
+            ->paginate($this->pagesize);
+        return $res;
+    }
+
+}

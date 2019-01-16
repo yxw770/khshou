@@ -1,0 +1,50 @@
+<div class="sidebar">
+    <div class="avatar">
+        <img src="{$images}/avataraf73.png" alt="">
+        <p class="t1">欢迎您 </p>
+        <p class="t2">{:session('user.username')}</p>
+    </div>
+    <ul class="nav j-nav" style="color: #f0efef !important;">
+        <li class="{if (in_array(request()->controller(),['Index','Userinfo','Paymoney','Complain','Withdraw','Log','Safety']))}active{/if} open">
+            <i class="xcFont ico-card"></i>基本信息
+            <i class="xcFont ico-arrow"></i>
+            <ul>
+                <li class="{if condition="$res=:request()->controller() eq 'Index'"}active{else /}{/if}"><a href="{:url('/')}">账户概要</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Userinfo'"}active{else /}{/if}"><a href="{:url('/useruuserinfo')}">用户信息</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Paymoney'"}active{else /}{/if}"><a href="{:url('/paymoney')}">结算记录</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Complain'"}active{else /}{/if}"><a href="{:url('/complain')}">投诉管理</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Withdraw'"}active{else /}{/if}"><a href="{:url('/withdraw')}">申请提现</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Log'"}active{else /}{/if}"><a href="{:url('/log')}">登陆日志</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Safety'"}active{else /}{/if}"><a href="{:url('/safety')}">修改密码</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Safekey'"}active{else /}{/if}"><a href="{:url('/safekey')}">安全密码</a></li>
+            </ul>
+        </li>
+        <li class="{if (in_array(request()->controller(),['Cate','Goodlist','Kami','Kamilist','Sold']))}active{/if} open">
+            <i class="xcFont ico-bag"></i>商品信息
+            <i class="xcFont ico-arrow"></i>
+            <ul>
+                <li class="{if condition="$res=:request()->controller() eq 'Cate'"}active{else /}{/if}"><a href="{:url('/cate')}">添加分类</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Goodlist'&&request()->action() eq 'index'"}active{else /}{/if}"><a href="{:url('/goodlist')}">商品列表</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Goodlist'&&request()->action() eq 'add'"}active{else /}{/if}"><a href="{:url('goodlist/add')}">添加商品</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Kami'&&request()->action() eq 'add'"}active{else /}{/if}"><a href="{:url('kami/add')}">添加卡密</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Kamilist'&&request()->action() eq 'index'"}active{else /}{/if}"><a href="{:url('/kamilist')}">库存卡密</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Sold'&&request()->action() eq 'index'"}active{else /}{/if}"><a href="{:url('/sold')}">最近卖出</a></li>
+                <!--<li><a href="./kamimanage.html">卡密批量管理</a></li>-->
+                <!--<li><a href="./kamitrash.html">卡密回收站</a></li>-->
+            </ul>
+        </li>
+        <li class="{if (in_array(request()->controller(),['Shop','Payway','Seo','Income','Order','Ac','Coupon']))}active{/if} open">
+            <i class="xcFont ico-order"></i>交易管理
+            <i class="xcFont ico-arrow"></i>
+            <ul>
+                <li class="{if condition="$res=:request()->controller() eq 'Shop'&&request()->action() eq 'index'"}active{else /}{/if}"><a href="{:url('/shop')}">总购链接</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Payway'&&request()->action() eq 'index'"}active{else /}{/if}"><a href="{:url('/payway')}">查看费率</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Seo'&&request()->action() eq 'index'"}active{else /}{/if}"><a href="{:url('/seo')}">渠道分析</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Income'&&request()->action() eq 'index'"}active{else /}{/if}"><a href="{:url('/income')}">收益统计</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Order'&&request()->action() eq 'index'"}active{else /}{/if}"><a href="{:url('/order')}">订单交易</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Ac'&&request()->action() eq 'index'"}active{else /}{/if}"><a href="{:url('/ac')}">加优惠卷</a></li>
+                <li class="{if condition="$res=:request()->controller() eq 'Coupon'&&request()->action() eq 'index'"}active{else /}{/if}"><a href="{:url('/coupon')}">查优惠卷</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>

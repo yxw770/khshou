@@ -1,0 +1,60 @@
+{include file="common/header" /}
+<body>
+<!-- 顶部 -->
+<!--部分页面top后面有style样式添加-->
+<div class="top" style="padding-bottom: 0">
+    <div class="top_con">
+        <span>投诉管理</span>
+        <a class="back" href="{:url('/')}"><img src="{$images}/back.png" width="7" height="11"></a>
+        <a class="user_name"><i class="iconfont icon-mine"></i></a>
+    </div>
+</div><!-- 列表 -->
+<div class="list_bg">
+    <ul>
+        {volist name="list" id="vo"}
+        <li>
+            <div class="j_box_title">
+                <i class="fa fa-calendar"></i> 投诉订单：{$vo.report_orderid}
+                <a class="j_price">{$vo.report_status=='1'?'<span class="label label-success">投诉结束':$vo.report_status=='2'?'<span class="label label-info">平台客服介入处理</span>':'<span class="label label-default">举证期内</span>'}</span></a>
+            </div>
+            <div class="j_box_con">
+                <p>投诉原因： {$vo.report_type}<br>买家留言：{$vo.maijia_remark}<br>联系方式： <font>{$vo.maijia_contact}</font><br>{$vo.report_creattime}</p>
+                <div id="clear"></div>
+            </div>
+        </li>
+        {/volist}
+    </ul>
+</div>
+
+
+<style>
+    .pagination {
+        /*padding: 32px 0;*/
+        text-align: left;
+        font-size: 12px;
+        color: #666;
+        position: relative;
+    }
+    .m-pages a{
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid #e3e5eb;
+        border-left: 1px solid #e3e5eb;
+        border-top: 1px solid #e3e5eb;
+        display: inline-block;
+        font-size: 12px;
+        height: 30px;
+        line-height: 30px;
+        overflow: hidden;
+        text-align: center;
+        vertical-align: top;
+        width: 30px;
+    }
+</style>
+<div class="pagination">
+    {$page}
+</div>
+{include file="common/footer" /}

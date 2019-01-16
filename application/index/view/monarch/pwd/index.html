@@ -1,0 +1,42 @@
+{include file="common/header" /}
+<body style="background: url('{$images}/se5_bg.jpg')">
+{include file="common/orhter_top_nav" /}
+<div class="se5_card" style="margin-top: 120px;margin-bottom: 60px">
+    <div class="search_box" style="margin-top: 0px">
+        <form action="{:url('pwd/chkpwd')}" method="get" id="ajaxform">
+            <i class="iconfont icon-sousuo"></i>
+            <input type="text" name="pwd" value="" placeholder="请输入订单编号：{:input('orderid')?input('orderid'):''}的取卡密码" class="order_input">
+            <input type="hidden" name="kw" value="{:input('orderid')}">
+            <!--<button>查 询</button>-->
+            <button onclick="submitform();return false;">查 询</button>
+        </form>
+    </div>
+</div>
+<script>
+    function submitform() {
+        $.post(
+            "{:url('pwd/chkpwd')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.href = "/orderquery?kw={:input('orderid')}";
+                    });
+                    // window.location.href = "/center";
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}

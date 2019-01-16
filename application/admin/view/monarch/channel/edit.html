@@ -1,0 +1,269 @@
+<!--<link rel="stylesheet" href="{$flag}/font-awesome.min.css">-->
+<!--<link rel="stylesheet" href="{$flag}/layeropen.css?v=1">-->
+<link rel="stylesheet" href="{$layui}/css/layui.css">
+
+
+<script src="{$js}/jquery-2.2.1.min.js"></script>
+<script src="{$layer}/layer.js"></script>
+<script src="{$layui}/layui.js" charset="utf-8"></script>
+
+
+<style>
+    /**{*/
+        /*margin:0;padding:0;border:0;font-weight:normal;vertical-align:baseline;background:transparent;*/
+    /*}*/
+
+    body{
+        overflow-y: hidden;
+    }
+    /*顶部显示圆角显示*/
+    #layui-layer-iframe2{
+        border-radius: 6px;
+
+    }
+    .clearfix{*zoom: 1;}
+    .clearfix:before,.clearfix:after
+    {display: table;line-height: 0;content: "";}
+    .clearfix:after{clear: both;}
+    .t_title {
+        font-size: 20px;
+        color: #333333;
+        text-align: center;
+        line-height: 48px;
+        border-bottom: 1px solid #ddd;
+    }
+    /*body部分*/
+    .pop_balance {
+        width: 420px;
+        display: block;
+    }
+    /*body部分*/
+
+    /*box部分*/
+    .detail {
+        padding: 30px 70px 40px 35px;
+    }
+    /*box部分*/
+
+    /*row box部分*/
+    .pop_form .row {
+        margin-bottom: 20px;
+    }
+    /*row box部分*/
+
+    /*row部分*/
+    .pop_channel .detail .tit {
+        width: 95px;
+    }
+    .pop_form .tit {
+        text-align: right;
+        display: block;
+        float: left;
+        line-height: 35px;
+        font-size: 14px;
+        color: #333333;
+    }
+    .pop_channel .detail .info {
+        width: 200px;
+    }
+    .pop_form .info {
+        float: right;
+        line-height: 35px;
+    }
+    /*row部分*/
+
+    /*row input元素部分*/
+    .pop .ipt_txt {
+        width: 100%;
+    }
+    .pop_form .ipt {
+        padding: 0 20px;
+        border: 1px solid #ddd;
+        height: 35px;
+        line-height: 35px;
+    }
+    input[type="button"], input[type="submit"], input[type="reset"], input[type="text"] {
+        -webkit-appearance: none;
+    }
+    .ipt {
+        display: block;
+    }
+    /*row input元素部分*/
+
+    /*row select元素部分*/
+    .pop_select {
+        width: 100%;
+        text-align: left;
+    }
+    .pop_select {
+        text-align: left;
+    }
+    .fl {
+        float: left;
+    }
+    body, input, h1, h2, h3, h4, h5, h6, p, textarea, table, div, ul, li, select {
+        font-family: Microsoft YaHei;
+        margin: 0;
+        padding: 0;
+        color: inherit;
+        line-height: 1;
+    }
+    /*row select元素部分*/
+
+    /*row button元素部分*/
+    .ipt_button {
+        cursor: pointer;
+    }
+
+    .pop_form .ipt_button:hover {
+        box-shadow: 0 0 5px #5967dc;
+    }
+    .pop_channel .ipt_button {
+        margin-top: 35px;
+    }
+    .pop_form .ipt_button {
+        width: 140px;
+        height: 40px;
+        background: #5967dc;
+        text-align: center;
+        line-height: 40px;
+        font-size: 16px;
+        color: #fff;
+        border: none;
+        margin: 0 auto;
+        display: block;
+    }
+    /*row button元素部分*/
+
+    /*row textarea元素部分*/
+    .pop_textarea {
+        display: block;
+        width: 100%;
+        height: 110px;
+        border: 1px solid #ddd;
+        padding: 10px 20px;
+        font-size: 14px;
+        color: #333;
+        resize: none;
+    }
+    .pop_textarea:hover {
+        transition: all .2s;
+    }
+    textarea {
+        -webkit-appearance: none;
+    }
+    /*row textarea元素部分*/
+
+    /*row layerui select 部分*/
+    .layui-form-select dl dd.layui-this {
+        background-color: #706ac9;
+    }
+    .layui-form-select .layui-edge {
+        background: url({$images}/icon_14.png) no-repeat right center;
+        background-size: cover;
+        width: 10px;
+        height: 6px;
+        margin-top: -3px;
+        border-style: initial;
+    }
+    /*row layerui select 部分*/
+</style>
+<div class="pop pop_channel">
+    <a href="javascript:;" class="close"></a>
+    <h5 class="t_title">编辑支付通道</h5>
+    <div class="detail">
+        <form class="layui-form" action="" id="ajaxform">
+            <div class="pop_form">
+                <div class="row clearfix">
+                    <span class="tit">接入商家</span>
+                    <div class="info">
+                        <div class="pop_select fl">
+                            <select name="providerid">
+                                {volist name="arr" id="vo"}
+                                <option value="{$vo.providerid}" {$vo.providerid==$list.providerid?'selected':''}>{$vo.providername}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">通道名称</span>
+                    <div class="info">
+                        <input type="text" name="channelname" class="ipt ipt_txt" placeholder="" value="{$list.channelname}" onfocus="layer.msg('通道名称，请不要随意修改。')"/>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">支付通道</span>
+                    <div class="info">
+                        <input type="text" name="payway" class="ipt ipt_txt" placeholder="" value="{$list.payway}" onfocus="layer.msg('支付通道，请不要随意修改。')"/>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">商户分成</span>
+                    <div class="info">
+                        <input type="text" name="userproportion" class="ipt ipt_txt" placeholder="0" value="{$list.userproportion}"/>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">设置状态</span>
+                    <div class="info">
+                        <div class="pop_select fl">
+                            <select name="is_state">
+                                <option value="1" {$list.is_state=="1"?"selected":'';}>正式开通</option>
+                                <option value="0" {$list.is_state=="0"?"selected":'';}>暂时关闭</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">平台分成</span>
+                    <div class="info">
+                        <input type="text" name="ptproportion" class="ipt ipt_txt" placeholder="0" value="{$list.ptproportion}"/>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit"></span>
+                    <div class="info">
+						<span class="tag">
+							 <input type="checkbox" name="all" lay-skin="primary" >为所有用户更新费率设置
+						</span>
+                    </div>
+                </div>
+                <input type="button" value="保存通道" class="ipt_button" onclick="submitform();return false;"/>
+            </div>
+            <input type="hidden" name="channelid" value="{$list.channelid}">
+        </form>
+    </div>
+</div>
+
+
+<script>
+    layui.use(['form'], function(){
+    });
+</script>
+<script>
+    function submitform() {
+        $.post(
+            "{:url('channel/editsave')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>

@@ -1,0 +1,289 @@
+{include file="common/header" /}
+<script src="{$js}/bootstrap.min.js"></script>
+
+<link href="{$css}/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="{$css}/core.css" rel="stylesheet" type="text/css">
+<link href="{$css}/menu.css" rel="stylesheet" type="text/css">
+<link href="{$css}/nav.css" rel="stylesheet">
+<link href="{$css}/dropify.min.css" rel="stylesheet" type="text/css">
+
+<script src="{$js}/dropify.min.js"></script>
+<body class="fixed-left widescreen">
+<div id="wrapper">
+    {include file="common/top_nav" /}
+    {include file="common/left_nav" /}
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="content-page">
+        <!-- Start content -->
+        <div class="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card-box">
+                            <div class="add-title clear">
+                                修改商品
+                            </div>
+                            <div class="row">
+                                <form class="form-horizontal" role="form" action="{:url('goodlist/editsave')}" method="post" id="ajaxform">
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">商品分类</label>
+                                        <div class="col-md-4">
+                                            <select name="cateid" class="form-control" required>
+                                                {volist name="cate_arr" id="vo"}
+                                                <option value="{$vo.goodcateid}" {$vo.goodcateid==$list.cateid?"selected":'';}>{$vo.catename}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="form-control-static">请选择商品分类</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">页面风格</label>
+                                        <div class="col-md-4">
+                                            <select name="paytheme" class="form-control" required>
+                                                <?php foreach($paytheme_arr as $k => $v): ?>
+                                                <option value="{$k}" {$k==$list.paytheme?"selected":'';}>{$v}</option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="form-control-static">请选择购买时的页面风格</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">商品排序</label>
+                                        <div class="col-md-4">
+                                            <input name="sortid" type="number" class="form-control" placeholder="商品排序" value="{$list.sortid}" min=0>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="form-control-static"> 数字越小越靠前！</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label red">* 商品名称</label>
+                                        <div class="col-md-4">
+                                            <input name="goodname" type="text" class="form-control" placeholder="商品名称" value="{$list.goodname}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="form-control-static">好的名字有利于销售哦！</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label red">* 商品价格</label>
+                                        <div class="col-md-4">
+                                            <input name="price" type="text" class="form-control" placeholder="商品价格" value="{$list.price}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="form-control-static">商品对外出售的价格即零售价格！</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">批发优惠</label>
+                                        <div class="col-md-4">
+                                            <div class="radio radio-primary radio-inline">
+                                                <input type="radio" name="is_wholesale" id="wholesale_discount1" value="1" {$list.is_wholesale=='1'?"checked":'';} onclick="$('#is_discount_desc').show();">
+                                                <label for="wholesale_discount1">使用</label>
+                                            </div>
+                                            <div class="radio radio-primary radio-inline">
+                                                <input type="radio" name="is_wholesale" id="wholesale_discount2" value="0" {$list.is_wholesale=='0'?"checked":'';} onclick="$('#is_discount_desc').hide();">
+                                                <label for="wholesale_discount2">不使用</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="form-control-static">是否设置批发购买时使用批发价格！</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group block-wholesale_discount" id="is_discount_desc" style="width: 100%;display: {$list.is_wholesale=='1'?'':'none';}">
+                                        <label class="col-md-2 control-label"></label>
+                                        <div class="col-md-4">
+                                            <table class="table table-bordered">
+                                                <tr class="active"><td></td><td>购买数量</td><td>优惠价格</td></tr>
+                                                {volist name="wholesale_arr" id="vo"}
+                                                <tr>
+                                                    <td><img src="{$images}/ico_del.png" style="cursor: pointer;" onclick="del_discount(this)" align="absmiddle" title="移除" /></td>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">大于</span>
+                                                            <input type="text" name="define_price[]" value="{$vo.define_price}" class="form-control">
+                                                            <span class="input-group-addon">张</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <input type="text" name="define_quantity[]" class="form-control" value="{$vo.define_quantity}">
+                                                            <span class="input-group-addon">元</span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {/volist}
+                                                <tr id="add_button" class="active">
+                                                    <td colspan="3" class="text-center">
+                                                        <button type="button" class="btn btn-primary waves-effect waves-light" onclick="add_discount()"><span class="zmdi zmdi-plus-circle"></span>&nbsp;添加优惠</button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="form-control-static">优惠价格为单价，并不是商品总价哦！</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">成本价格</label>
+                                        <div class="col-md-4">
+                                            <input name="cost" type="text" class="form-control" placeholder="单位（元）" value="{$list.cost}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="form-control-static">商品进货价,可以不填,填写有利于商户系统的利润统计分析！</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">起购数量</label>
+                                        <div class="col-md-4">
+                                            <input name="low_limit" type="number" class="form-control" placeholder="起购数量" value="{$list.low_limit}" min=1>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="form-control-static">每次购买 最少购买多少件！</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">优惠券</label>
+                                        <div class="col-md-4">
+                                            <div class="radio radio-primary radio-inline">
+                                                <input type="radio" name="is_coupon" id="coupon_type1" {$list.is_coupon=='1'?'checked':''} value="1">
+                                                <label for="coupon_type1">
+                                                    支持
+                                                </label>
+                                            </div>
+                                            <div class="radio radio-primary radio-inline">
+                                                <input type="radio" name="is_coupon" id="coupon_type2" {$list.is_coupon=='0'?'checked':''} value="0">
+                                                <label for="coupon_type2">
+                                                    不支持
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="form-control-static">是否支持优惠券</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">提卡密码</label>
+                                        <div class="col-md-4">
+                                            <div class="radio radio-primary radio-inline">
+                                                <input type="radio" name="psd_limit" id="take_card_type1" {$list.psd_limit=='1'?'checked':''} value="1">
+                                                <label for="take_card_type1">
+                                                    必填
+                                                </label>
+                                            </div>
+                                            <div class="radio radio-primary radio-inline">
+                                                <input type="radio" name="psd_limit" id="take_card_type2" {$list.psd_limit=='2'?'checked':''} value="2">
+                                                <label for="take_card_type2">
+                                                    选填
+                                                </label>
+                                            </div>
+                                            <div class="radio radio-primary radio-inline">
+                                                <input type="radio" name="psd_limit" id="take_card_type3" {$list.psd_limit=='0'?'checked':''} value="0">
+                                                <label for="take_card_type3">
+                                                    关闭
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="form-control-static">开启后，购买页面会提示买家填写取卡密码</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">客户信息</label>
+                                        <div class="col-md-4">
+                                            <select name="contact_limit" class="form-control" required>
+                                                <?php foreach($contact_limit_arr as $k => $v): ?>
+                                                <option value="{$k}" {$k==$list.contact_limit?"selected":'';}>{$v}</option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="form-control-static">客户下单时输入的联系方式或充值账号格式限制</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">商品说明</label>
+                                        <div class="col-md-4">
+                                            <textarea name="remark" placeholder="建议填写该商品的使用方法，文字不超过200字" class="form-control" rows="5" maxlength="200">{$list.remark}</textarea>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="form-control-static">商品说明将显示在商品购买页面</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">使用说明</label>
+                                        <div class="col-md-4">
+                                            <textarea name="instrucation" placeholder="建议填写该商品的使用方法，文字不超过200字" class="form-control" rows="5" maxlength="200">{$list.instrucation}</textarea>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="form-control-static">使用说明将显示在订单查询结果中，一般设置售后QQ群，或者下载地址类</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label"></label>
+                                        <div class="col-md-4">
+                                            <button type="button" onclick="submitform();return false;" class="btn btn-purple waves-effect waves-light">确认提交</button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="form-control-static"></p>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- container -->
+        </div>
+        <!-- content -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Right content here -->
+    <!-- ============================================================== -->
+
+    <!-- Right Sidebar -->
+</div>
+<!-- END wrapper -->
+<script>
+    function submitform() {
+        var formData = new FormData($( "#ajaxform" )[0]);//找到input，作为参数传递给FormData构造函数
+        $.ajax({
+            url: "{:url('dl_goodlist/editsave','goodlistid='.$list.goodlistid)}",
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.href = "{:url('dl_goodlist/index')}";
+                        // window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+        });
+    }
+</script>
+{include file="common/footer" /}

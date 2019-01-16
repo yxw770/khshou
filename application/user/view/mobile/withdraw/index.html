@@ -1,0 +1,179 @@
+{include file="common/header" /}
+<body style="background: url('/static/usr/xcfaka/images/se5_bg.jpg')">
+<!-- 顶部 -->
+<!--部分页面top后面有style样式添加-->
+<div class="top" style="padding-bottom: 0">
+    <div class="top_con">
+        <span> </span>
+        <a class="back" href="{:url('/')}"><img src="{$images}/back.png" width="7" height="11"></a>
+        <a class="user_name"><i class="iconfont icon-mine"></i></a>
+    </div>
+</div>
+<!-- 顶部 -->
+<div class="top">
+    <div class="top_con">
+        <span>申请提现</span>
+    </div>
+    <div class="top_con top2" style="padding-bottom:20px;">
+        <span>{$unpayment?$unpayment:'0.00';}</span><br>可提现金额(不包含当天销售额) (元)
+    </div>
+</div>
+{if $unpayment>=$takecashlowest}
+<form action="" class="clearfix">
+    <div class="list_bg">
+        <table border="0" cellspacing="0" cellpadding="0" class="tab1">
+            {if ($list.ptype=='1')}
+            <tr>
+                <td>收款方式</td>
+                <td>支付宝账号</td>
+            </tr>
+            <tr>
+                <td>收款姓名</td>
+                <td>{$list.realname}</td>
+            </tr>
+            <tr>
+                <td>收款帐号</td>
+                <td>{$list.alipay}</td>
+            </tr>
+            {/if}
+            {if ($list.ptype=='2')}
+            <tr>
+                <td>收款方式</td>
+                <td>银行卡账号</td>
+            </tr>
+            <tr>
+                <td>收款姓名</td>
+                <td>{$list.realname}</td>
+            </tr>
+            <tr>
+                <td>收款帐号</td>
+                <td>{$list.card}</td>
+            </tr>
+            {/if}
+            {if ($list.ptype=='0')}
+            <tr>
+                <td>收款方式</td>
+                <td>未设置</td>
+            </tr>
+            <tr>
+                <td>收款姓名</td>
+                <td>未设置</td>
+            </tr>
+            <tr>
+                <td>收款帐号</td>
+                <td>未设置</td>
+            </tr>
+            {/if}
+            <tr>
+                <td>提现金额</td>
+                <td>{$unpayment?$unpayment:'0.00';} <font>元</font></td>
+            </tr>
+        </table>
+    </div>
+    <button type="submit" class="btn2" onclick="submitform()">申请提现</button>
+</form>
+<script>
+    function submitform() {
+        // var test = $("#ajaxform").serialize();
+        $.post(
+            "{:url('withdraw/add')}",
+            // $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+</script>
+{else/}
+<style>
+    .tip_box{
+        text-align: center;
+        margin: 0 auto ;
+    }
+    .icon-tishi1{
+        display: block;
+        height: 100px;
+        width: 100px;
+        border-radius: 54px;
+        line-height: 100px;
+        text-align: center;
+        font-size: 72px;
+        color: #fe825a;
+        border: 2px solid #fe825a;
+        margin: 0 auto 20px auto;
+    }
+    .tip_box h3{
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+    .tip_box p{
+        font-size: 14px;
+        line-height: 24px;
+        width: 300px;
+        margin: 0 auto 40px auto;
+    }
+    .tip_btn a{
+        display: inline-block;
+        height: 40px;
+        line-height: 40px;
+        padding: 0 30px;
+        border-radius: 3px;
+        margin: 0 20px;
+        color: #fff;
+        transition: .2s;
+    }
+    .tip_btn .btn1{
+        background: #ccc;
+    }
+    .tip_btn .btn1:hover{
+        background: #999;
+    }
+    .tip_btn .btn2{
+        background: #389ef3;
+    }
+</style>
+<!--头部-->
+<div class="se5_card" style="margin-top: 120px;margin-bottom: 60px">
+    <div class="tip_box">
+        <span class="icon-tishi1">!</span>        <h3></h3>
+        <p><span class="red">当前账户可申请结算金额不足{$takecashlowest}，暂不能申请结算！</span></p>
+        <div class="tip_btn">
+            <a href="http://957ka.com/usr" style="width: auto" class="btn1">如果<span id="times">3</span>秒后没有转回，请点击找到回去的路！</a>
+        </div>
+    </div>
+</div>
+<script>
+    $(function(){
+        setTimeout(changeTimes,1000);
+    });
+    var changeTimes=function(){
+        if($('#times').text()==0){
+            JumpUrl();
+            return false;
+        } else {
+            $('#times').text($('#times').text()-1);
+            setTimeout(changeTimes,1000);
+        }
+    };
+    var JumpUrl=function(){
+        history.go(-1);
+        // window.location.href='';
+    };
+</script>
+{/if}
+{include file="common/footer" /}

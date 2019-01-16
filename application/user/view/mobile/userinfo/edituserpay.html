@@ -1,0 +1,367 @@
+{include file="common/header" /}
+<body>
+<!-- 顶部 -->
+<!--部分页面top后面有style样式添加-->
+<div class="top" style="padding-bottom: 0">
+	<div class="top_con">
+		<span>修改收款信息</span>
+		<a class="back" href="{:url('/')}"><img src="{$images}/back.png" width="7" height="11"></a>
+		<a class="user_name"><i class="iconfont icon-mine"></i></a>
+	</div>
+</div>
+<!-- 顶部 -->
+<div class="top">
+	<div class="tip1"> 收款提示：推荐使用支付宝收款，更方便更快捷！
+		<br>注意事项：<br>1、收款人姓名必须填写与身份证对应的真实姓名。<br>
+		2、银行卡收款必须尽量填写准确的支行信息</div>
+</div>
+<form action="{:url('userinfo/edituserpaysave')}" method="post" id="ajaxform">
+	<div class="list_bg">
+		<table border="0" cellspacing="0" cellpadding="0" class="tab1">
+			<tbody><tr>
+				<td>用户名</td>
+				<td>{:session('user.username')}</td>
+			</tr>
+			<tr>
+				<td>收款方式</td>
+				<td>
+					<select name="ptype" onchange="selectptype()">
+						<option value="1" {$userpay_row.ptype=="1"?"selected":'';}>支付宝收款</option>
+						<option value="2" {$userpay_row.ptype=="2"?"selected":'';}>银行卡收款</option>
+						<option value="3" {$userpay_row.ptype=="3"?"selected":'';}>微信收款</option>
+					</select>
+				</td>
+			</tr>
+			<tr style="display: {$userpay_row.ptype=="2"?"":'none';}" id="bank2">
+				<td>银行卡号</td>
+				<td><input name="card" type="text" placeholder="请认真核对银行卡号" value="{$userpay_row.card?$userpay_row.card:'';}"></td>
+			</tr>
+			<tr style="display: {$userpay_row.ptype=="2"?"":'none';}" id="bank3">
+				<td>开户地址</td>
+				<td><input name="bankaddr" type="text" placeholder="开户行请精确到市！！" value="{$userpay_row.bankaddr?$userpay_row.bankaddr:'';}"></td>
+			</tr>
+			<tr style="display: {$userpay_row.ptype=="1"?"":'none';}" id="alipay1">
+				<td>支付宝账号</td>
+				<td><input name="alipay" type="text" placeholder="请认真填写收款帐号" value="{$userpay_row.alipay?$userpay_row.alipay:'';}"></td>
+			</tr>
+			<tr style="display: {$userpay_row.ptype=="1"?"":'none';}" id="alipay2">
+				<td>支付宝二维码</td>
+				<td>
+					<label><input name="alipayimg" value="{$userpay_row.alipayimg?$userpay_row.alipayimg:'';}" type="file" accept=".jpg,.jpeg,.bmp,.png,.gif" style="display: none" id="alipayimg" checked="" onchange="Uploadimg('alipayimg_img_show','alipayimg')">上传图片</label>
+					<br>
+					<img id="alipayimg_img_show" style="width: 200px;margin-top: 20px;max-height: 200px;" src="{$userpay_row.alipayimg?$userpay_row.alipayimg:'';}" alt="" onclick="window.open(this.src)">
+				</td>
+			</tr>
+
+			<tr style="display: {$userpay_row.ptype=="3"?"":'none';}" id="weixin1">
+				<td>微信账号</td>
+				<td><input name="weixin" type="text" value="{$userpay_row.weixin?$userpay_row.weixin:'';}"></td>
+			</tr>
+			<tr style="display: {$userpay_row.ptype=="3"?"":'none';}"id="weixin2">
+				<td>微信二维码</td>
+				<td>
+					<label><input name="weixinimg" value="{$userpay_row.weixinimg?$userpay_row.weixinimg:'';}" type="file" accept=".jpg,.jpeg,.bmp,.png,.gif" style="display: none" id="weixinimg" checked="" onchange="Uploadimg('weixinimg_img_show','weixinimg')">上传图片</label>
+					<br>
+					<img id="weixinimg_img_show" style="width: 200px;margin-top: 20px;max-height: 200px;" src="{$userpay_row.weixinimg?$userpay_row.weixinimg:'';}" alt="" onclick="window.open(this.src)">
+				</td>
+			</tr>
+
+			<tr>
+				<td>收款人姓名</td>
+				<td><input type="text" name="realname" placeholder="必须跟收款帐户名一致" value="{$userpay_row.realname?$userpay_row.realname:'';}"></td>
+			</tr>
+			<tr>
+				<td>身份证号</td>
+				<td><input name="idcard" type="text" placeholder="请填写真实的身份证号" value="{$userpay_row.idcard?$userpay_row.idcard:'';}" maxlength="18"></td>
+			</tr>
+
+			{if (cache('adminconfig')['is_sms_userpay']==1)}
+			<tr>
+				<td>手机号</td>
+				<td>
+					<input type="text" style="width: calc(100% - 108px);" name="tel" value="{$userdefine_row.tel}" readonly>
+					<span style="height:44px;color:#fff;border:none;border-radius:2px;background:#389ef3;padding: 12px 10px;cursor: pointer" onclick="getCode();" id="click_checkcode">
+						发送验证码
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>验证码</td>
+				<td><input name="chkcode" type="text" placeholder="短信验证码" value=''></td>
+			</tr>
+			<script>
+                function getCode(){
+                    var phone=$('[name="tel"]').val();
+                    var reg=/\d{11}/;
+                    if(phone=='' || !reg.test(phone)){
+                        layer.msg('请填写正确的手机号码！');
+                        $('[name="tel"]').focus();
+                        return false;
+                    }
+                    $.post(
+                        "{:url('userinfo/sms_userinfo')}",
+                        {phone:phone,t:new Date().getTime()},
+                        function(data){
+                            data = eval("(" + data + ")");
+                            if (data.status == '1') {
+                                layer.msg(data.msg);
+                                $('#click_checkcode').removeAttr('onclick');
+                                $('#click_checkcode').html('<i class="times">80</i>秒后重发');
+                                timeC(80);
+                            } else {
+                                layer.msg(data.msg);
+                                $('#click_checkcode').attr('onclick','getCode()');
+                            }
+                        },'json');
+                }
+
+                function timeC(t){
+                    if(t==0){
+                        $('#click_checkcode').attr('onclick','getCode()');
+                        $('#click_checkcode').text('获取验证码');
+                    } else {
+                        t=t-1;
+                        $('#click_checkcode .times').text(t);
+                        setTimeout('timeC('+t+')',1000);
+                    }
+                }
+			</script>
+			{elseif (cache('adminconfig')['is_sms_userpay']==2)}
+			<tr>
+				<td>验证码</td>
+				<td>
+					<input type="text" style="width: calc(100% - 108px);" name="chkcode" value="" placeholder="验证码">
+					<span style="height:44px;color:#fff;border:none;border-radius:2px;background:#389ef3;padding: 12px 10px;cursor: pointer" onclick="getCode();" id="click_checkcode">
+						发送验证码
+					</span>
+				</td>
+			</tr>
+			<script>
+                function getCode(){
+                    $.post(
+                        "{:url('userinfo/wx_sms_userinfo')}",
+                        {t:new Date().getTime()},
+                        function(data){
+                            data = eval("(" + data + ")");
+                            if (data.status == '1') {
+                                layer.msg(data.msg);
+                                $('#click_checkcode').removeAttr('onclick');
+                                $('#click_checkcode').html('<i class="times">80</i>秒后重发');
+                                timeC(80);
+                            } else {
+                                layer.msg(data.msg);
+                                $('#click_checkcode').attr('onclick','getCode()');
+                            }
+                        },'json');
+                }
+
+                function timeC(t){
+                    if(t==0){
+                        $('#click_checkcode').attr('onclick','getCode()');
+                        $('#click_checkcode').text('获取验证码');
+                    } else {
+                        t=t-1;
+                        $('#click_checkcode .times').text(t);
+                        setTimeout('timeC('+t+')',1000);
+                    }
+                }
+			</script>
+			{/if}
+			</tbody></table>
+		<button type="submit" class="btn2" onclick="submitform();return false;">保存设置</button>
+	</div>
+</form>
+<script>
+    var selectptype = function () {
+        var ptype = $('[name=ptype]').val();
+        if (ptype == '1') {
+            $('#bank1').hide();
+            $('#bank2').hide();
+            $('#bank3').hide();
+            $('#weixin1').hide();
+            $('#weixin2').hide();
+            $('#alipay1').show();
+            $('#alipay2').show();
+        } else if (ptype == '2') {
+            $('#bank1').show();
+            $('#bank2').show();
+            $('#bank3').show();
+            $('#weixin1').hide();
+            $('#weixin2').hide();
+            $('#alipay1').hide();
+            $('#alipay2').hide();
+        } else if (ptype == '3') {
+            $('#bank1').hide();
+            $('#bank2').hide();
+            $('#bank3').hide();
+            $('#weixin1').show();
+            $('#weixin2').show();
+            $('#alipay1').hide();
+            $('#alipay2').hide();
+        }
+    }
+</script>
+<script>
+    function submitform() {
+
+        {if (cache('adminconfig')['is_sms_userpay']==1)}
+        var chkcode=$('[name="chkcode"]').val();
+        if(chkcode==''){
+            layer.msg('请输入短信验证码！');
+            $('[name="chkcode"]').focus();
+            return false;
+        }
+        {/if}
+
+        var ptype=$('[name="ptype"]').val();
+        if(ptype==''){
+            layer.msg('请选择收款方式！');
+            $('[name="ptype"]').focus();
+            return false;
+        }
+
+        if (ptype == '1') {
+            var alipay=$('[name="alipay"]').val();
+            if(alipay==''){
+                layer.msg('请填写支付宝账号！');
+                $('[name="alipay"]').focus();
+                return false;
+            }
+            var alipayimg=$('#alipayimg').attr('value');
+            var alipayimg_siblings = $('#alipayimg_img_show').attr('src');
+            if(alipayimg==''||alipayimg==undefined||alipayimg==null){
+                if(alipayimg_siblings==''||alipayimg_siblings==undefined||alipayimg_siblings==null) {
+                    layer.msg('请上传支付宝二维码！');
+                    $('#alipayimg').focus();
+                    return false;
+                }
+            }
+        } else if (ptype == '2') {
+            var bankaddr=$('[name="bankaddr"]').val();
+            if(bankaddr==''){
+                layer.msg('请填写开户地址！');
+                $('[name="bankaddr"]').focus();
+                return false;
+            }
+            var card=$('[name="card"]').val();
+            if(card==''){
+                layer.msg('请填写银行卡号！');
+                $('[name="card"]').focus();
+                return false;
+            }
+        } else if (ptype == '3') {
+            var weixin=$('[name="weixin"]').val();
+            if(weixin==''){
+                layer.msg('请填写微信账号！');
+                $('[name="weixin"]').focus();
+                return false;
+            }
+            var weixinimg=$('#weixinimg').attr('value');
+            var weixinimg_siblings = $('#weixinimg_img_show').attr('src');
+            if(weixinimg==''||weixinimg==undefined||weixinimg==null){
+                if(weixinimg_siblings==''||weixinimg_siblings==undefined||weixinimg_siblings==null) {
+                    layer.msg('请上传微信二维码！');
+                    $('#weixinimg').focus();
+                    return false;
+                }
+            }
+        }
+
+        var realname=$('[name="realname"]').val();
+        if(realname==''){
+            layer.msg('请填写正确的收款人姓名！');
+            $('[name="realname"]').focus();
+            return false;
+        }
+
+        var idcard=$('[name="idcard"]').val();
+        if(idcard==''){
+            layer.msg('请填写正确的身份证号！');
+            $('[name="idcard"]').focus();
+            return false;
+        }
+
+        var formData = new FormData($( "#ajaxform" )[0]);//找到input，作为参数传递给FormData构造函数
+        $.ajax({
+            url: "{:url('userinfo/edituserpaysave')}",
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.href = "{:url('/useruuserinfo')}";
+                        // window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+        });
+    }
+</script>
+<script>
+
+    /**
+     * 上传缩略图版本
+     */
+    function Uploadimg(showimgid,fileid) {
+        var eImg = $('#'+showimgid);
+//        console.log(getObjectURL($('#'+inputid)[0].files[0]));
+        eImg.show().attr('src', getObjectURL($('#'+fileid)[0].files[0])); // 或 this.files[0] this->input $(this).after(eImg);});
+    }
+
+    /*
+     * 获取文件绝对路径
+     */
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjectURL != undefined) {
+            url = window.createObjectURL(file) ;
+        } else if (window.URL!=undefined) {
+            url = window.URL.createObjectURL(file) ;
+        } else if (window.webkitURL!=undefined) {
+            url = window.webkitURL.createObjectURL(file) ;
+        } return url ;
+    }
+</script>
+<!--<script>-->
+    <!--function submitform() {-->
+        <!--var test = $("#ajaxform").serialize();-->
+        <!--$.post(-->
+            <!--"{:url('userinfo/edituserpaysave')}",-->
+            <!--$("#ajaxform").serialize(),-->
+            <!--function (data) {-->
+                <!--// console.log(data);-->
+                <!--data = eval("(" + data + ")");-->
+                <!--if (data.status == '1') {-->
+                    <!--layer.msg(data.msg, {-->
+                        <!--icon: 6,-->
+                        <!--time: 1000 //1.5秒关闭（如果不配置，默认是3秒）-->
+                    <!--}, function(){-->
+                        <!--window.location.href = "{:url('/useruuserinfo')}";-->
+                        <!--// window.parent.location.reload();-->
+                    <!--});-->
+                <!--} else if(data.status=='0') {-->
+                    <!--layer.msg(data.msg, {-->
+                        <!--icon: 5,-->
+                        <!--time: 1000 //1.5秒关闭（如果不配置，默认是3秒）-->
+                    <!--});-->
+                <!--}-->
+            <!--}-->
+            <!--, "json"-->
+        <!--);-->
+    <!--}-->
+<!--</script>-->
+{include file="common/footer" /}

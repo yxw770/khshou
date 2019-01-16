@@ -1,0 +1,129 @@
+{include file="common/header" /}
+<body>
+<!-- 顶部 -->
+<!--部分页面top后面有style样式添加-->
+<div class="top" style="padding-bottom: 0">
+    <div class="top_con">
+        <span>添加分类</span>
+        <a class="back" href="{:url('/')}"><img src="{$images}/back.png" width="7" height="11"></a>
+        <a class="user_name"><i class="iconfont icon-mine"></i></a>
+    </div>
+</div><!-- 列表 -->
+<form action="{:url('cate/add')}" method="post" id="ajaxform">
+    <table border="0" cellspacing="0" cellpadding="0" class="tab1">
+        <tbody><tr>
+            <td>分类名称</td>
+            <td><input name="catename[]" type="text" maxlength="50"></td>
+        </tr>
+        <tr>
+            <td>分类排序</td>
+            <td><input value="100" name="sortid[]" type="text" maxlength="3"></td>
+        </tr>
+        </tbody>
+    </table>
+    <a class="add_box" href="javascript:;" onclick="submitform();return false;" style="background: linear-gradient(-45deg,#51cfe4,#389ef3,#838ced);">
+        <img src="{$images}/add.png" width="17" height="18"> 添加分类
+    </a>
+</form>
+<div class="list_bg">
+    <ul>
+        {volist name="list" id="vo"}
+        <li id="record_51">
+            <div class="j_box_title">分类：{$vo.catename}</div>
+            <div class="j_box_con"><p>当前排序：{$vo.sortid}</p>
+                <p> <a href="javascript:void(0)" onclick="showContent('分类链接','{:url('cate/link','goodcateid='.$vo.goodcateid)}','90%','90%')" class="j_btn">链接</a>
+                    <a href="{:url('cate/edit','goodcateid='.$vo.goodcateid)}" class="j_btn">编辑</a>
+                    <a href="" class="j_btn" style="color:#e573c5" onclick="del('{$vo.goodcateid}');return false;">删除</a>
+                </p>
+                <div id="clear"></div>
+            </div>
+        </li>
+        {/volist}
+    </ul>
+</div>
+<script>
+    function submitform() {
+        var test = $("#ajaxform").serialize();
+        $.post(
+            "{:url('cate/add')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+</script>
+<script>
+    function del(id) {
+        $.post(
+            "{:url('cate/del')}",
+            {goodcateid:id},
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+</script>
+<style>
+    .pagination {
+        /*padding: 32px 0;*/
+        text-align: left;
+        font-size: 12px;
+        color: #666;
+        position: relative;
+    }
+    .m-pages a{
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid #e3e5eb;
+        border-left: 1px solid #e3e5eb;
+        border-top: 1px solid #e3e5eb;
+        display: inline-block;
+        font-size: 12px;
+        height: 30px;
+        line-height: 30px;
+        overflow: hidden;
+        text-align: center;
+        vertical-align: top;
+        width: 30px;
+    }
+</style>
+<div class="pagination">
+    {$page}
+</div>
+{include file="common/footer" /}
+
+

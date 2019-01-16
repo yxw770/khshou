@@ -1,0 +1,130 @@
+{include file="common/header" /}
+<script src="{$js}/saveFile.js"></script>
+<script src="{$layer}/layer.js"></script>
+
+	<body>
+	<div class="top_bg">
+		{include file="common/orhter_top_nav" /}
+	</div>
+		<div class="banner_bg">
+			<div class="container">
+				<h3>投诉信息 <span>/ Searchresult</span></h3></div>
+		</div>
+		<div class="main_box">
+			<div class="se5_card" style="margin-top: 40px;margin-bottom: 60px;width: 100%">
+				<div class="order_tips order_result">
+					<img src="{$images}/clock.png" alt="">
+					<span id="lesstime_span">投诉举证期剩余时间：</span>
+					<!-- 倒计时 -->
+					<div id="remainSeconds" style="display:none"><?php echo $lesttime; ?></div>
+					<span id="remainTime" style="color: #FE825A">平台审核期</span>
+					<div class="clear"></div>
+					<br>
+				</div>
+				<h3>投诉信息</h3>
+				<br>
+				<p>
+					<?php switch ($lists['report_status']){
+					case '0':
+						$report_msg = '卖家处理中';
+						break;
+					case '1':
+						$report_msg = '投诉处理完成';
+						break;
+					case '2':
+						$report_msg = '平台处理中';
+						break;
+				} ?>
+							<?php switch ($lists['result_status']){
+					case '':
+						$result_msg = '投诉处理中';
+						break;
+					case '1':
+						$result_msg = '支持买家';
+						break;
+					case '2':
+						$result_msg = '支持卖家';
+						break;
+				} ?>
+					投诉订单： <?php echo $lists['report_orderid'] ?><br><br>
+					投诉类别： <?php echo $lists['report_type'] ?><br><br>
+					联系方式： <a href="http://wpa.qq.com/msgrd?v=3&uin={$qq}&site=qq&menu=yes" target="_blank"><?php echo $qq ?></a><br><br>
+					投诉时间： <?php echo $lists['report_creattime'] ?><br><br>
+					投诉状态： <?php echo $report_msg ?><br><br>
+					投诉处理结果： <?php echo $result_msg ?><br><br>
+				</p>
+				<div class="bottom_btn">
+					<a id="destroy_report">撤销投诉</a>
+					<!--<a id="report_details">投诉详情</a>-->
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			var SysSecond;
+			var InterValObj;
+
+			$(document).ready(function() {
+				SysSecond = parseInt($("#remainSeconds").html()); //这里获取倒计时的起始时间 
+				InterValObj = window.setInterval(SetRemainTime, 1000);
+			});
+
+			function SetRemainTime() {
+				if(SysSecond > 0) {
+					SysSecond = SysSecond - 1;
+					var second = Math.floor(SysSecond % 60);
+					var minite = Math.floor((SysSecond / 60) % 60);
+					var hour = Math.floor((SysSecond / 3600) % 24);
+					var day = Math.floor((SysSecond / 3600) / 24);
+
+					$("#remainTime").html(day + "天" + hour + "小时" + minite + "分" + second + "秒");
+				} else {
+					window.clearInterval(InterValObj);
+					//这里可以添加倒计时时间为0后需要执行的事件
+                    $('#lesstime_span').html('投诉举证期结束');
+				}
+			}
+		</script>
+    <script>
+        $('#destroy_report').click(function () {
+            layer.confirm('请确定卖家已经处理好您的售后问题，订单撤销投诉后不可再次投诉，订单金额将会正常结算给卖家。请买家回想您当时投诉的原因，是不是千万不要撤诉。您确认撤销投诉吗？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                layer.prompt({title: '请输入投诉密码', formType: 1}, function (pass) {
+                    var orderid="{$lists['report_orderid']}";
+                    $.post(
+                        '{:url("tousu/destroy_report")}',
+						{
+						    orderid: orderid,
+							pass: pass
+						},
+						function (data) {
+                            console.log(data);
+                            data = eval("(" + data + ")");
+                            if (data.status == '1') {
+                                layer.msg(data.msg, {
+                                    icon: 6,
+                                    time: 3000 //1.5秒关闭（如果不配置，默认是3秒）
+                                }, function(){
+                                    window.parent.location.reload(); //刷新父页面
+                                });
+                            } else if(data.status=='0') {
+                                layer.msg(data.msg, {
+                                    icon: 5,
+                                    time: 3000 //1.5秒关闭（如果不配置，默认是3秒）
+                                });
+                            }
+                    	}
+                    );
+                })
+            }, function () {
+                layer.msg('容我三思', {
+                    time: 2000 //20s后自动关闭
+                });
+            });
+        });
+    </script>
+	{include file="common/footer" /}
+	</div>
+	</div>
+	{include file="common/footer_mobile" /}

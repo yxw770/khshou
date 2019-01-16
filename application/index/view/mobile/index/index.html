@@ -1,0 +1,252 @@
+{include file="common/header" /}
+
+<body>
+<!--banner-->
+<div class="banner">
+    {include file="common/top_nav" /}
+    <!--全新发卡体验-->
+    <div class="container">
+        <div class="fk_left mobile_hide">
+            <h1>全新发卡体验</h1>
+            <p>全响应式界面，简约易操作，一站式寄售卡，为你稳定服务。<br>商品管理、订单记录、收益统计、渠道分析...</p>
+            <div class="ys_btn">
+                <a href="{:url('/login')}" class="main_btn">立即体验</a>
+            </div>
+        </div>
+    </div>
+    <form id="formSearch" action="{:url('/orderquery')}" method="get">
+        <div class="search_box">
+            <div class="cx_choose"><input type="text" value="订单编号" disabled=""></div>
+            <div class="choose_menu">
+                <ul>
+                    <li onclick="orderClick()">订单编号</li>
+                    <li onclick="contactClick()">联系方式</li>
+                </ul>
+            </div>
+            <input type="text" name="kw" value="" placeholder="请输入联系方式" class="cx_text">
+            <button type="button" onclick="btnClick()" class="search_btn"><img src="{$images}/search_icon.png" alt="查询"></button>
+        </div>
+    </form>
+    <!--核心优势-->
+    <div class="ys_bg">
+        <div class="title_bg title_bg2">
+            <h1>平台优势</h1>
+            <div class="title_line"></div>
+            <p>为商户及其买家提供，便捷、绿色、安全、快速的销售和购买体验。</p>
+        </div>
+        <div class="container">
+            <div class="ys_menu">
+                <ul>
+                    <li class=""><img src="{$images}/ys_icon1.png" alt=""><br><span class="mobile_hide">服务器安全</span>
+                        <p>采用群集服务器，防御高遍布全球，无论用户身在何处，均能获得流畅安全可靠的体验。</p>
+                    </li>
+                    <li class=""><img src="{$images}/ys_icon2.png" alt=""><br><span class="mobile_hide">界面简约</span>
+                        <p>简约的UI交互体验可以给您一个体验度极高的商户后台，更好的下单体验。</p>
+                    </li>
+                    <li class="ys_menu_on"><img src="{$images}/ys_icon3.png" alt=""><br><span class="mobile_hide">资金保障</span>
+                        <p>商户的资金，全部是次日结算当天到账，资金平均停留的时间不超过12小时，您的资金安全将得到充分的保障。</p>
+                    </li>
+                    <li class=""><img src="{$images}/ys_icon4.png" alt=""><br><span class="mobile_hide">费率超低</span>
+                        <p>支付渠道直接对接官方，直接去掉中间商的差价，因此我们可以给商户提供更低廉的费率。</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<!--查询订单-->
+
+<style>
+    .yz_shadow {
+        display: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: #19beba;
+        opacity: 0.9;
+        z-index: 1100;
+    }
+
+    .yz_box {
+        display: none;
+        position: fixed;
+        z-index: 1101;
+        top: 35%;
+        left: 50%;
+        margin-left: -170px;
+        width: 300px;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 10px
+    }
+
+    .yz_box>p {
+        display: block;
+        margin-bottom: 20px;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 20px;
+        background: #fff
+    }
+
+    .yz_box>p>input {
+        padding: 0 12px;
+        width: calc(100% - 150px);
+        font-size: 14px
+    }
+
+    .yz_box img:hover {
+        cursor: pointer;
+    }
+
+    .yz_box>button {
+        display: block;
+        cursor: pointer;
+        width: 100%;
+        height: 40px;
+        border-radius: 20px;
+        background: linear-gradient(90deg, #fe825a, #fc9);
+        color: #fff
+    }
+
+    @media (max-width: 800px) {
+        .yz_box {
+            width: 80%;
+            margin: 0 auto;
+            margin-left: -45%;
+        }
+    }
+</style>
+<script type="text/javascript">
+    $(function() {
+        contactClick();
+    });
+
+    function orderClick() {
+        $('[name=searchText]').attr('placeholder', '请输入订单号查询订单');
+    }
+
+    function contactClick() {
+        $('[name=searchText]').attr('placeholder', '请输入联系方式');
+    }
+
+    function btnClick() {
+        $('#formSearch').submit();
+    }
+
+    function submitForm() {
+        $('#formSearch').submit();
+    }
+    // 回车键监听
+    // 验证码位置按钮
+    $('[name=kw]').keydown(function(e) {
+        // 兼容FF和IE和Opera
+        var theEvent = e || window.event;
+        var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+        if(code == 13) {
+            submitForm();
+            return false;
+        }
+        return true;
+    });
+    // 搜索按钮
+    $('[name=searchText]').keydown(function(e) {
+        // 兼容FF和IE和Opera
+        var theEvent = e || window.event;
+        var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+        if(code == 13) {
+            btnClick();
+            return false;
+        }
+        return true;
+    });
+</script>
+<div class="sect">
+    <!--企业保障-->
+    <div class="bz_list">
+        <img src="{$images}/us_icon1.png" class="us-img1" alt="诚信">
+        <img src="{$images}/us_icon2.png" class="us-img2" alt="匠心">
+        <img src="{$images}/us_icon3.png" class="us-img3" alt="公道">
+        <img src="{$images}/us_icon4.png" class="us-img4" alt="风控">
+        <div class="bz-wz bz-wz1">
+            <h3>诚信</h3>
+            <div></div>
+            <p>诚信永远是{$qtarr.sitename}的经营之本，我们抱诚守真尊重、爱护平台的每一位商户以及买家。</p>
+            <a href="{:url('/login')}" class="main_btn">立即体验</a>
+        </div>
+        <div class="bz-wz bz-wz2">
+            <h3>匠心</h3>
+            <div></div>
+            <p>{$qtarr.sitename}开发团队成员均有长达3年以上的开发经验，匠心精神，铸就高品质体验。</p>
+            <a href="{:url('/login')}" class="main_btn">立即体验</a>
+        </div>
+        <div class="bz-wz bz-wz3">
+            <h3>公道</h3>
+            <div></div>
+            <p>平台所有的支付渠道,均有{$qtarr.sitename}平台自主申请对接,杜绝高费率第三方支付。</p>
+            <a href="{:url('/login')}" class="main_btn">立即体验</a>
+        </div>
+        <div class="bz-wz bz-wz4">
+            <h3>风控</h3>
+            <div></div>
+            <p>平台每个商户都经过{$qtarr.sitename}风控组筛选，商户信誉有保障。</p>
+            <a href="{:url('/login')}" class="main_btn">立即体验</a>
+        </div>
+    </div>
+    <div class="sect2">
+        <!--结算记录-->
+        <div class="title_bg">
+            <h1>结算公告</h1>
+            <div class="title_line"></div>
+            <p>支付宝、网银金额已由系统自动打款到账，如未到账请核实收款信息是否正确，银行卡商户2个小时内到账。</p>
+        </div>
+        <div class="container">
+            <ul class="jsgg">
+                {volist name="list" id="vo"  }
+                <li>{:date('Y年m月d日',strtotime($vo.addtime))} {$vo.title} {if $i==1}<img src="{$images}/news.gif">{/if}<span>{$vo.addtime}</span></li>
+                {/volist}
+                <div class="clear"></div>
+            </ul>
+        </div>
+        <!--合作伙伴-->
+        <div class="cooper">
+            <div class="container">
+                <div class="cooper_con swiper-container swiper-container-horizontal">
+                    <ul class="swiper-wrapper" style="transform: translate3d(-2192px, 0px, 0px); transition-duration: 0ms;">
+                        <li class="swiper-slide swiper-slide-duplicate" data-swiper-slide-index="0"><img src="{$images}/zfb_on.png" alt="支付宝"></li>
+                        <li class="swiper-slide swiper-slide-duplicate" data-swiper-slide-index="1"><img src="{$images}/wxzf_on.png" alt="微信支付"></li>
+                        <li class="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-prev" data-swiper-slide-index="2"><img src="{$images}/qqzf_on.png" alt="QQ支付"></li>
+                        <li class="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-active" data-swiper-slide-index="3"><img src="{$images}/yl_on.png" alt="银联支付"></li>
+                        <li class="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-next" data-swiper-slide-index="4"><img src="{$images}/cft_on.png" alt="财付通"></li>
+                        <li class="swiper-slide" data-swiper-slide-index="0"><img src="{$images}/zfb_on.png" alt="支付宝"></li>
+                        <li class="swiper-slide" data-swiper-slide-index="1"><img src="{$images}/wxzf_on.png" alt="微信支付"></li>
+                        <li class="swiper-slide swiper-slide-prev" data-swiper-slide-index="2"><img src="{$images}/qqzf_on.png" alt="QQ支付"></li>
+                        <li class="swiper-slide swiper-slide-active" data-swiper-slide-index="3"><img src="{$images}/yl_on.png" alt="银联支付"></li>
+                        <li class="swiper-slide swiper-slide-next" data-swiper-slide-index="4"><img src="{$images}/cft_on.png" alt="财付通"></li>
+                        <li class="swiper-slide swiper-slide-duplicate" data-swiper-slide-index="0"><img src="{$images}/zfb_on.png" alt="支付宝"></li>
+                        <li class="swiper-slide swiper-slide-duplicate" data-swiper-slide-index="1"><img src="{$images}/wxzf_on.png" alt="微信支付"></li>
+                        <li class="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-prev" data-swiper-slide-index="2"><img src="{$images}/qqzf_on.png" alt="QQ支付"></li>
+                        <li class="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-active" data-swiper-slide-index="3"><img src="{$images}/yl_on.png" alt="银联支付"></li>
+                        <li class="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-next" data-swiper-slide-index="4"><img src="{$images}/cft_on.png" alt="财付通"></li>
+                    </ul>
+                </div>
+                <div class="swiper-button-prev mobile_hide"></div>
+                <div class="swiper-button-next mobile_hide"></div>
+            </div>
+        </div>
+        <!--底部引导-->
+        <div class="foot_reg">
+            <div class="container">
+                <div class="left_reg">不再犹豫，开始你的表演!</div>
+                <div class="right_reg">
+                    <a href="{:url('/login')}">立即登录</a>
+                </div>
+            </div>
+        </div>
+        {include file="common/footer" /}
+    </div>
+</div>
+{include file="common/footer_mobile" /}

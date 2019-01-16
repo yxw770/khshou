@@ -1,0 +1,298 @@
+{include file="common/header" /}
+<script src="{$js}/sj.js"></script>
+<script src="{$js}/morris.min.js"></script>
+<script src="{$js}/raphael-min.js"></script>
+<link rel="stylesheet" href="{$css}/morris.css">
+<link rel="stylesheet" href="{$css}/style.css">
+<link href="{$open}/openin.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<section class="box-right">
+	<div class="header clear">
+		<div class="sec-box sec-1 clear">
+			<h3>{$unpaied_payment}</h3>
+			<i class="icon icon-1"></i>
+			<p>当前可结算金额（元）</p>
+			<div class="line"></div>
+			<p>上次结算金额<span>{$last_usermoney?$last_usermoney:'暂无结算'}</span></p>
+		</div>
+		<div class="sec-box sec-2">
+			<h3>{$today_buylist_count}</h3>
+			<i class="icon icon-2"></i>
+			<p>今日成交订单（笔）</p>
+			<div class="line"></div>
+			<p>昨日成交订单<span>{$yesterday_buylist_count}</span></p>
+		</div>
+		<div class="sec-box sec-3">
+			<h3>{$today_quantity}</h3>
+			<i class="icon icon-3"></i>
+			<p>今日卖出卡量（张）</p>
+			<div class="line"></div>
+			<p>今日收入金额（元）<span>{$today_income}</span></p>
+		</div>
+		<div class="sec-box sec-4">
+			<h3>{$today_income}</h3>
+			<i class="icon icon-4"></i>
+			<p>今日收入（元）</p>
+			<div class="line"></div>
+			<p>昨日获得利润<span>{$yesterday_income}</span></p>
+		</div>
+	</div>
+	<div class="index-lg-12">
+		<div class="card-box">
+			<h4 class="header-title m-t-0" style="color: #585962;">近期结算统计</h4>
+			<div id="morris-line-example" style="height: 280px; position: relative; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+				<div class="morris-hover morris-default-style" style="left: 626.583px; top: 150px; display: none;">
+					<div class="morris-hover-row-label"></div>
+					<div class="morris-hover-point" style="color: #10c469">
+						结算金额: 0
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="idx_bottom">
+		<li class="item fr">
+			<div class="title">
+				通道分析<em class="icon fr"></em>
+			</div>
+			<div class="box">
+				<div id="my_container">
+					<div class="td">通道分析</div>
+					<canvas id="pie_canvas"></canvas>
+					<ul class="sj">
+						<li>
+							<div style="background:#706acb"></div>
+							微信扫码
+						</li>
+						<li>
+							<div style="background:#08c5dd"></div>
+							微信wap/微信公众号/QQ扫码
+						</li>
+						<li>
+							<div style="background:#ffb726"></div>
+							支付宝
+						</li>
+						<li>
+							<div style="background:#991cf5"></div>
+							支付宝wap/京东扫码/微信公众号
+						</li>
+						<li>
+							<div style="background:#f5506c"></div>
+							组合支付/网上银行
+						</li>
+					</ul>
+				</div>
+			</div>
+		</li>
+	</div>
+	<div class="Notice">
+		<div class="title">系统公告<em class="icon fr"></em>
+		</div>
+		<div class="inbox-widget nicescroll" tabindex="5000" style="overflow: hidden; outline: none;padding: 1% 2%;">
+			{volist name="articlelist_arr" id="vo"}
+			{if $vo.is_noticed=='1'}
+			<script>
+                showContent('平台公告','{:url('index/link','articlelistid='.$vo.articlelistid)}','900px','320px');
+			</script>
+			{/if}
+			<a href="javascript:;" onclick="showContent('平台公告','{:url('index/link','articlelistid='.$vo.articlelistid)}','900px','320px')">
+				<div class="inbox-item modal1">
+					<p class="inbox-item-author">
+						{$vo.title}
+						<san style="">{$vo.addtime}</san>
+					</p>
+				</div>
+			</a>
+			{/volist}
+		</div>
+	</div>
+</section>
+
+
+<script>
+    ! function($) {
+        "use strict";
+
+        var Dashboard1 = function() {
+            this.$realData = []
+        };
+
+        //creates Bar chart
+        Dashboard1.prototype.createBarChart = function(element, data, xkey, ykeys, labels, lineColors) {
+            Morris.Bar({
+                element: element,
+                data: data,
+                xkey: xkey,
+                ykeys: ykeys,
+                labels: labels,
+                hideHover: 'auto',
+                resize: true, //defaulted to true
+                gridLineColor: '#eeeeee',
+                barSizeRatio: 0.2,
+                barColors: lineColors
+            });
+        },
+
+            //creates line chart
+            Dashboard1.prototype.createLineChart = function(element, data, xkey, ykeys, labels, opacity, Pfillcolor, Pstockcolor, lineColors) {
+                Morris.Line({
+                    element: element,
+                    data: data,
+                    xkey: xkey,
+                    ykeys: ykeys,
+                    labels: labels,
+                    fillOpacity: opacity,
+                    pointFillColors: Pfillcolor,
+                    pointStrokeColors: Pstockcolor,
+                    behaveLikeLine: true,
+                    gridLineColor: '#eef0f2',
+                    hideHover: 'auto',
+                    resize: true, //defaulted to true
+                    pointSize: 0,
+                    lineColors: lineColors
+                });
+            },
+
+            //creates Donut chart
+            Dashboard1.prototype.createDonutChart = function(element, data, colors) {
+                Morris.Donut({
+                    element: element,
+                    data: data,
+                    resize: true, //defaulted to true
+                    colors: colors
+                });
+            },
+
+            Dashboard1.prototype.init = function() {
+
+                //creating bar chart
+
+                //create line chart
+                var $data = [
+                <?php if($reserpayment_list):  ?>
+				<?php foreach ($reserpayment_list as $key=>$row): ?>
+					{
+						y: <?php echo $row[ 'addtime']?"'".date('Y-m-d',strtotime($row[ 'addtime']))."'":0 ?>,
+						a: <?php echo $row[ 'settlement']?$row[ 'settlement']:0 ?>
+					},
+                <?php if($key>=15){break;} ?>
+				<?php endforeach; ?>
+				<?php  else: ?>
+				<?php for($i=1;$i<=15;$i++): ?>
+					{
+						y:'<?php echo date('Y-m-d',strtotime("-".$i." day")); ?>',
+						a:0
+					},
+				<?php endfor; ?>
+				<?php endif ?>
+				];
+                this.createLineChart('morris-line-example', $data, 'y', ['a'], ['结算金额'], ['0.9'], ['#ffffff'], ['#999999'], ['#10c469', '#188ae2']);
+
+                //creating donut chart
+                var $donutData = [
+                <?php if($orderlist_arr):?>
+				<?php end($orderlist_arr);?>
+				<?php $key_last=key($orderlist_arr);?>
+				<?php foreach ($orderlist_arr as $key=>$row): ?>
+				<?php if($key!=$key_last): ?>
+					{
+						label: '<?php echo $row[ 'channelname'] ?>',
+						value: <?php echo $row[ 'pay_count']?$row[ 'pay_count']:0 ?>
+					},
+				<?php else: ?>
+					{
+						label: '<?php echo $row[ 'channelname'] ?>',
+						value: <?php echo $row[ 'pay_count']?$row[ 'pay_count']:0 ?>
+					}
+				<?php endif; ?>
+				<?php endforeach; ?>
+				<?php endif; ?>
+                ];
+                this.createDonutChart('morris-donut-example', $donutData, ['#5b69bc', '#ff8acc', "#35b8e0", "#10c469", "188ae2"]);
+            },
+            //init
+            $.Dashboard1 = new Dashboard1, $.Dashboard1.Constructor = Dashboard1
+    }(window.jQuery),
+
+        //initializing
+        function($) {
+            "use strict";
+            $.Dashboard1.init();
+        }(window.jQuery);
+</script>
+<script>
+    $(function() {
+        $(document).on('click', '.modal1', function() {
+            $(".dmodal1").css('display', 'block')
+        });
+        $(document).on('click', '.modal2', function() {
+            $(".dmodal2").css('display', 'block')
+        });
+        $(document).on('click', '.modal3', function() {
+            $(".dmodal3").css('display', 'block')
+        });
+        $(document).on('click', '.close', function() {
+            $(".modal").css('display', 'none')
+        });
+        $(document).on('click', '.btn-default', function() {
+            $(".modal").css('display', 'none')
+        });
+
+        $(document).on('click', '.m-zt', function() {
+            $(".modal-zt").css('display', 'block')
+        });
+        $(document).on('click', '.close', function() {
+            $(".modal").css('display', 'none')
+        });
+    });
+</script>
+<script>
+    window.onload = function() {
+        var canvas = document.getElementById("pie_canvas");
+        var seriesData = [{
+            name: "zh",
+            value: 0.1,
+            color: "#f5506c"
+        },
+            {
+                name: "zfb",
+                value: 0.1,
+                color: "#ffb726"
+            },
+            {
+                name: "zfbwap",
+                value: 0.1,
+                color: "#991cf5"
+            },
+            {
+                name: "wxwap",
+                value: 0.1,
+                color: "#08c5dd"
+            },
+            {
+                name: "wx",
+                value: 0.6,
+                color: "#706acb"
+            }
+        ];
+        var config = {
+            width: 300,
+            height: 300,
+            series: seriesData,
+            canvas: canvas,
+            title: "Fruit Sales",
+            callback: function(obj) {
+                console.log(obj.label1);
+            }
+        };
+        pieChart.initSettings(config);
+        pieChart.render();
+    }
+</script>
+{include file="common/footer" /}
+
+

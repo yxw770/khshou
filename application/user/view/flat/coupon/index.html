@@ -1,0 +1,161 @@
+{include file="common/header" /}
+<link rel="stylesheet" href="{$css}/style.css">
+<link rel="stylesheet" href="{$css}/page.css">
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+
+<section class="box-right">
+    <div class="Journal">
+        <div class="jrl-title clear">优惠券列表</div>
+        <div class="goods-an clear">
+            <div class="col-sm-6">
+                <form class="form-inline" role="form" action="" method="get">
+                    <div class="form-group">
+                        <select name="goodlistid" class="form-controlzt" style="width: 710px;">
+                            <option value="">全部商品</option>
+                            {volist name="goodlist_arr" id="vo"}
+                            <option value="{$vo.goodlistid}" {:input('goodlistid')==$vo.goodlistid?"selected":'';}>{$vo.goodname}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="is_state" class="form-controlzt">
+                            <option value="">全部</option>
+                            <option value="1">已使用</option>
+                            <option value="0">未使用</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" style="width:200px;" type="text" name="keyword" value="{:input('keyword')}" placeholder="请输入关键字">
+                    </div>
+                    <button type="submit" class="btn btn-purple waves-effect waves-light"><i class="fa fa-search"></i> 搜索</button>
+                </form>
+            </div>
+            <div class="goods-btn">
+                <button type="button" onclick="delall()" class="btn btn-purple1 waves-effect waves-light">删除</button>
+            </div>
+        </div>
+        <div class="row">
+            <form action="{:url('coupon/delall')}" method="post" id="ajaxform">
+            <table class="table table-striped m-0">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" class="selectAllCheckbox"></th>
+                    <th>优惠券号码</th>
+                    <th>绑定商品</th>
+                    <th>面额</th>
+                    <th>生成时间</th>
+                    <th>有效期</th>
+                    <th>状态</th>
+                    <th>管理</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td><input name="listid[]" type="checkbox" id="t{$vo.couponid}" value="{$vo.couponid}"></td>
+                    <td style="text-align:left">{$vo.couponcode}</td>
+                    {if $vo.is_all=='1'}
+                    <td style="text-align:left">全部商品</td>
+                    {else/}
+                    <td style="text-align:left">{$vo.goodname}</td>
+                    {/if}
+                    <td>{$vo.amount}</td>
+                    <td>{$vo.addtime}</td>
+                    <td>{$vo.gptime}</td>
+                    {if $vo.is_state=='1'}
+                    <td>已使用</td>
+                    {elseif $vo.is_state=='0'}
+                    <td>未使用</td>
+                    {/if}
+                    <td>
+                        <a href="javascript:;" onclick="del('{$vo.couponid}');return false;">删除</a>
+                    </td>
+                    <td>
+                        <label for="t{$vo.couponid}"></label>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+            </form>
+        </div>
+    </div>
+</section>
+<script>
+    function delall() {
+        layer.confirm('确认要删除选中优惠券吗？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                // var test = $("#ajaxform").serialize();
+            $.post(
+                "{:url('coupon/delall')}",
+                $("#ajaxform").serialize(),
+                function (data) {
+                    // console.log(data);
+                    data = eval("(" + data + ")");
+                    if (data.status == '1') {
+                        layer.msg(data.msg, {
+                            icon: 6,
+                            time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            window.parent.location.reload();
+                        });
+                    } else if (data.status == '0') {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                        });
+                    }
+                }
+                // , "json"
+            );
+            }, function () {
+                layer.msg('容我三思', {
+                    time: 500 //20s后自动关闭
+                });
+            }
+        )
+    }
+</script>
+<script>
+    function del(id) {
+        $.post(
+            "{:url('coupon/del')}",
+            {couponid:id},
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+<script>
+    $('.selectAllCheckbox').click(function(){
+        if($(this).prop('checked')){
+            $('[type=checkbox]').prop('checked',true);
+        } else {
+            $('[type=checkbox]').prop('checked',false);
+        }
+    });
+</script>
+{include file="common/footer" /}

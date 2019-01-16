@@ -1,0 +1,168 @@
+{include file="common/header" /}
+<link rel="stylesheet" href="{$css}/style.css">
+<link rel="stylesheet" href="{$css}/page.css">
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<section class="box-right">
+    <div class="Journal">
+        <div class="jrl-title clear">商品列表</div>
+        <div class="goods-an clear">
+            <div class="col-sm-6">
+                <form class="form-inline" role="form" action="" method="get">
+                    <div class="form-group">
+                        <select name="cateid" class="form-controlzt" style="width: 710px;">
+                            <option value="">全部分类</option>
+                            {volist name="cate_arr" id="vo"}
+                            <option value="{$vo.goodcateid}" {:input('cateid')==$vo.goodcateid?"selected":'';}>{$vo.catename}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <button type="button" onclick='window.location.href="{:url('goodlist/add')}"' style="color:#fff;background-color:#449d44;border-color:#398439;margin-left: 10px;" class="btn btn-purple waves-effect waves-light">&nbsp;添加商品</button>
+                    <button type="submit" class="btn btn-purple waves-effect waves-light"><i class="fa fa-search"></i> 搜索</button>
+
+                    <input type="hidden" name="do" value="search">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <table class="table table-striped m-0">
+                <thead>
+                <tr>
+                    <th>商品分类</th>
+                    <th>排序</th>
+                    <th>商品名称</th>
+                    <th>授权码</th>
+                    <th>价格</th>
+                    <th>库存</th>
+                    <th>卖出</th>
+                    <th>上下架</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <?php
+                if ($vo['is_sub'] == '1') {
+                continue;
+                }
+                ?>
+                <tr>
+                    <td>{$vo.catename}</td>
+                    <td>{$vo.sortid}</td>
+                    <td>{$vo.goodname}</td>
+
+                    <?php if($vo['is_author']==1): ?>
+                    <td><?php echo $vo['sub_code'] ?></td>
+                    <?php else: ?>
+                    <td></td>
+                    <?php endif; ?>
+
+                    <td>￥{$vo.price}</td>
+                    <td>{$vo.count_onsell_kami}张 <a href="{:url('/kamilist')}?goodlistid={$vo.goodlistid}&do=search">查看</a></td>
+                    <td>{$vo.count_selled_kami}张 <a href="{:url('/sold')}?goodlistid={$vo.goodlistid}&ktype=order&keyword=&do=search">查看</a></td>
+                    {if $vo.is_state=='1'}
+                    <td><a onclick="togglestate({$vo.goodlistid},'0')" class="blue" style="cursor: pointer;">上架中</a></td>
+                    {else/}
+                    <td><a onclick="togglestate({$vo.goodlistid},'1')" class="red" style="cursor: pointer;">已下架</a></td>
+                    {/if}
+                    <td>{$vo.addtime}</td>
+                    <td>
+                        <a class="orange" onclick="showContent('分类链接','{:url('goodlist/link','goodlistid='.$vo.goodlistid)}','900px','289px')" style="cursor: pointer;">链接</a>
+                        <a href="{:url('kami/add','goodlistid='.$vo.goodlistid)}">加卡</a>
+                        <a href="{:url('goodlist/edit','goodlistid='.$vo.goodlistid)}">修改商品</a>
+                        <a href="javascript:;" onclick="del('{$vo.goodlistid}');return false;">删除商品</a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="pagination">
+        {$page}
+    </div>
+</section>
+<script>
+    // function submitform() {
+    //     // var test = $("#ajaxform").serialize();
+    //     $.post(
+    //         "{:url('cate/add')}",
+    //         $("#ajaxform").serialize(),
+    //         function (data) {
+    //             // console.log(data);
+    //             data = eval("(" + data + ")");
+    //             if (data.status == '1') {
+    //                 layer.msg(data.msg, {
+    //                     icon: 6,
+    //                     time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+    //                 }, function(){
+    //                     window.parent.location.reload();
+    //                 });
+    //             } else if(data.status=='0') {
+    //                 layer.msg(data.msg, {
+    //                     icon: 5,
+    //                     time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+    //                 });
+    //             }
+    //         }
+    //         , "json"
+    //     );
+    // }
+
+    function togglestate(id,is_state) {
+        $.post(
+            "{:url('goodlist/togglestate')}",
+            {
+                goodlistid: id,
+                is_state: is_state,
+            },
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg('操作成功', {time: 1000, icon: 6});
+                    // $('#record_'+id).fadeOut();
+                    parent.location.reload();
+                } else {
+                    layer.msg('操作失败', {time: 1000, icon: 5});
+                }
+            }
+            ,"json"
+        );
+    }
+
+</script>
+<script>
+    function del(id) {
+        $.post(
+            "{:url('goodlist/del')}",
+            {goodlistid:id},
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}

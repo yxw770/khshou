@@ -1,0 +1,113 @@
+{include file="common/header" /}
+<script src="{$laydate}/laydate.js"></script>
+<script>
+    //执行一个laydate实例
+    laydate.render({
+        elem: '#from_time' //指定元素
+    });
+    //执行一个laydate实例
+    laydate.render({
+        elem: '#to_time' //指定元素
+    });
+</script>
+
+<body>
+<!-- 顶部 -->
+<!--部分页面top后面有style样式添加-->
+<div class="top" style="padding-bottom: 0">
+    <div class="top_con">
+        <span>订单交易</span>
+        <a class="back" href="{:url('/')}"><img src="{$images}/back.png" width="7" height="11"></a>
+        <a class="user_name"><i class="iconfont icon-mine"></i></a>
+    </div>
+</div>
+<!-- 列表 -->
+<form name="search" method="get" action="" id="order">
+    <input name="from_time" id="from_time" placeholder="开始日期" class="laydate-icon input3" readonly="readonly" value="{:input('from_time')}">
+    <input name="to_time" id="to_time" placeholder="结束日期" class="laydate-icon input4" readonly="readonly" value="{:input('to_time')}">
+    <div class="clear"></div>
+    <select name="ktype" style="display: none">
+        <option value="order" selected>订单号</option>
+    </select>
+    <input type="text" name="keyword" value="{:input('keyword')}" placeholder="订单号" class="input1"><button class="btn1"><img src="{$images}/search.png" width="13" height="13"> 查询商品</button>
+    <input type="hidden" name="do" value="search">
+<!-- 列表 -->
+<div class="list_bg">
+    <select class="select1" name="is_buylist">
+        <option value="">支付状态</option>
+        <option value="">全部</option>
+        <option value="1" {:input('is_buylist')=='1'?"selected":'';}>已支付</option>
+        <option value="0" {:input('is_buylist')=='0'?"selected":'';}>未支付</option>
+    </select>
+    <ul>
+        {volist name="list" id="vo"}
+        <li>
+            <div class="j_box_title"><i class="fa fa-calendar"></i> 订单号：<label onclick="window.open('/orderquery?kw={$vo.orderid}')">{$vo.orderid}</label><a class="j_price">{$vo.is_buylist=='1'?'已付款':'未付款'}</a></div>
+            <div class="j_box_con">
+                <p>下单时间： {$vo.addtime}<br>商品名称： {$vo.goodname}({$vo.quantity}张)<span class="red"><br>交易金额： {$vo.paymoney}元<br>支付方式： {$vo.channelname}<br>联系方式： {$vo.contact}</span></p>
+                <p>
+                    {if $vo.is_state=='1'}
+                    <a class="j_btn" href="javascript:void(0)" onclick="togglestate({$vo.orderlistid},'0')">关闭</a>
+                    {else/}
+                    <a class="j_btn" href="javascript:void(0)" onclick="export_order('{$vo.orderlistid}')">开启</a>
+                    {/if}
+                </p>
+                <div id="clear"></div>
+            </div>
+        </li>
+        {/volist}
+    </ul>
+</div>
+</form>
+
+<style>
+    .pagination {
+        /*padding: 32px 0;*/
+        text-align: left;
+        font-size: 12px;
+        color: #666;
+        position: relative;
+    }
+    .m-pages a{
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid #e3e5eb;
+        border-left: 1px solid #e3e5eb;
+        border-top: 1px solid #e3e5eb;
+        display: inline-block;
+        font-size: 12px;
+        height: 30px;
+        line-height: 30px;
+        overflow: hidden;
+        text-align: center;
+        vertical-align: top;
+        width: 30px;
+    }
+</style>
+<div class="pagination">
+    {$page}
+</div>
+<script>
+    function op(orderid,t){
+        var state = '';
+        if (t == 1){ state = '关闭'}else{ state = '开启'}
+        layer.confirm('确定要'+state+'此订单吗？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.get('/orders/op',{orderid:orderid,t:t},function(data){
+                if(data=='ok'){
+                    layer.msg('订单'+state+'成功',{icon:1});
+                    location.reload();
+                } else {
+                    layer.msg('订单'+state+'失败',{icon:2});
+                    location.reload();
+                }
+            });
+        });
+    }
+</script>
+
+{include file="common/footer" /}

@@ -1,0 +1,90 @@
+    {include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+<style>
+    input[type=password]{
+        display: inline-block;
+        height: 40px;
+        line-height: 38px;
+        border: 1px solid #e3e5eb;
+        padding-left: 16px;
+        border-radius: 4px;
+        width: 400px;
+    }
+    .left{
+        width: 120px !important;
+    }
+</style>
+<body>
+{include file="common/top_nav" /}
+
+<div class="main clearfix">
+    {include file="common/left_nav" /}
+
+    <div class="container safety scroll">
+        <div class="box init b1">
+            <div class="title">安全设置
+                <span>security settings</span></div>
+            <div class="subtitle">输入安全密码</div>
+            <form action="" class="clearfix" id="ajaxform">
+                <div class="item clearfix">
+                    <span class="left">安全密码</span>
+                    <div class="right">
+                        <input name="old_usersafekey" type="password" placeholder="安全密码" minlength="6" maxlength="20" value="">
+                    </div>
+                </div>
+                <div class="btn">
+                    <button class="t1" onclick="submitform();return false;">保存设置</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+<script>
+    function submitform() {
+        var old_usersafekey = $('input[name="old_usersafekey"]').val();
+        if(old_usersafekey=='') {
+            layer.msg('请输入安全密码', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="old_usersafekey"]').focus();
+            return false;
+        }
+        if(old_usersafekey.length<6) {
+            layer.msg('安全密码至少6位', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="old_usersafekey"]').focus();
+            return false;
+        }
+        $.post(
+            "{:url('safekey/entersave')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                data = eval("(" + data + ")");
+                // console.log(data);
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        // window.location.reload();
+                        history.go(-1);
+                        // window.location.href = "{:url('/login')}";
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}

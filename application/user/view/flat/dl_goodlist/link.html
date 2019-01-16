@@ -1,0 +1,99 @@
+<!--<link href="{$css}/main8621.css" rel="stylesheet">-->
+<script src="{$js}/jquery-2.2.1.min.js"></script>
+<script src="{$layer}/layer.js"></script>
+<script src="{$open}/jquery.qrcode.min.js"></script>
+
+<style>
+    *{
+        margin:0;padding:0;border:0;font-weight:normal;vertical-align:baseline;background:transparent;
+    }
+    /*.ico-switch:before { content: "\E60C"; box-sizing: inherit;}*/
+    button.btn1:hover {
+        background: #2b8aea;
+    }
+    button.btn2:hover {
+        background: #d81e2e;
+    }
+    /*顶部显示圆角显示*/
+    #layui-layer-iframe2{
+        border-radius: 6px;
+
+    }
+</style>
+<div class="link-modal modal j-linkModal">
+    <div class="title" style="border-bottom:1px solid#e8e8e8;background:#fff;padding:0 15px 0 18px;line-height:55px;">商品链接
+        <span class="close"></span></div>
+    <div class="content" style="padding:8px 20px;">
+        <div class="info" style="overflow:hidden;margin-bottom:8px;padding:8px 0px;font-size:14px;color:#666;">
+            <p style="font-size:14px;color:#666;line-height:36px;">购买链接：
+                <input readonly style="width:298px;color:#ff7f00;background:none;margin:0;padding:0;border:none;outline:none;font-size:inherit;font-family: 'Microsoft YaHei';cursor: pointer;" class="link" id="link1" value="{$list.long_url}" onclick="window.open(this.value)">
+                <!--<span class="btn j-btn" data-clipboard-target="#link1">复制</span>-->
+            </p>
+            <p style="font-size:14px;color:#666;line-height:36px;">短&nbsp;链&nbsp;接：
+                <input readonly id="link2" style="width:200px;color:#ff7f00;background:none;margin:0;padding:0;border:none;outline:none;font-size:inherit;font-family: 'Microsoft YaHei';cursor: pointer;" class="link" value="{$list.short_url}" onclick="window.open(this.value)">
+                <!--<span class="btn j-btn" data-clipboard-target="#link2">复制</span>-->
+            </p>
+        </div>
+        <div class="left" style="float: left" id="qrcode">
+            <!--<img class="code" src="{$images}/codea49b.png" alt="" style="margin-bottom:25px;">-->
+        </div>
+        <div class="right" style="float:left;padding-left:20px;">
+            <div class="t1" style="line-height:36px;font-size:16px;color:#333;margin-bottom:10px;">
+                <!--链接状态：-->
+                <!--<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABeklEQVQ4jY3Tv0tXYRTH8de9ubRKNBRFfoeCwsnJQWhIpCU0EPrlUoNLi2g0OHwLIqiEgpoEhfAHhaC4SQ5KLRWFg6KgFAkqGvUPhPhteJ4rt9vtx2e55z7nvM899zznJLWqoo6iF+dQQYrPmMPjaO8rLcD92EAXFtGDm/iITnzCvTxQl7OHcB3dGCwkHo7PKxjDaVzMV9Af4TMlcF7jaEAHHmUJ6mNZ3Vj+C5zpC9rRhxMpqvjxjy9nasEBTOM77qc4j8n/gF/hNZL4/gKtKY5EZ6bE7xpBK5qxG88+4FAagb1c8Lpw35nGcU3o/NvceY1wjVsx+/PoeIineI9TuIwmrBSqasK3pFb1DDdwMOdsx1S0G7FU8ltfMZ/Uqg5jR5i+0VxAJ7bxpgRuwwxO1sVMd4VGvcNaDJooAQlNn8ETrGWTeAcvsYqrfwDhAjYxK+zJL7twKSYYxYMYtCB0uzGWfRwDuJVBSck6V3AbZ3FMGPcNYYgGFMb9Jx9NUgq4t/hcAAAAAElFTkSuQmCC" alt="" style="vertical-align:sub;">-->
+                <!--<button class="btn1" style="background:#409fff;width:120px;height:36px;transition:.2s ease;color:#fff;margin-left:10px;border-radius:4px;font-size:14px;">-->
+                    <!--<i class="xcFont ico-switch" style="vertical-align:sub;margin-right:8px;font-size:18px;font-family:"xcFont"!important;font-style:normal;-webkit-font-smoothing:antialiased;"></i>关闭链接-->
+                <!--</button>-->
+                <button class="btn2" style="background:#ea2b3b;width:120px;height:36px;transition:.2s ease;color:#fff;margin-left:10px;border-radius:4px;font-size:14px;" onclick="submitform();return false;">
+                    <i class="xcFont ico-reload"></i>重置链接
+                </button>
+            </div>
+            <div class="tip" style="font-size:14px;line-height:55px;color:#666;">链接说明：商品和分类的独立链接在
+                <a href="{:url('/cate')}" style="color:#ff7f00;margin:0;padding:0;font-size:100%;vertical-align:baseline;background:transparent;text-decoration:none;" target="_parent">商品分类</a> 和
+                <a href="{:url('/goodlist')}" style="color:#ff7f00;margin:0;padding:0;font-size:100%;vertical-align:baseline;background:transparent;text-decoration:none;" target="_parent">商品列表</a> 中获取！</div></div>
+    </div>
+</div>
+<script>
+    function submitform() {
+        // var test = $("#ajaxform").serialize();
+        var goodlistid = '{$list.goodlistid}';
+        $.post(
+            "{:url('goodlist/resetlink')}",
+            {goodlistid: goodlistid},
+            // $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+</script>
+<script>
+    jQuery(function(){
+        var url = '{$list.long_url}';
+        jQuery('#qrcode').qrcode(
+            {
+                render : "canvas",    //设置渲染方式，有table和canvas，使用canvas方式渲染性能相对来说比较好
+                width: 100,				//二维码的宽度
+                height: 100,				//二维码的高度
+                // foreground: "#cc674a",				//二维码的后景色
+                background: "#FFF",				//二维码的前景色
+                text:url,				//扫描二维码后显示的内容,可以直接填一个网址，扫描二维码后自动跳向该链接
+                // src: 'photo.jpg'             //二维码中间的图片
+            });
+    })
+</script>

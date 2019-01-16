@@ -1,0 +1,59 @@
+{include file="common/header" /}
+<body>
+<!-- 顶部 -->
+<!--部分页面top后面有style样式添加-->
+<div class="top" style="padding-bottom: 0">
+    <div class="top_con">
+        <span>结算记录</span>
+        <a class="back" href="{:url('/')}"><img src="{$images}/back.png" width="7" height="11"></a>
+        <a class="user_name"><i class="iconfont icon-mine"></i></a>
+    </div>
+</div><!-- 顶部 -->
+<div class="top">
+    <div class="top_con">
+        <div class="tip1">结算状态仅供参考，点击流水号或状态可以看到备注信息，已结算款项最迟在当天下午5时之前到账。</div>
+    </div>
+</div>
+<!-- 列表 -->
+<div class="list_bg">
+    <ul>
+        {volist name="list" id="vo"}
+        <li>
+            <div class="j_box_title"><img src="{$images}/card.png" width="13" height="11"> 流水号：{$vo.id}<a class="j_price"><span class="label label-success">{$vo.is_state=='1'?'已结算':'未结算'}</span></a></div>
+            <div class="j_box_con"><p>处理时间： {$vo.addtime}<br>申请金额： {$vo.usermoney==''?'0.00':$vo.usermoney}<br>手续费： {$vo.fee}</p><p>{$vo.is_user=='1'?'手动提现':'自动结算'}<br><font><strong>+{$vo.settlement==''?'0.00':$vo.settlement}元</strong></font></p><div id="clear"></div></div>
+        </li>
+        {/volist}
+    </ul>
+</div>
+
+<style>
+    .pagination {
+        /*padding: 32px 0;*/
+        text-align: left;
+        font-size: 12px;
+        color: #666;
+        position: relative;
+    }
+    .m-pages a{
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid #e3e5eb;
+        border-left: 1px solid #e3e5eb;
+        border-top: 1px solid #e3e5eb;
+        display: inline-block;
+        font-size: 12px;
+        height: 30px;
+        line-height: 30px;
+        overflow: hidden;
+        text-align: center;
+        vertical-align: top;
+        width: 30px;
+    }
+</style>
+<div class="pagination">
+    {$page}
+</div>
+{include file="common/footer" /}

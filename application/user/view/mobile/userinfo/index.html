@@ -1,0 +1,475 @@
+{include file="common/header" /}
+<body>
+<!-- 顶部 -->
+<!--部分页面top后面有style样式添加-->
+<div class="top" style="padding-bottom: 0">
+	<div class="top_con">
+		<span> </span>
+		<a class="back" href="{:url('/')}"><img src="{$images}/back.png" width="7" height="11"></a>
+		<a class="user_name"><i class="iconfont icon-mine"></i></a>
+	</div>
+</div>
+<form action="{:url('userinfo/editsave')}" method="post" id="ajaxform">
+<div class="list_bg" style="margin-bottom: 0">
+	<div class="title">商户基本信息</div>
+		<table border="0" cellspacing="0" cellpadding="0" class="tab1" style="margin-bottom:8px;">
+			<tbody><tr>
+				<td>商户编号</td>
+				<td><input type="text" value="{:session('user.userid')}" readonly=""></td>
+			</tr>
+			<tr>
+				<td>商户名</td>
+				<td><input type="text" value="{:session('user.username')}" readonly=""></td>
+			</tr>
+			<tr>
+				<td>电子邮箱</td>
+				<td><input type="text" value="{$userdefine_row.email}" readonly=""></td>
+			</tr>
+			<tr>
+				<td>手机号码</td>
+				<td><input type="text" value="{$userdefine_row.tel}" readonly=""></td>
+			</tr>
+			<tr>
+				<td>商户QQ</td>
+				<td><input name="qq" type="text" value="{$userdefine_row.qq}"></td>
+			</tr>
+			<tr>
+				<td>店铺名称</td>
+				<td><input name="sitename" type="text" placeholder="为您的店铺取一个响亮的名字吧！" value="{$userdefine_row.sitename}" maxlength="50"></td>
+			</tr>
+			<tr>
+				<td>站点网址</td>
+				<td><input name="siteurl" maxlength="50" type="text" value="{$userdefine_row.siteurl}"></td>
+			</tr>
+			<tr>
+				<td>库存显示</td>
+				<td>
+					<label class="checked"><input name="kucun_show" type="radio" id="kucun_hide" value="0" checked="">实际库存</label>
+					<label class=""><input name="kucun_show" type="radio" id="kucun_show" value="1">库存范围</label>
+					<script>
+                        $('#kucun_hide').click(function () {
+                            $('.kucun').hide();
+                        });
+                        $('#kucun_show').click(function () {
+                            $('.kucun').show();
+                        });
+					</script>
+					<span class="kucun" style="display:none">
+                <p>1. 库存大于100，显示 <font>库存非常多</font></p>
+                <p>2. 库存小于100、大于30，显示 <font>库存很多</font></p>
+                <p>3. 库存小于30、大于10，显示 <font>库存一般</font></p>
+                <p>4. 库存小于10，显示 <font>库存少量</font></p>
+            </span>
+				</td>
+			</tr>
+			<tr>
+				<td>购买联系方式</td>
+				<td>
+					<select name="contact_limit">
+						<?php foreach($contact_limit_arr as $k => $v): ?>
+						<option value="{$k}">{$v}</option>
+						<?php endforeach; ?>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>支付页面</td>
+				<td>
+					<select name="paytheme">
+						<?php foreach($paytheme_arr as $k => $v): ?>
+						<option value="{$k}">{$v}</option>
+						<?php endforeach; ?>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>商家公告</td>
+				<td><textarea name="usernotice" cols="" rows=" " placeholder="此公告将显示到您所有的商品页面上（适合填写售后QQ，客服QQ群）">{$userdefine_row.usernotice}</textarea></td>
+			</tr>
+			</tbody>
+		</table>
+</div>
+
+<!--如果没有设置收款信息-->
+{if $userpay_row.ptype=='0'}
+<div class="list_bg">
+	<div class="title">商户收款信息</div>
+	<table border="0" cellspacing="0" cellpadding="0" class="tab1">
+		<tbody><tr>
+			<td>收款方式</td>
+			<td>
+				<select name="ptype"  onchange="selectptype()">
+					<option value="1" {$userpay_row.ptype=="1"?"selected":'';}>支付宝收款</option>
+					<option value="2" {$userpay_row.ptype=="2"?"selected":'';}>银行卡收款</option>
+					<option value="3" {$userpay_row.ptype=="3"?"selected":'';}>微信收款</option>
+				</select>
+			</td>
+		</tr>
+		<tr style="display: none" id="bank2">
+			<td>银行卡号</td>
+			<td><input name="card" type="text" value="{$userpay_row.card?$userpay_row.card:'';}"></td>
+		</tr>
+		<tr style="display: none" id="bank3">
+			<td>开户地址</td>
+			<td><input name="bankaddr" type="text" value="{$userpay_row.bankaddr?$userpay_row.bankaddr:'';}"></td>
+		</tr>
+		<tr id="alipay1">
+			<td>支付宝账号</td>
+			<td><input name="alipay" type="text" value="{$userpay_row.alipay?$userpay_row.alipay:'';}"></td>
+		</tr>
+		<tr id="alipay2">
+			<td>支付宝二维码</td>
+			<td>
+				<label><input name="alipayimg" type="file" accept=".jpg,.jpeg,.bmp,.png,.gif" style="display: none" id="alipayimg" checked="" onchange="Uploadimg('alipayimg_img_show','alipayimg')">上传图片</label>
+				<br>
+				<img id="alipayimg_img_show" style="width: 200px;display: none;margin-top: 20px;max-height: 200px;" src="" alt="" onclick="window.open(this.src)">
+			</td>
+		</tr>
+
+		<tr style="display:none;" id="weixin1">
+			<td>微信账号</td>
+			<td><input name="weixin" type="text" value="{$userpay_row.weixin?$userpay_row.weixin:'';}"></td>
+		</tr>
+		<tr style="display:none;"id="weixin2">
+			<td>微信二维码</td>
+			<td>
+				<label><input name="weixinimg" type="file" accept=".jpg,.jpeg,.bmp,.png,.gif" style="display: none" id="weixinimg" checked="" onchange="Uploadimg('weixinimg_img_show','weixinimg')">上传图片</label>
+				<br>
+				<img id="weixinimg_img_show" style="width: 200px;display: none;margin-top: 20px;max-height: 200px;" src="" alt="" onclick="window.open(this.src)">
+			</td>
+		</tr>
+
+		<tr>
+			<td>收款人姓名</td>
+			<td><input name="realname" type="text" value="{$userpay_row.realname?$userpay_row.realname:'';}"></td>
+		</tr>
+		<tr>
+			<td>身份证号</td>
+			<td><input name="idcard" type="text" value="{$userpay_row.idcard?$userpay_row.idcard:'';}" maxlength="18"></td>
+		</tr>
+		<script>
+            var selectptype = function () {
+                var ptype = $('[name=ptype]').val();
+                if (ptype == '1') {
+                    $('#bank1').hide();
+                    $('#bank2').hide();
+                    $('#bank3').hide();
+                    $('#weixin1').hide();
+                    $('#weixin2').hide();
+                    $('#alipay1').show();
+                    $('#alipay2').show();
+                } else if (ptype == '2') {
+                    $('#bank1').show();
+                    $('#bank2').show();
+                    $('#bank3').show();
+                    $('#weixin1').hide();
+                    $('#weixin2').hide();
+                    $('#alipay1').hide();
+                    $('#alipay2').hide();
+                } else if (ptype == '3') {
+                    $('#bank1').hide();
+                    $('#bank2').hide();
+                    $('#bank3').hide();
+                    $('#weixin1').show();
+                    $('#weixin2').show();
+                    $('#alipay1').hide();
+                    $('#alipay2').hide();
+                }
+            }
+		</script>
+		</tbody>
+	</table>
+</div>
+{/if}
+<!--支付宝收款-->
+{if $userpay_row.ptype=='1'}
+<div class="list_bg">
+	<div class="title">商户收款信息</div>
+	<table border="0" cellspacing="0" cellpadding="0" class="tab1">
+		<tbody><tr>
+			<td>收款方式</td>
+			<td>
+				支付宝收款
+				<a class="xg_btn" href="{:url('userinfo/edituserpay')}">修改收款方式</a>
+			</td>
+		</tr>
+		<tr>
+			<td>支付宝账号</td>
+			<td>{$userpay_row.alipay?$userpay_row.alipay:'';}</td>
+		</tr>
+		{if !empty($userpay_row.weixinimg)}
+		<tr>
+			<td>支付宝二维码</td>
+			<td>
+				<img style="width: 200px;margin-top: 20px;max-height: 200px;" src="{$userpay_row.alipayimg?$userpay_row.alipayimg:'';}" alt="" onclick="window.open(this.src)">
+			</td>
+		</tr>
+		{/if}
+		<tr>
+			<td>收款人姓名</td>
+			<td>{$userpay_row.realname?$userpay_row.realname:'';}</td>
+		</tr>
+		<tr>
+			<td>身份证号</td>
+			<td>{$userpay_row.idcard?$userpay_row.idcard:'';}</td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+{/if}
+<!--银行卡收款-->
+{if $userpay_row.ptype=='2'}
+<div class="list_bg">
+	<div class="title">商户收款信息</div>
+	<table border="0" cellspacing="0" cellpadding="0" class="tab1">
+		<tbody><tr>
+			<td>收款方式</td>
+			<td>
+				银行卡收款
+				<a class="xg_btn" href="{:url('userinfo/edituserpay')}">修改收款方式</a>
+			</td>
+		</tr>
+		<tr>
+			<td>银行卡号</td>
+			<td>{$userpay_row.card?$userpay_row.card:'';}</td>
+		</tr>
+		<tr>
+			<td>银行卡号</td>
+			<td>{$userpay_row.bankaddr?$userpay_row.bankaddr:'';}</td>
+		</tr>
+		<tr>
+			<td>收款人姓名</td>
+			<td>{$userpay_row.realname?$userpay_row.realname:'';}</td>
+		</tr>
+		<tr>
+			<td>身份证号</td>
+			<td>{$userpay_row.idcard?$userpay_row.idcard:'';}</td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+{/if}
+	<!--微信收款-->
+	{if $userpay_row.ptype=='3'}
+	<div class="list_bg">
+		<div class="title">商户收款信息</div>
+		<table border="0" cellspacing="0" cellpadding="0" class="tab1">
+			<tbody><tr>
+				<td>收款方式</td>
+				<td>
+					微信收款
+					<a class="xg_btn" href="{:url('userinfo/edituserpay')}">修改收款方式</a>
+				</td>
+			</tr>
+			<tr>
+				<td>微信账号</td>
+				<td>{$userpay_row.weixin?$userpay_row.weixin:'';}</td>
+			</tr>
+			{if !empty($userpay_row.weixinimg)}
+			<tr>
+				<td>微信二维码</td>
+				<td>
+					<img style="width: 200px;margin-top: 20px;max-height: 200px;" src="{$userpay_row.weixinimg?$userpay_row.weixinimg:'';}" alt="" onclick="window.open(this.src)">
+				</td>
+			</tr>
+			{/if}
+			<tr>
+				<td>收款人姓名</td>
+				<td>{$userpay_row.realname?$userpay_row.realname:'';}</td>
+			</tr>
+			<tr>
+				<td>身份证号</td>
+				<td>{$userpay_row.idcard?$userpay_row.idcard:'';}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	{/if}
+<button class="btn2" onclick="submitform();return false;">保存设置</button>
+</form>
+<!--<script>-->
+    <!--function submitform() {-->
+        <!--var test = $("#ajaxform").serialize();-->
+        <!--$.post(-->
+            <!--"{:url('userinfo/editsave')}",-->
+            <!--$("#ajaxform").serialize(),-->
+            <!--function (data) {-->
+                <!--// console.log(data);-->
+                <!--data = eval("(" + data + ")");-->
+                <!--if (data.status == '1') {-->
+                    <!--layer.msg(data.msg, {-->
+                        <!--icon: 6,-->
+                        <!--time: 1000 //1.5秒关闭（如果不配置，默认是3秒）-->
+                    <!--}, function(){-->
+                        <!--window.parent.location.reload();-->
+                    <!--});-->
+                <!--} else if(data.status=='0') {-->
+                    <!--layer.msg(data.msg, {-->
+                        <!--icon: 5,-->
+                        <!--time: 1000 //1.5秒关闭（如果不配置，默认是3秒）-->
+                    <!--});-->
+                <!--}-->
+            <!--}-->
+            <!--, "json"-->
+        <!--);-->
+    <!--}-->
+<!--</script>-->
+
+<script>
+
+    /**
+     * 上传缩略图版本
+     */
+    function Uploadimg(showimgid,fileid) {
+        var eImg = $('#'+showimgid);
+//        console.log(getObjectURL($('#'+inputid)[0].files[0]));
+        eImg.show().attr('src', getObjectURL($('#'+fileid)[0].files[0])); // 或 this.files[0] this->input $(this).after(eImg);});
+    }
+
+    /*
+     * 获取文件绝对路径
+     */
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjectURL != undefined) {
+            url = window.createObjectURL(file) ;
+        } else if (window.URL!=undefined) {
+            url = window.URL.createObjectURL(file) ;
+        } else if (window.webkitURL!=undefined) {
+            url = window.webkitURL.createObjectURL(file) ;
+        } return url ;
+    }
+</script>
+<script>
+    function submitform() {
+
+        // var email=$('[name="email"]').val();
+        // var reg = /^([0-9a-zA-Z_-])+@([0-9a-zA-Z_-])+((\.[0-9a-zA-Z_-]{2,3}){1,2})$/;
+        // if (!reg.test(email)) {
+        //     layer.msg('请填写正确的邮箱地址！');
+        //     $('[name="email"]').focus();
+        //     return false;
+        // }
+        //
+        // var tel=$('[name="tel"]').val();
+        // var reg=/\d{11}/;
+        // if(tel=='' || !reg.test(tel) || tel.length!=11){
+        //     layer.msg('请填写正确的手机号码！');
+        //     $('[name="tel"]').focus();
+        //     return false;
+        // }
+
+        var qq=$('[name="qq"]').val();
+        var reg=/\d{5,11}/;
+        if(qq=='' || !reg.test(qq) ||qq.length<5 || qq.length>11){
+            layer.msg('请填写正确的QQ号码！');
+            $('[name="qq"]').focus();
+            return false;
+        }
+
+        var sitename=$('[name="sitename"]').val();
+        if(sitename==''){
+            layer.msg('请填写正确的店铺名称！');
+            $('[name="sitename"]').focus();
+            return false;
+        }
+
+        {if $userpay_row.ptype=='0'}
+        var ptype=$('[name="ptype"]').val();
+        if(ptype==''){
+            layer.msg('请选择收款方式！');
+            $('[name="ptype"]').focus();
+            return false;
+        }
+
+        if (ptype == '1') {
+            var alipay=$('[name="alipay"]').val();
+            if(alipay==''){
+                layer.msg('请填写支付宝账号！');
+                $('[name="alipay"]').focus();
+                return false;
+            }
+            var alipayimg=$('#alipayimg').attr('value');
+            var alipayimg_siblings = $('#alipayimg_img_show').attr('src');
+            if(alipayimg==''||alipayimg==undefined||alipayimg==null){
+                if(alipayimg_siblings==''||alipayimg_siblings==undefined||alipayimg_siblings==null) {
+                    layer.msg('请上传支付宝二维码！');
+                    $('#alipayimg').focus();
+                    return false;
+                }
+            }
+        } else if (ptype == '2') {
+            var bankaddr=$('[name="bankaddr"]').val();
+            if(bankaddr==''){
+                layer.msg('请填写开户地址！');
+                $('[name="bankaddr"]').focus();
+                return false;
+            }
+            var card=$('[name="card"]').val();
+            if(card==''){
+                layer.msg('请填写银行卡号！');
+                $('[name="card"]').focus();
+                return false;
+            }
+        } else if (ptype == '3') {
+            var weixin=$('[name="weixin"]').val();
+            if(weixin==''){
+                layer.msg('请填写微信账号！');
+                $('[name="weixin"]').focus();
+                return false;
+            }
+            var weixinimg=$('#weixinimg').attr('value');
+            var weixinimg_siblings = $('#weixinimg_img_show').attr('src');
+            if(weixinimg==''||weixinimg==undefined||weixinimg==null){
+                if(weixinimg_siblings==''||weixinimg_siblings==undefined||weixinimg_siblings==null) {
+                    layer.msg('请上传微信二维码！');
+                    $('#weixinimg').focus();
+                    return false;
+                }
+            }
+        }
+
+        var realname=$('[name="realname"]').val();
+        if(realname==''){
+            layer.msg('请填写正确的收款人姓名！');
+            $('[name="realname"]').focus();
+            return false;
+        }
+
+        var idcard=$('[name="idcard"]').val();
+        if(idcard==''){
+            layer.msg('请填写正确的身份证号！');
+            $('[name="idcard"]').focus();
+            return false;
+        }
+        {/if}
+            var formData = new FormData($( "#ajaxform" )[0]);//找到input，作为参数传递给FormData构造函数
+            $.ajax({
+                url: "{:url('userinfo/editsave')}",
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    // console.log(data);
+                    data = eval("(" + data + ")");
+                    if (data.status == '1') {
+                        layer.msg(data.msg, {
+                            icon: 6,
+                            time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            window.parent.location.reload();
+                        });
+                    } else if(data.status=='0') {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                        });
+                    }
+                }
+            });
+        }
+</script>
+{include file="common/footer" /}

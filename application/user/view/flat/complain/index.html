@@ -1,0 +1,97 @@
+{include file="common/header" /}
+<link rel="stylesheet" href="{$css}/style.css">
+<link rel="stylesheet" href="{$css}/page.css">
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+
+<body>
+
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<section class="box-right">
+    <div class="Journal">
+        <div class="jrl-title clear">投诉管理
+            <div class="col-sm-6">
+            </div>
+        </div>
+        <table class="table table-striped m-0">
+            <thead>
+            <tr>
+                <td>投诉订单</td>
+                <td>投诉原因</td>
+                <td>投诉内容</td>
+                <td>联系方式</td>
+                <td>投诉时间</td>
+                <td>投诉状态</td>
+                <td>处理结果</td>
+                <td>查看详情</td>
+                <td style="text-align: center">操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="list" id="vo"}
+            <tr>
+                <td>{$vo.report_orderid}</td>
+                <td>{$vo.report_type}</td>
+                <td>{$vo.maijia_contact}</td>
+                <td>{$vo.maijia_telephone}</td>
+                <td>{$vo.report_creattime}</td>
+
+                {if $vo.report_status=='1'}
+                <td><span class="done">投诉结束</span></td>
+                {elseif $vo.report_status=='2'}
+                <td><span style="display:inline-block;padding:0 10px;height:24px;border-radius:4px;text-align:center;color:#fff;line-height:24px;background:#0EC879;">平台客服介入处理</span></td>
+                {else}
+                <td><span class="todo">买家卖家交流期限</span></td>
+                {/if}
+
+                {if $vo.result_status=='1'}
+                <td><span class="done">支持买家</span></td>
+                {elseif $vo.result_status=='2'}
+                <td><span style="display:inline-block;padding:0 10px;height:24px;border-radius:4px;text-align:center;color:#fff;line-height:24px;background:#0EC879;">支持卖家</span></td>
+                {else}
+                <td><span class="todo">正在处理</span></td>
+                {/if}
+                <td><a href="javascript:void(0);" class="blue" onclick="layer.msg('{$vo.maijia_remark}',{time:5000})">查看</a></td>
+                <td style="text-align: center"><a href="javascript:void(0);" onclick="refund2('{$vo.report_orderid}','{$vo.id}')" class="red">同意退款</a></td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination">
+        {$page}
+    </div>
+    <script>
+        function refund2(orderid,id) {
+            layer.confirm('确认要退款给买家吗？确认退款后不可再操作！', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                $.post('{:url("complain/refund")}', {id: id,orderid:orderid}, function (data) {
+                    console.log(data);
+                    data = eval("(" + data + ")");
+                    if (data.status == '1') {
+                        layer.msg(data.msg, {
+                            icon: 6,
+                            time: 3000 //1.5秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            window.parent.location.reload(); //刷新父页面
+                        });
+                    } else if(data.status=='0') {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 3000 //1.5秒关闭（如果不配置，默认是3秒）
+                        });
+                    }
+                },'json');
+            }, function(){
+                layer.msg('容我三思', {
+                    time: 2000 //20s后自动关闭
+                });
+            });
+        }
+    </script>
+</section>
+{include file="common/footer" /}

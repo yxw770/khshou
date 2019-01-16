@@ -1,0 +1,153 @@
+@import 'http://fonts.googleapis.com/css?family=Noto+Sans';
+body {
+  padding: 0;
+  margin: 0;
+  background: -moz-linear-gradient(-45deg, #183850 0, #183850 25%, #192c46 50%, #22254c 75%, #22254c 100%);
+  background: -webkit-linear-gradient(-45deg, #183850 0, #183850 25%, #192c46 50%, #22254c 75%, #22254c 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: rgba(25, 147, 147, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgba(25, 147, 147, 0.2);
+}
+
+.chat-thread {
+  margin: 0 auto 0 auto;
+  padding: 0 20px 0 0;
+  list-style: none;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.chat-thread li {
+  position: relative;
+  clear: both;
+  display: inline-block;
+  padding: 10px 32px 10px 20px;
+  margin: 0 0 20px 0;
+  font: 16px/20px 'Noto Sans', sans-serif;
+  border-radius: 10px;
+  background-color: rgba(25, 147, 147, 0.2);
+}
+
+/* Chat - Avatar */
+.chat-thread li:before {
+  position: absolute;
+  top: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  content: '';
+}
+
+/* Chat - Speech Bubble Arrow */
+.chat-thread li:after {
+  position: absolute;
+  top: 7px;
+  content: '';
+  width: 0;
+  height: 0;
+  border-top: 15px solid rgba(25, 147, 147, 0.2);
+}
+
+.right-content {
+  animation: show-chat-odd 0.15s 1 ease-in;
+  -moz-animation: show-chat-odd 0.15s 1 ease-in;
+  -webkit-animation: show-chat-odd 0.15s 1 ease-in;
+  float: right;
+  margin-right: 80px !important;
+  color: #0AD5C1;
+}
+
+.right-content:before {
+  right: -80px;
+}
+
+.right-content:after {
+  border-right: 15px solid transparent;
+  right: -15px;
+}
+
+.left-content {
+  animation: show-chat-even 0.15s 1 ease-in;
+  -moz-animation: show-chat-even 0.15s 1 ease-in;
+  -webkit-animation: show-chat-even 0.15s 1 ease-in;
+  float: left;
+  margin-left: 80px !important;
+  color: #0EC879;
+}
+
+.left-content:before {
+  left: -80px;
+}
+
+.left-content:after {
+  border-left: 15px solid transparent;
+  left: -15px;
+}
+
+@keyframes show-chat-even {
+  0% {
+    margin-left: -480px;
+  }
+
+  100% {
+    margin-left: 0;
+  }
+}
+@-moz-keyframes show-chat-even {
+  0% {
+    margin-left: -480px;
+  }
+
+  100% {
+    margin-left: 0;
+  }
+}
+@-webkit-keyframes show-chat-even {
+  0% {
+    margin-left: -480px;
+  }
+
+  100% {
+    margin-left: 0;
+  }
+}
+@keyframes show-chat-odd {
+  0% {
+    margin-right: -480px;
+  }
+
+  100% {
+    margin-right: 0;
+  }
+}
+@-moz-keyframes show-chat-odd {
+  0% {
+    margin-right: -480px;
+  }
+
+  100% {
+    margin-right: 0;
+  }
+}
+@-webkit-keyframes show-chat-odd {
+  0% {
+    margin-right: -480px;
+  }
+
+  100% {
+    margin-right: 0;
+  }
+}

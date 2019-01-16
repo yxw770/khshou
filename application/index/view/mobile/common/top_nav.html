@@ -1,0 +1,57 @@
+<!--顶部导航-->
+<div class="top mobile_hide" style="">
+    <div class="container">
+        <div class="logo"><img src="{$images}/logo.png" alt="{$qtarr.sitename}" title="{$qtarr.sitename}"></div>
+        <div class="user_btns">
+            <a href="{:url('/register')}" class="reg_btn" style="color: rgb(255, 255, 255);">注册</a>
+            <a href="{:url('/login')}" class="login_btn" style="background: rgba(255, 255, 255,0.2);">登录</a>
+        </div>
+        <div class="nav">
+            <ul style="left: 43%">
+                <li>
+                    <a href="/" style="color: rgb(255, 255, 255);">首页</a>
+                </li>
+                <li>
+                    <a href="{:url('index/about')}" style="color: rgb(255, 255, 255);">关于</a>
+                </li>
+                <li>
+                    <a href="{:url('index/app')}" style="color: rgb(255, 255, 255);">APP</a>
+                </li>
+                <li>
+                    <a href="{:url('index/contact')}" style="color: rgb(255, 255, 255);">联系</a>
+                </li>
+                <li style="width: 100px;">
+                    <a href="{:url('/orderquery')}" style="color: rgb(255, 255, 255);">订单查询</a>
+                </li>
+                <li style="width: 100px;">
+                    <a href="{:url('tousu/search')}" style="color: rgb(255, 255, 255);">[投诉查询]</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--顶部导航手机端-->
+<div class="mobile_top">
+    <div class="container">
+        <div class="mobile_logo"><img src="{$images}/logo1.png" alt="{$qtarr.sitename}" height="28">
+        </div>
+        <div class="nav_btn"><i></i></div>
+        <div class="clear"></div>
+    </div>
+</div>
+<div class="main_shadow">
+    <ul>
+        <li>
+            <a href="{:url('/register')}">快速注册</a>
+        </li>
+        <li>
+            <a href="{:url('/login')}">商户登录</a>
+        </li>
+        <li>
+            <a href="{:url('index/contact')}">联系我们</a>
+        </li>
+        <li>
+            <a href="{:url('/orderquery')}" style="color: rgb(255, 255, 255);">订单查询</a>
+        </li>
+    </ul>
+</div>

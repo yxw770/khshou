@@ -1,0 +1,53 @@
+{include file="common/header" /}
+<script src="{$js}/saveFile.js"></script>
+<script src="{$layer}/layer.js"></script>
+
+	<body>
+	<div class="top_bg">
+		{include file="common/orhter_top_nav" /}
+	</div>
+		<div class="banner_bg">
+			<div class="container">
+				<h3>取卡密码 <span>/ OrderqueryPassWord</span></h3></div>
+		</div>
+			<form id="ajaxform" class="form-inline" action="{:url('pwd/chkpwd')}" method="get">
+				<div class="sedd_card" style="margin-top: 60px;margin-bottom: 120px">
+					<div class="search_box3" style="margin-top: 0px">
+						<i class="iconfont icon-sousuo"></i>
+						<input type="text" value="" placeholder="请输入取卡密码" name="pwd" class="order_input">
+						<input type="hidden" name="kw" value="{:input('orderid')}">
+						<button type="button" onclick="submitform();return false;">立即查询</button>
+					</div>
+				</div>
+			</form>
+	<script>
+        function submitform() {
+            $.post(
+                "{:url('pwd/chkpwd')}",
+                $("#ajaxform").serialize(),
+                function (data) {
+                    console.log(data);
+                    data = eval("(" + data + ")");
+                    if (data.status == '1') {
+                        layer.msg(data.msg, {
+                            icon: 6,
+                            time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            window.location.href = "/orderquery?kw={:input('orderid')}";
+                        });
+                        // window.location.href = "/center";
+                    } else if(data.status=='0') {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                        });
+                    }
+                }
+                // , "json"
+            );
+        }
+	</script>
+	{include file="common/footer" /}
+	</div>
+	</div>
+	{include file="common/footer_mobile" /}

@@ -1,0 +1,127 @@
+{include file="common/header" /}
+<body>
+<!-- 顶部 -->
+<!--部分页面top后面有style样式添加-->
+<div class="top" style="padding-bottom: 0">
+    <div class="top_con">
+        <span>登录密码修改</span>
+        <a class="back" href="{:url('/')}"><img src="{$images}/back.png" width="7" height="11"></a>
+        <a class="user_name"><i class="iconfont icon-mine"></i></a>
+    </div>
+</div>
+<style>
+    .tab1 input[type=password]{
+        height:36px;
+        width:calc(100% - 8px);
+        border:1px solid #edf2fa;
+        padding:0px 4px;
+        border-radius:2px;
+    }
+</style>
+
+<div class="list_bg">
+    <form action="" class="clearfix" id="ajaxform">
+        <table border="0" cellspacing="0" cellpadding="0" class="tab1">
+            <tbody><tr>
+                <td>旧密码</td>
+                <td><input name="old_password" type="text"></td>
+            </tr>
+            <tr>
+                <td>新密码</td>
+                <td><input name="password" type="password" minlength="6" maxlength="20"></td>
+            </tr>
+            <tr>
+                <td style="width: 66px">确认新密码</td>
+                <td><input name="confirm_password" type="password" minlength="6" maxlength="20"></td>
+            </tr>
+            </tbody></table>
+        <button type="submit" class="btn2" onclick="submitform();return false;">立即修改</button>
+    </form>
+    <script>
+        function submitform() {
+            var old_password = $('input[name="old_password"]').val();
+            var password = $('input[name="password"]').val();
+            var confirm_password = $('input[name="confirm_password"]').val();
+            if(old_password=='') {
+                layer.msg('请输入原密码', {
+                    icon: 5,
+                    time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                });
+                $('input[name="old_password"]').focus();
+                return false;
+            }
+            if(old_password.length<6) {
+                layer.msg('原密码至少6位', {
+                    icon: 5,
+                    time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                });
+                $('input[name="old_password"]').focus();
+                return false;
+            }
+            if(password=='') {
+                layer.msg('请输入新密码', {
+                    icon: 5,
+                    time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                });
+                $('input[name="password"]').focus();
+                return false;
+            }
+            if(password.length<6) {
+                layer.msg('新密码至少6位', {
+                    icon: 5,
+                    time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                });
+                $('input[name="password"]').focus();
+                return false;
+            }
+            if(confirm_password=='') {
+                layer.msg('请输入确认新密码', {
+                    icon: 5,
+                    time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                });
+                $('input[name="confirm_password"]').focus();
+                return false;
+            }
+            if(confirm_password.length<6) {
+                layer.msg('确认新密码至少6位', {
+                    icon: 5,
+                    time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                });
+                $('input[name="confirm_password"]').focus();
+                return false;
+            }
+            if(password!=confirm_password) {
+                layer.msg('新密码输入和确认新密码不一致', {
+                    icon: 5,
+                    time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                });
+                $('input[name="confirm_password"]').focus();
+                return false;
+            }
+            $.post(
+                "{:url('safety/retsave')}",
+                $("#ajaxform").serialize(),
+                function (data) {
+                    data = eval("(" + data + ")");
+                    // console.log(data);
+                    if (data.status == '1') {
+                        layer.msg(data.msg, {
+                            icon: 6,
+                            time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            window.location.reload();
+                            // window.location.href = "{:url('/login')}";
+                        });
+                    } else if(data.status=='0') {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                        });
+                    }
+                }
+                // , "json"
+            );
+        }
+    </script>
+</div>
+{include file="common/footer" /}

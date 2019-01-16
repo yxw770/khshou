@@ -1,0 +1,138 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+<script src="{$layertip}/layertip.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+
+<div class="main clearfix">
+    {include file="common/left_nav" /}
+
+    <div class="container addcate scroll">
+        <div class="box init b1">
+            <div class="title">添加分类
+                <span>Add classification</span></div>
+            <div class="table table-border">
+                <form action="{:url('cate/add')}" method="post" id="ajaxform">
+                <table>
+                    <thead>
+                    <td style="text-align: left">分类名称</td>
+                    <td style="text-align: left">分类排序</td>
+                    <td>分类管理</td></thead>
+                    <tbody>
+                    {volist name="list" id="vo"}
+
+                    <tr>
+                        <td style="text-align: left">
+                            {$vo.catename}
+                        </td>
+                        <td style="text-align: left">
+                            {$vo.sortid}
+                        <td>
+                            <a href="{:url('cate/edit','goodcateid='.$vo.goodcateid)}" onmouseover="showTooltip(this,'修改分类');" onmouseout="hideTooltip(this)">修改</a>
+                            <a href="javascript:;" onclick="showContent('分类链接','{:url('cate/link','goodcateid='.$vo.goodcateid)}','900px','289px')" onmouseover="showTooltip(this,'分类链接');" onmouseout="hideTooltip(this)">链接</a>
+                            <a href="{:url('/goodlist')}?cateid={$vo.goodcateid}&do=search">商品</a>
+                            <a href="{:url('/kamilist')}">库存卡</a>
+                            <a href="" onclick="del('{$vo.goodcateid}');return false;">删除</a></td>
+                    </tr>
+                    {/volist}
+                    <tr id="addNewCate1" ></tr>
+                    <tr id="addNewCate2" ></tr>
+                    <tr id="addNewCate3" ></tr>
+                        <script>
+                            var addNew=function(){
+                                $('#addNewCate2').before(
+                                    '\n' +
+                                    '\t\t\t\t\t\t\t<tr>\n' +
+                                    '\t\t\t\t\t\t\t\t<td style="text-align: left">\n' +
+                                    '\t\t\t\t\t\t\t\t\t<input name="catename[]" type="text" placeholder="添加分类名称" maxlength="100">\n' +
+                                    '\t\t\t\t\t\t\t\t</td>\n' +
+                                    '\t\t\t\t\t\t\t\t<td style="text-align: left">\n' +
+                                    '\t\t\t\t\t\t\t\t\t<input name="sortid[]" type="text" placeholder="添加分类排序" value="100">\n' +
+                                    '\t\t\t\t\t\t\t\t</td>\n' +
+                                    '\t\t\t\t\t\t\t\t<td>\n' +
+                                    // '\t\t\t\t\t\t\t\t\t<a href="">修改</a>\n' +
+                                    // '\t\t\t\t\t\t\t\t\t<a href="javascript:;" class="j-cateLink" class="orange">链接</a>\n' +
+                                    // '\t\t\t\t\t\t\t\t\t<a href="">商品</a>\n' +
+                                    // '\t\t\t\t\t\t\t\t\t<a href="">库存卡</a>\n' +
+                                    // '\t\t\t\t\t\t\t\t\t<a href="">删除</a>\n' +
+                                    '\t\t\t\t\t\t\t\t</td>\n' +
+                                    '\t\t\t\t\t\t\t</tr>'
+                                    );
+                            };
+                        </script>
+                    </tbody>
+                </table>
+                <div class="btn">
+                    <button class="btn1" type="button" onclick="addNew()">
+                        <i class="xcFont ico-add"></i>添加分类
+                    </button>
+                    <button class="btn2" type="button" onclick="submitform();return false;">
+                        <i class="xcFont ico-save"></i>保存设置
+                    </button>
+                </div>
+                </form>
+                <div class="pagination">
+                    {$page}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    function submitform() {
+        var test = $("#ajaxform").serialize();
+        $.post(
+            "{:url('cate/add')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+</script>
+<script>
+    function del(id) {
+        $.post(
+            "{:url('cate/del')}",
+            {goodcateid:id},
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}

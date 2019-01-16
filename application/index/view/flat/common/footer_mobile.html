@@ -1,0 +1,139 @@
+
+
+<!--返回顶部-->
+<div class="toTop mobile_hide" style="display: none;">
+    <img src="{$images}/totop.png" alt="返回顶部">
+</div>
+<script>
+    $(function() {
+        new Swiper('.swiper-container', {
+            slidesPerView: 'auto',
+            autoplay: 3000,
+            direction: 'horizontal',
+            loop: true,
+            nextButton: '.swiper-button-next',
+            prevButton: '.swiper-button-prev'
+        })
+    });
+</script>
+<style media="screen">
+    @media (max-width: 800px) {
+        .right_fix {
+            display: none;
+        }
+    }
+
+    .right_fix {
+        position: fixed;
+        right: 2px;
+        height: 42px;
+        width: 42px;
+        line-height: 42px;
+        font-size: 12px;
+        text-align: center;
+        border-radius: 4px;
+        color: #fff;
+        background: rgba(51, 51, 79, .3);
+        z-index: 1001;
+        cursor: pointer;
+        transition: .2s
+    }
+
+    .right_fix i {
+        font-size: 28px
+    }
+
+    .right_fix:hover {
+        background: rgba(100, 143, 247, .9)
+    }
+
+    .tel_fix {
+        bottom: 105px;
+        overflow: hidden;
+        font-size: 16px
+    }
+
+    .tel_fix img {
+        margin: 0 10px
+    }
+
+    .tel_fix:hover {
+        width: auto;
+        padding-right: 10px
+    }
+
+    .qq_fix {
+        bottom: 150px;
+        overflow: hidden;
+        font-size: 16px
+    }
+
+    .qq_fix img {
+        margin: 0 10px
+    }
+
+    .qq_fix:hover {
+        width: auto;
+        padding-right: 10px
+    }
+
+    .wx_fix {
+        bottom: 195px
+    }
+
+    .ewm_show {
+        display: none;
+        position: absolute;
+        left: -330px;
+        top: 0;
+        width: 300px;
+        padding: 15px;
+        line-height: 24px;
+        text-align: right;
+        background: #fff;
+        color: #33334f;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, .14)
+    }
+
+    .ewm_show img {
+        float: left
+    }
+
+    .ewm_show span {
+        float: right
+    }
+
+    .ewm_show span h3 {
+        font-size: 18px;
+        margin-bottom: 20px
+    }
+
+    .ewm_show span p {
+        font-size: 12px;
+        line-height: 24px;
+        color: rgba(51, 51, 79, .6)
+    }
+</style>
+<!--右侧固定-->
+<div class="right_fix tel_fix"><img src="{$images}/tel.png" alt="电话" height="20" style="vertical-align: middle">{$qtarr.tel}</div>
+<div class="right_fix qq_fix"><img src="{$images}/qq.png" alt="QQ" height="20" style="vertical-align: middle">{$qtarr.qq}</div>
+<!--底部 手机-->
+<div class="foot">
+    <div class="container">
+        <div class="foot_left">
+            <a href="{:url('index/contact')}" rel="nofollow"><img src="{$images}/qq_icon.png" alt="QQ:{$qtarr.qq}"></a>
+            <a href="{:url('index/contact')}"><img src="{$images}/email_icon.png" alt="邮件"></a>
+        </div>
+        <div class="foot_right">
+            {$qtarr['copyright']}
+            <br> 工信部ICP备案：
+            <a target="_blank" style="color: rgba(41,60,96,0.3);" rel="nofollow" href="http://www.miitbeian.gov.cn/">{$qtarr.icp}</a>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<!--底部 pc-->
+
+<script src="{$js}/main.min.js"></script>
+</body>
+</html>

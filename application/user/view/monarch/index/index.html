@@ -1,0 +1,151 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+<div class="main clearfix">
+	{include file="common/left_nav" /}
+
+	<div class="container home scroll">
+		<div class="box b1">
+			<ul>
+				<li>
+					<div class="card">
+						<p class="t1">{$unpaied_payment}</p>
+						<div class="img">
+							<img src="{$images}/home16fd2.png" alt="">
+						</div>
+						<p class="t2"><span class="c1">·</span>	当前可结算金额（元）</p>
+					</div>
+				</li>
+				<li>
+					<div class="card focus">
+						<p class="t1">{$today_income}</p>
+						<div class="img">
+							<img src="{$images}/home12bf81.png" alt="">
+						</div>
+						<p class="t2"><span class="c2">·</span>	今日收入（元）</p>
+					</div>
+				</li>
+				<li>
+					<div class="card">
+						<p class="t1">{$last_usermoney?$last_usermoney:'暂无结算'}</p>
+						<div class="img">
+							<img src="{$images}/home115b02.png" alt="">
+						</div>
+						<p class="t2"><span class="c3">·</span>	上次结算金额（元）</p>
+					</div>
+				</li>
+				<li>
+					<div class="card">
+						<p class="t1">{$last_t?$last_t:'暂无结算'}</p>
+						<div class="img">
+							<img src="{$images}/home109f00.png" alt="">
+						</div>
+						<p class="t2"><span class="c4">·</span>	上次结算时间</p>
+					</div>
+				</li>
+				<li>
+					<div class="card">
+						<p class="t1">{$is_buylist_count}</p>
+						<div class="img">
+							<img src="{$images}/home9d593.png" alt="">
+						</div>
+						<p class="t2"><span class="c5">·</span>	成交订单</p>
+					</div>
+				</li>
+				<li>
+					<div class="card">
+						<p class="t1">{$today_buylist_count}</p>
+						<div class="img">
+							<img src="{$images}/home80242.png" alt="">
+						</div>
+						<p class="t2"><span class="c6">·</span>	今日成交订单</p>
+					</div>
+				</li>
+				<li>
+					<div class="card">
+						<p class="t1">{$yesterday_buylist_count}</p>
+						<div class="img">
+							<img src="{$images}/home7280f.png" alt="">
+						</div>
+						<p class="t2"><span class="c7">·</span>	昨日成交订单</p>
+					</div>
+				</li>
+				<li>
+					<div class="card">
+						<p class="t1">{$yesterday_income}</p>
+						<div class="img">
+							<img src="{$images}/home6cfc1.png" alt="">
+						</div>
+						<p class="t2"><span class="c8">·</span>	昨日获得利润</p>
+					</div>
+				</li>
+				<li>
+					<div class="card card1">
+						<p class="t1">自动结算</p>
+						<p class="t3">满{:cache('adminconfig')['takecashlowest']}元</p>
+						<div class="img">
+							<img src="{$images}/home5a92d.png" alt="">
+						</div>
+						<p class="t2">
+							<span class="c9">·</span> 结算方式</p>
+					</div>
+				</li>
+				<li>
+					<div class="card">
+						<p class="t1">{$today_quantity}</p>
+						<div class="img">
+							<img src="{$images}/home4f0f7.png" alt="">
+						</div>
+						<p class="t2">
+							<span class="c10">·</span> 今日卖出卡量</p>
+					</div>
+				</li>
+				<li>
+					<div class="card">
+						<p class="t1">{$today_paymoney}</p>
+						<div class="img">
+							<img src="{$images}/home36bb0.png" alt="">
+						</div>
+						<p class="t2">
+							<span class="c11">·</span> 今日卖出总额（元）</p>
+					</div>
+				</li>
+				<li>
+					<div class="card">
+						<p class="t1">{$today_sum_usergain}</p>
+						<div class="img">
+							<img src="{$images}/home2aac5.png" alt="">
+						</div>
+						<p class="t2">
+							<span class="c12">·</span> 今日获得利润</p>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="box b2">
+			<div class="title">
+				<i class="xcFont ico-alert"></i>
+				平台公告
+			</div>
+			<ul class="j-annouceBox">
+				{volist name="articlelist_arr" id="vo"}
+				{if $vo.is_noticed=='1'}
+				<script>
+                    showContent('平台公告','{:url('index/link','articlelistid='.$vo.articlelistid)}','900px','320px');
+				</script>
+				{/if}
+				<li>
+					<a href="javascript:;" onclick="showContent('平台公告','{:url('index/link','articlelistid='.$vo.articlelistid)}','900px','320px')"><i class="xcFont ico-arrow2"></i>{$vo.title}</a>
+					<span>{$vo.addtime}</span>
+				</li>
+				{/volist}
+			</ul>
+		</div>
+	</div>
+</div>
+{include file="common/footer" /}
+
+

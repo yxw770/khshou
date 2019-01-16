@@ -1,0 +1,131 @@
+{include file="common/header" /}
+<script src="{$js}/jquery-2.2.1.min.js"></script>
+<script src="{$layer}/layer.js"></script>
+<script src="{$open}/clipboard.min.js"></script>
+<script src="{$open}/jquery.qrcode.min.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+	<div class="main clearfix">
+		{include file="common/left_nav" /}
+		<div class="container link scroll">
+			<div class="box init b1">
+				<div class="title">总购链接
+					<span>Total purchase link</span></div>
+				<div class="content">
+					<div class="t1">文字链接：</div>
+					<div class="info">
+						<p>购买链接：
+							<input style="width:320px;cursor: pointer" class="link" id="a1" value="{$long_url}" onclick="window.open(this.value)" readonly>
+							<span class="btn copy_btn" data-clipboard-action="copy" data-clipboard-target="#a1">复制</span>
+						</p>
+						<p>短&nbsp;链&nbsp;接：
+							<input id="a2" style="width:200px;cursor: pointer" class="link" value="{$short_url}" onclick="window.open(this.value)" readonly>
+							<span class="btn copy_btn" data-clipboard-action="copy" data-clipboard-target="#a2">复制</span>
+						</p>
+					</div>
+					<div id="qrcode"></div>
+					<div class="t1">链接状态：
+						{if $link_state=='1'}
+						<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABeklEQVQ4jY3Tv0tXYRTH8de9ubRKNBRFfoeCwsnJQWhIpCU0EPrlUoNLi2g0OHwLIqiEgpoEhfAHhaC4SQ5KLRWFg6KgFAkqGvUPhPhteJ4rt9vtx2e55z7nvM899zznJLWqoo6iF+dQQYrPmMPjaO8rLcD92EAXFtGDm/iITnzCvTxQl7OHcB3dGCwkHo7PKxjDaVzMV9Af4TMlcF7jaEAHHmUJ6mNZ3Vj+C5zpC9rRhxMpqvjxjy9nasEBTOM77qc4j8n/gF/hNZL4/gKtKY5EZ6bE7xpBK5qxG88+4FAagb1c8Lpw35nGcU3o/NvceY1wjVsx+/PoeIineI9TuIwmrBSqasK3pFb1DDdwMOdsx1S0G7FU8ltfMZ/Uqg5jR5i+0VxAJ7bxpgRuwwxO1sVMd4VGvcNaDJooAQlNn8ETrGWTeAcvsYqrfwDhAjYxK+zJL7twKSYYxYMYtCB0uzGWfRwDuJVBSck6V3AbZ3FMGPcNYYgGFMb9Jx9NUgq4t/hcAAAAAElFTkSuQmCC" class="linked" alt="">
+						<button class="btn1 j-closeLink" type="button" onclick="togglestate(0)">
+							<i class="xcFont ico-switch"></i>关闭链接
+						</button>
+						{else/}
+						<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABfElEQVQ4jX3Tv0uXURQG8M/7+u2LLrVYi0iUX8IhoWgoJBwdtKGfBiENZdBQ/QWNTRFBaKMOiotR1GA4CFKDizQErWFSJBFBNvmtqIb3vPR6efHAhcs9z/Pc55x7brbRakliCBdxBH+Q4y/eYQFrVXAjIU9jELN4gk8h0IuROF/G7ZKQVRwsoo0b+JbaiujFPDZxWajDY/zC+V3I8DFKPIh7pcCpsHc1QPtwqIbcg87Yn8MV9OW4iRn8iORevAhAGeN4WhHYxBImGtiPycTmLf+bCA9xCd8ruCXcaaCJrcTuaxzHW8UTHsPnBPMBWzmymnrhML7GqutJhjzHb3Qnyet4jlGcUfTkWs0Fe3K8x1iSmAjieqyzikYeqOAuYC3baLWO4iVOhN3OqLud3NgM223FmC/idK6Y8dmwDNs1ZPgZ5008wxS+lJN4N6yuor+GXMbJwLzCI3b+BbiPYbxRvPM6OqIvoxjAHB6UhFRA1DemGPHtEOjCSpB3zMM/xCpWory16CgAAAAASUVORK5CYII=" class="unlink" alt="">
+						<button class="btn1 j-closeLink" type="button" onclick="togglestate(1)">
+							<i class="xcFont ico-switch"></i>开启链接
+						</button>
+						{/if}
+						<button class="btn2" type="button" onclick="submitform();return false;">
+							<i class="xcFont ico-reload"></i>重置链接
+						</button>
+					</div>
+					<div class="tip">链接说明：商品和分类的独立链接在
+						<a href="{:url('/cate')}" style="color:#ff7f00;margin:0;padding:0;font-size:100%;vertical-align:baseline;background:transparent;text-decoration:none;" target="_parent">商品分类</a> 和
+						<a href="{:url('/goodlist')}" style="color:#ff7f00;margin:0;padding:0;font-size:100%;vertical-align:baseline;background:transparent;text-decoration:none;" target="_parent">商品列表</a> 中获取！
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<script>
+    function submitform() {
+        // var test = $("#ajaxform").serialize();
+        $.post(
+            "{:url('shop/resetlink')}",
+            // $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+</script>
+<script>
+    var clipboard = new Clipboard('.copy_btn');
+
+    clipboard.on('success', function(e) {
+        // console.log(e);
+        layer.msg('复制链接成功', {icon: 6, time: 2000});
+    });
+
+    clipboard.on('error', function(e) {
+        // console.log(e);
+        layer.msg('复制链接失败', {icon: 6, time: 2000});
+    });
+</script>
+<script>
+    function togglestate(to_state) {
+        $.post(
+            "{:url('shop/togglestate')}",
+            {
+                to_state: to_state,
+            },
+            function (data) {
+                console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg('操作成功', {time: 1000, icon: 6});
+                    // $('#record_'+id).fadeOut();
+                    parent.location.reload();
+                } else {
+                    layer.msg('操作失败', {time: 1000, icon: 5});
+                }
+            }
+            ,"json"
+        );
+    }
+
+</script>
+<script>
+    jQuery(function(){
+        var url = $('#a1').val();
+        jQuery('#qrcode').qrcode(
+			{
+                render : "canvas",    //设置渲染方式，有table和canvas，使用canvas方式渲染性能相对来说比较好
+                width: 100,				//二维码的宽度
+                height: 100,				//二维码的高度
+                // foreground: "#cc674a",				//二维码的后景色
+                background: "#FFF",				//二维码的前景色
+                text:url,				//扫描二维码后显示的内容,可以直接填一个网址，扫描二维码后自动跳向该链接
+                // src: 'photo.jpg'             //二维码中间的图片
+			});
+    })
+</script>
+{include file="common/footer" /}
+

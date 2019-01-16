@@ -1,0 +1,146 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+
+<div class="main clearfix">
+    {include file="common/left_nav" /}
+
+    <div class="container addkami scroll">
+        <div class="box init b1">
+            <div class="title">添加卡密
+                <span>Add a secret</span></div>
+            <form action="" class="clearfix">
+                <div class="item clearfix">
+                    <span class="left">商品名称</span>
+                    <div class="right">
+                        <select name="" id="">
+                            <option value="">请选择商品</option></select>
+                        <div class="info-tip">格式：卡号+空格+密码，一行一张卡，如：A1B2C3D4F5E8 9876543210</div></div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">添加方式</span>
+                    <div class="right">
+                        <div class="radio">
+                            <input class="chooseType" type="radio" name="store" checked="checked" id="a1" value="txt">
+                            <label for="a1">使用TXT文件导入</label></div>
+                        <div class="radio">
+                            <input type="radio" class="chooseType" name="store" id="a2" value="input">
+                            <label for="a2">使用输入框添加</label></div>
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">商品名称</span>
+                    <div class="right way1 j-way">
+                        <input type="file" id="file" accept="text/plain">
+                        <label class="upload" for="file">请选择文件</label>
+                        <p>注意：上传的TXT文件最大100KB</p>
+                    </div>
+                    <div class="right way2 j-way" style="display:none">
+                        <textarea name="" id="" cols="30" rows="10">158885773</textarea>
+                        <div class="info-tip">输入框添加卡密最多一次添加500张(500行)，TXT文件上传最多支持100KB。
+                            <div class="radio">
+                                <input type="checkbox" name="" id="c1" checked="checked">
+                                <label for="c1">检查重复的卡密(选中后表示重复的卡密将不会加入库存中)</label></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn">
+                    <button class="t1 j-save">保存设置</button></div>
+            </form>
+            <div class="success j-success">
+                <p class="state">
+                    <img src="./images/success96db.png" alt="">共一张卡密，成功添加一张卡密</p>
+                <p class="info">如果3秒后没有跳转，
+                    <a href="">请点击这里继续</a></p>
+            </div>
+            <div class="fail j-fail">
+                <p class="state">
+                    <img src="./images/fail7bd3.png" alt="">共一张卡密，添加失败</p>
+                <p class="info">如果3秒后没有跳转，
+                    <a href="">请点击这里继续</a></p>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    function submitform() {
+        var test = $("#ajaxform").serialize();
+        $.post(
+            "{:url('cate/add')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+
+    function togglestate(id,is_state) {
+        $.post(
+            "{:url('goodlist/togglestate')}",
+            {
+                goodlistid: id,
+                is_state: is_state,
+            },
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg('操作成功', {time: 1000, icon: 6});
+                    // $('#record_'+id).fadeOut();
+                    parent.location.reload();
+                } else {
+                    layer.msg('操作失败', {time: 1000, icon: 5});
+                }
+            }
+            ,"json"
+        );
+    }
+
+</script>
+<script>
+    function del(id) {
+        $.post(
+            "{:url('goodlist/del')}",
+            {goodlistid:id},
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}

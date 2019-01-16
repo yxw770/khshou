@@ -1,0 +1,317 @@
+<!--<link rel="stylesheet" href="{$flag}/font-awesome.min.css">-->
+<!--<link rel="stylesheet" href="{$flag}/layeropen.css?v=1">-->
+<link rel="stylesheet" href="{$layui}/css/layui.css">
+
+
+<script src="{$js}/jquery-2.2.1.min.js"></script>
+<script src="{$layer}/layer.js"></script>
+<script src="{$layui}/layui.js" charset="utf-8"></script>
+
+
+<style>
+    /**{*/
+        /*margin:0;padding:0;border:0;font-weight:normal;vertical-align:baseline;background:transparent;*/
+    /*}*/
+
+    body{
+        overflow-y: hidden;
+    }
+    /*顶部显示圆角显示*/
+    #layui-layer-iframe2{
+        border-radius: 6px;
+
+    }
+    .clearfix{*zoom: 1;}
+    .clearfix:before,.clearfix:after
+    {display: table;line-height: 0;content: "";}
+    .clearfix:after{clear: both;}
+    .t_title {
+        font-size: 20px;
+        color: #333333;
+        text-align: center;
+        line-height: 48px;
+        border-bottom: 1px solid #ddd;
+    }
+    /*body部分*/
+    .pop_balance {
+        width: 800px;
+        display: block;
+    }
+    /*body部分*/
+
+    /*box部分*/
+    .detail {
+        padding: 30px 70px 30px 10px;
+    }
+    /*box部分*/
+
+    /*row box部分*/
+    .pop_form .row {
+        margin-bottom: 20px;
+    }
+    /*row box部分*/
+
+    /*row部分*/
+    .pop_balance .detail .tit {
+        width: 100px;
+    }
+    .pop_form .tit {
+        text-align: right;
+        display: block;
+        float: left;
+        line-height: 35px;
+        font-size: 14px;
+        color: #333333;
+    }
+    .pop_balance .detail .info {
+        width: 605px;
+    }
+    .pop_form .info {
+        float: right;
+        line-height: 35px;
+    }
+    /*row部分*/
+
+    /*row input元素部分*/
+    .pop .ipt_txt {
+        width: 100%;
+    }
+    .pop_form .ipt {
+        padding: 0 20px;
+        border: 1px solid #ddd;
+        height: 35px;
+        line-height: 35px;
+    }
+    input[type="button"], input[type="submit"], input[type="reset"], input[type="text"] {
+        -webkit-appearance: none;
+    }
+    .ipt {
+        display: block;
+    }
+    /*row input元素部分*/
+
+    /*row select元素部分*/
+    .pop_balance .pop_select {
+        width: 220px;
+        margin-right: 10px;
+    }
+    .pop_select {
+        text-align: left;
+    }
+    .fl {
+        float: left;
+    }
+    body, input, h1, h2, h3, h4, h5, h6, p, textarea, table, div, ul, li, select {
+        font-family: Microsoft YaHei;
+        margin: 0;
+        padding: 0;
+        color: inherit;
+        line-height: 1;
+    }
+    /*row select元素部分*/
+
+    /*row button元素部分*/
+    .pop_balance .btns {
+        text-align: center;
+    }
+    .btns:hover {
+        transition: all .2s;
+    }
+    .pop_balance .ipt_button {
+        display: inline-block;
+        margin: 0 16px;
+        position: relative;
+    }
+    .pop_form .ipt_button {
+        width: 140px;
+        height: 40px;
+        background: #5967dc;
+        text-align: center;
+        line-height: 40px;
+        font-size: 16px;
+        color: #fff;
+        border: none;
+    }
+    .ipt_button {
+        cursor: pointer;
+    }
+    .pop_balance .sd {
+        background: #54c669;
+    }
+    .pop_balance .erweima {
+        background: #e3a048;
+    }
+    /*row button元素部分*/
+
+    /*row textarea元素部分*/
+    .pop_textarea {
+        display: block;
+        width: 100%;
+        height: 110px;
+        border: 1px solid #ddd;
+        padding: 10px 20px;
+        font-size: 14px;
+        color: #333;
+        resize: none;
+    }
+    .pop_textarea:hover {
+        transition: all .2s;
+    }
+    textarea {
+        -webkit-appearance: none;
+    }
+    /*row textarea元素部分*/
+
+    /*row layerui select 部分*/
+    .layui-form-select dl dd.layui-this {
+        background-color: #706ac9;
+    }
+    .layui-form-select .layui-edge {
+        background: url({$images}/icon_14.png) no-repeat right center;
+        background-size: cover;
+        width: 10px;
+        height: 6px;
+        margin-top: -3px;
+        border-style: initial;
+    }
+    /*row layerui select 部分*/
+</style>
+<div class="pop pop_balance">
+    <a href="javascript:;" class="close"></a>
+    <h5 class="t_title">为商户[{$list.username}]结算</h5>
+    <div class="detail">
+        <form class="layui-form" action="{:url('settlement/addsave')}" method="post" id="ajaxform">
+            <div class="pop_form">
+                <!--<div class="row clearfix">-->
+                    <!--<span class="tit">账单设置</span>-->
+                    <!--<div class="info">-->
+                        <!--<div class="pop_select fl">-->
+                            <!--<select>-->
+                                <!--<option value="1">正在处理</option>-->
+                                <!--<option value="2">正在处理</option>-->
+                                <!--<option value="3">正在处理</option>-->
+                            <!--</select>-->
+                        <!--</div>-->
+                        <!--<div class="pop_select fl">-->
+                            <!--<select>-->
+                                <!--<option value="1">平台结算</option>-->
+                                <!--<option value="2">平台结算</option>-->
+                                <!--<option value="3">平台结算</option>-->
+                            <!--</select>-->
+                        <!--</div>-->
+
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="row clearfix">
+                    <span class="tit">商户名</span>
+                    <div class="info">
+                        {$list.username}
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">收款方式</span>
+                    <div class="info">
+                        {if $list.ptype=='1'}
+                        支付宝
+                        {elseif $list.ptype=='3'}
+                        微信
+                        {else/}
+                        银行卡
+                        {/if}
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">收款账户</span>
+                    <div class="info">
+                        {if $list.ptype=='1'}
+                        {$list.alipay}
+                        {elseif $list.ptype=='3'}
+                        {$list.weixin}
+                        {else/}
+                        {$list.card}
+                        {/if}
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">收款姓名</span>
+                    <div class="info" onclick="showContent('查看用户','{:url('userlist/userinfo','userid='.$list.userid)}','500px','548px')">
+                        {$list.realname}
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">结款金额</span>
+                    <div class="info">
+                        {$list.sum_up_paymoney}
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">手续费</span>
+                    <div class="info">
+                        <input name="fee" type="text" class="ipt ipt_txt" value="0.00" placeholder="0.00"/>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">备注说明</span>
+                    <div class="info">
+                        <textarea name="remark_admin" id="" class="pop_textarea" placeholder=""></textarea>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit"></span>
+                    <div class="info">
+                        <div class="btns">
+                            <a href="javascript:void(0);" class="ipt_button" onclick="submitform();return false;">保存结算</a>
+                            <!--<a href="#" class="ipt_button">代付结算</a>-->
+                            <!--<a href="#" class="ipt_button sd">手动结算</a>-->
+                            <!--<a href="#" class="ipt_button erweima">-->
+                                <!--二维码收款-->
+                                <!--<span class="imgbox">-->
+									<!--<img src="images/img2.jpg" alt="" class="img"/>-->
+								<!--</span>-->
+                            <!--</a>-->
+                        </div>
+                    </div>
+                </div>
+                {if $list.ptype=='1'}
+                <div style="position: absolute;background-size: cover;top: 50px;right: 70px;">
+                    <img src="{$list.alipayimg}" alt="" style="max-width: 200px;max-height: 300px;" onclick="window.open(this.src)">
+                </div>
+                {elseif $list.ptype=='3'}
+                <div style="position: absolute;background-size: cover;top: 50px;right: 70px;">
+                    <img src="{$list.weixinimg}" alt="" style="max-width: 200px;max-height: 300px;" onclick="window.open(this.src)">
+                </div>
+                {else/}
+                {$list.card}
+                {/if}
+            </div>
+            <input type="hidden" name="userid" value="{$list.userid}">
+        </form>
+    </div>
+</div>
+
+<script>
+    function submitform() {
+        $.post(
+            "{:url('dl_settlement/addsave')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>

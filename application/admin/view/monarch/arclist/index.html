@@ -1,0 +1,127 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<link rel="stylesheet" href="{$flag}/font-awesome.min.css">
+<style>
+    .icon{
+        text-align: center;
+    }
+</style>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<div class="main auto">
+    <div class="main_wrap">
+        <div class="m_top clearfix">
+            <div class="m_search fl clearfix">
+                <form class="layui-form" action="">
+                    <div class="s_box clearfix fl">
+                        <div class="s_select fl">
+                            <select name="articlecateid">
+                                {volist name="arr" id="vo"}
+                                <option value="{$vo.articlecateid}" {:input('articlecateid')==$vo.articlecateid?"selected":'';}>{$vo.catename}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+                    <button class="search_btn fl">搜索</button>
+                    <input type="hidden" name="do" value="search">
+                </form>
+            </div>
+            <a href="javascript:;" class="build_cat fl" id="buildCatButton" style="float: right" onclick="showContent('新建文章','{:url('arclist/add')}','800px','760px')">+ 新建文章</a>
+        </div>
+        <div class="m_content">
+            <table class="pub_table">
+                <thead>
+                </th>
+                <th width="7%">类别</th>
+                <th width="7%">文章编号</th>
+                <th width="43%">标题</th>
+                <th width="7%">自动弹出</th>
+                <th width="13%">日期</th>
+                <th width="10%">操作</th>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td>{$vo.catename}</td>
+                    <td>{$vo.articlelistid}</td>
+                    <td><a href="#" class="c_purple">{$vo.title}</a></td>
+                    <td>{$vo.is_noticed=='1'?'是':'否'}</td>
+                    <td>{$vo.addtime}</td>
+                    <td>
+                        <a href="javascript:;" class="icon edit arcEditPop" onclick="showContent('编辑文章','{:url('arclist/edit','articlelistid='.$vo.articlelistid)}','800px','760px')"></a>
+                        <a href="#" class="icon delete" onclick="del({$vo.articlelistid})"></a>
+                        <a href="#" class="" onclick="wx_send_notice({$vo.articlelistid})">微信推送</a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {$page}
+</div>
+<script>
+    function del(articlelistid) {
+        $.post(
+            "{:url('arclist/del')}",
+            {
+                articlelistid:articlelistid
+            },
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+<script>
+    function wx_send_notice(articlelistid) {
+        $.post(
+            "{:url('arclist/wx_send_notice')}",
+            {
+                articlelistid:articlelistid
+            },
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+
+<script>
+    layui.use(['form'], function () {
+    });
+</script>
+{include file="common/footer" /}

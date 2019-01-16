@@ -1,0 +1,113 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<link rel="stylesheet" href="{$flag}/font-awesome.min.css">
+<style>
+    .icon{
+        text-align: center;
+    }
+    .laydate-set-ym {
+        height: 30px;
+        line-height: 30px;
+        margin-top: -3px;
+    }
+</style>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<div class="main auto">
+    <div class="main_wrap">
+        <div class="m_top clearfix">
+            <div class="m_search fl clearfix">
+                <form class="layui-form" action="">
+                    <div class="s_box clearfix fl">
+                        <div class="s_input fl">
+                            <input style="cursor: pointer" type="text" name="from_time" id="from_time" class="ipt ipt_txt" value="{:input('from_time')}" placeholder="请选择开始日期" readonly>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_input fl">
+                            <input style="cursor: pointer" type="text" name="to_time" id="to_time" class="ipt ipt_txt" value="{:input('to_time')}" placeholder="请选择日期" readonly>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_select fl">
+                            <select name="channelid">
+                                <option value="">支付类型</option>
+                                {volist name="paychannel_arr" id="vo"}
+                                <option value="{$vo.channelid}" {:input('channelid')==$vo.channelid?"selected":'';}>{$vo.channelname}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_select fl">
+                            <select name="ktype">
+                                <option value="userid" {:input('ktype')=='userid'?"selected":'';}>商户ID</option>
+                                <option value="username" {:input('ktype')=='username'?"selected":'';}>商户名称</option>
+                            </select>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_input fl">
+                            <input type="text" name="keyword" class="ipt ipt_txt" value="{:input('keyword')}"/>
+                        </div>
+                    </div>
+                    <button class="search_btn fl">搜索</button>
+                    <input type="hidden" name="do" value="search">
+                </form>
+            </div>
+        </div>
+        <div class="m_content">
+
+            <table class="pub_table">
+                <thead>
+                <th width="10%">商户编号</th>
+                <th width="10%">商户名称</th>
+                <th width="12%">提交订单</th>
+                <th width="10%">已付订单</th>
+                <th width="8%">未付订单</th>
+                <th width="12%">提交金额</th>
+                <th width="13%">实付金额</th>
+                <th width="10%">商户收入</th>
+                <th width="10%">平台收入</th>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td>
+                        <em class="c_purple">{$vo.userid}</em>
+                    </td>
+                    <td>{$vo.username}</td>
+                    <td>{$vo.count_all}</td>
+                    <td>
+                        <em class="c_red">{$vo.count_success}</em>
+                    </td>
+                    <td>{$vo.count_failed}</td>
+                    <td>
+                        <em class="c_blue">{$vo.sum_ordermoney}</em>
+                    </td>
+                    <td>{$vo.sum_paymoney}</td>
+                    <td>{$vo.sum_usergain}</td>
+                    <td>
+                        {$vo.sum_ptgain}
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {$page}
+</div>
+<script>
+    layui.use(['form','laydate'], function () {
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#to_time' //指定元素
+        });
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#from_time' //指定元素
+        });
+    });
+</script>
+{include file="common/footer" /}

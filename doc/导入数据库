@@ -1,0 +1,6 @@
+DROP DATABASE faka;
+CREATE DATABASE `faka`CHARACTER SET utf8 COLLATE utf8_general_ci;
+use faka
+show tables;
+source /home/wwwroot/duobao/doc/faka.sql
+show tables;

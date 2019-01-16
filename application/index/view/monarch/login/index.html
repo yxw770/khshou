@@ -1,0 +1,66 @@
+{include file="common/header" /}
+<body style="background: url('{$images}/se5_bg.jpg')">
+<!--头部-->
+{include file="common/orhter_top_nav" /}
+<div class="se5_card" style="margin-top: 140px">
+    <div class="login_left"></div>
+    <!--<form id="ajaxform">-->
+        <form action="{:url('login/login')}" method="post" id="ajaxform">
+        <div class="login_right">
+            <h1>会员登录</h1>
+            <p><input name="username" type="text" placeholder="用户名" maxlength="20"></p>
+            <p><input name="password" type="password" placeholder="密码"></p>
+            <!--<p><button>登 录</button></p>-->
+            <p><button onclick="submitform();return false;">登 录</button></p>
+            <p class="p4">
+                <span>还没有账号？<a href="{:url('register/index')}">立即注册</a></span>
+                <span><a href="{:url('/retpwd')}">找回密码</a></span>
+            </p>
+            <div class="clear"></div>
+        </div>
+    </form>
+    <div class="clear"></div>
+</div>
+<script>
+    function submitform() {
+        $.post(
+            "{:url('login/login')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    // layer.msg(data.msg, {
+                    //     icon: 6,
+                    //     time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    // }, function(){
+                    //     window.location.href = "/center";
+                    // });
+                    window.location.href = "/center";
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+<script>
+    <?php if(session('?login_msg')):?>
+    <?php if(session('login_msg')=='退出成功'):?>
+    layer.msg("<?php echo session('login_msg') ?>", {
+        icon: 6,
+        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+    });
+    <?php else:?>
+    layer.msg("<?php echo session('login_msg') ?>", {
+        icon: 5,
+        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+    });
+    <?php endif; ?>
+    <?php endif; ?>
+</script>
+{include file="common/footer" /}

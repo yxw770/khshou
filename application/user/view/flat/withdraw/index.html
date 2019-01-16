@@ -1,0 +1,141 @@
+{include file="common/header" /}
+<link rel="stylesheet" href="{$css}/style.css">
+<link rel="stylesheet" href="{$css}/page.css">
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+
+<section class="box-right">
+    <div class="apply">
+        <div class="jrl-title clear">申请结算</div>
+        <div class="content">
+            <div class="row">
+                <div class="col-xs-5 col-xs-offset-2">
+                    <div class="alert alert-warning">当前最低提现金额为<span class="red bold">{$takecashlowest}</span>元，每笔手续费 <span class="red blod">0</span> 元</div>
+                </div>
+            </div>
+            <form class="form-horizontal clear"  method="post">
+                <br>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">商户编号</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" value="{:session('user.userid')}" disabled="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">账号名称</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" value="{:session('user.username')}" disabled="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">收款方式</label>
+                    <div class="col-sm-4">
+                        {if ($list.ptype=='1')}
+                        <input type="text" class="form-control" value="支付宝" disabled="">
+                        {/if}
+                        {if ($list.ptype=='2')}
+                        <input type="text" class="form-control" value="银行卡" disabled="">
+                        {/if}
+                        {if ($list.ptype=='3')}
+                        <input type="text" class="form-control" value="微信" disabled="">
+                        {/if}
+                    </div>
+                    <label class="good_info_bg">请确认您的收款帐号和姓名是否正确，帐号有问题请先修改后再申请！</label>
+                </div>
+
+                {if ($list.ptype=='1')}
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">支付宝账号</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" value="{$list.alipay}" disabled="">
+                    </div>
+                    <label class="good_info_bg">请确认您的收款帐号和姓名是否正确，帐号有问题请先修改后再申请！</label>
+                </div>
+                {/if}
+
+                {if ($list.ptype=='2')}
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">银行卡账号</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" value="{$list.card}" disabled="">
+                    </div>
+                    <label class="good_info_bg">请确认您的收款帐号和姓名是否正确，帐号有问题请先修改后再申请！</label>
+                </div>
+                {/if}
+
+                {if ($list.ptype=='3')}
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">微信账号</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" value="{$list.weixin}" disabled="">
+                    </div>
+                    <label class="good_info_bg">请确认您的收款帐号和姓名是否正确，帐号有问题请先修改后再申请！</label>
+                </div>
+                {/if}
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">可提现金额</label>
+                    <div class="col-sm-4">
+                        <div class="green" style="padding-top:6px;color: #5BB85C;font-size: 18px;">{$unpayment?$unpayment:'0.00';}元</div>
+                    </div>
+                    <label class="good_info_bg"><span class="red bold">每天9：00~20：00可申请结算前一天的销售金额，3小时内到账。</span></label>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">申请提现金额</label>
+                    <div class="col-sm-4">
+                        <div class="input-group form-m">
+                            <input type="text" class="form-control" value="{$unpayment?$unpayment:'0.00';}" maxlength="5" id="aaa" readonly>
+                            <span class="input-group-addon">元</span>
+                        </div>
+                    </div>
+                    <label class="good_info_bg">大于<b>{$takecashlowest}</b>元，系统自动结算，手动申请的话，会扣除1元手续费！</label>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-primary" onclick="submitform()"><i class="icon i-ser"></i>&nbsp;申请结算</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</section>
+<script>
+    function submitform() {
+        // var test = $("#ajaxform").serialize();
+        $.post(
+            "{:url('withdraw/add')}",
+            // $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+</script>
+
+{include file="common/footer" /}

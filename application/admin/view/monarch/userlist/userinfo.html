@@ -1,0 +1,140 @@
+<link rel="stylesheet" href="{$flag}/font-awesome.min.css">
+<link rel="stylesheet" href="{$flag}/layeropen.css?v=1">
+<script src="{$js}/jquery-2.2.1.min.js"></script>
+<script src="{$layer}/layer.js"></script>
+
+<style>
+    *{
+        margin:0;padding:0;border:0;font-weight:normal;vertical-align:baseline;background:transparent;
+    }
+    /*顶部显示圆角显示*/
+    #layui-layer-iframe2{
+        border-radius: 6px;
+
+    }
+    .clearfix{*zoom: 1;}
+    .clearfix:before,.clearfix:after
+    {display: table;line-height: 0;content: "";}
+    .clearfix:after{clear: both;}
+    .t_title {
+        font-size: 20px;
+        color: #333333;
+        text-align: center;
+        line-height: 48px;
+        border-bottom: 1px solid #ddd;
+    }
+    .pop_edit .detail {
+        padding: 30px 60px;
+    }
+    .pop_form .row {
+        margin-bottom: 20px;
+    }
+    .pop_edit .detail .tit {
+        width: 80px;
+    }
+    .pop_form .tit {
+        text-align: right;
+        display: block;
+        float: left;
+        line-height: 35px;
+        font-size: 14px;
+        color: #333333;
+    }
+    .pop_edit .detail .info {
+        width: 280px;
+    }
+    .pop_form .info {
+        float: right;
+        line-height: 35px;
+    }
+    .pop_form .ipt_button {
+        width: 100px;
+        height: 40px;
+        background: #5967dc;
+        text-align: center;
+        line-height: 40px;
+        font-size: 16px;
+        color: #fff;
+        border: none;
+        margin: 0 auto;
+        display: block;
+    }
+    .pop_userinfo .qqchart {
+        background: url({$images}/icon_50.png) no-repeat 30px center #5967dc;
+        background-size: 15px;
+        padding-left: 50px;
+        text-align: left;
+    }
+    .pop_edit .pop_form .ipt_button {
+        margin-top: 40px;
+    }
+    .pop_form .ipt_button:hover {
+        box-shadow: 0 0 5px #5967dc;
+    }
+    a:active, a:hover {
+        outline: 0;
+    }
+    .ipt_button {
+        cursor: pointer;
+    }
+    .ipt_button:hover {
+        transition: all .2s;
+    }
+    a {
+        text-decoration: none;
+        color: #333;
+    }
+</style>
+<div class="pop pop_edit pop_userinfo">
+    <a href="javascript:;" class="close"></a>
+    <h5 class="t_title">查看商户[{$list.username}]基本信息</h5>
+    <div class="detail">
+        <form class="layui-form" action="">
+            <div class="pop_form">
+                <div class="row clearfix">
+                    <span class="tit">商户编号</span>
+                    <div class="info">
+                        {$list.userid}
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">登录账号</span>
+                    <div class="info">
+                        {$list.username}
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">联系手机</span>
+                    <div class="info">
+                        {$list.tel}
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">联系QQ</span>
+                    <div class="info">
+                        {$list.qq}
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">电子邮箱</span>
+                    <div class="info">
+                        {$list.email}
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">站点名称</span>
+                    <div class="info">
+                        {$list.sitename}
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">站点地址</span>
+                    <div class="info">
+                        {$list.siteurl}
+                    </div>
+                </div>
+                <a href="http://wpa.qq.com/msgrd?v=3&uin={$list.qq}&site=qq&menu=yes" class="ipt_button qqchart" target="_blank">QQ交谈</a>
+            </div>
+        </form>
+    </div>
+</div>

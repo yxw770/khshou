@@ -1,0 +1,75 @@
+{include file="common/header" /}
+<script src="{$js}/bootstrap.min.js"></script>
+
+<link href="{$css}/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="{$css}/core.css" rel="stylesheet" type="text/css">
+<link href="{$css}/menu.css" rel="stylesheet" type="text/css">
+<link href="{$css}/nav.css" rel="stylesheet">
+<link href="{$css}/dropify.min.css" rel="stylesheet" type="text/css">
+
+<script src="{$js}/dropify.min.js"></script>
+<body class="fixed-left widescreen">
+<div id="wrapper">
+    {include file="common/top_nav" /}
+    {include file="common/left_nav" /}
+
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="content-page">
+        <!-- Start content -->
+        <div class="content">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card-box">
+                            <div class="add-title clear">
+                                付款方式
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                </div>
+                            </div>
+                            <!-- end row -->
+                            <div class="row">
+                                <table class="table table-striped m-0">
+                                    <thead>
+                                    <tr>
+                                        <th>支付方式</th>
+                                        <th>商户费率</th>
+                                        <th>状态</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {volist name="list" id="vo"}
+                                    <tr>
+                                        <td>{$vo.channelname}</td>
+                                        <td>{$vo.userrate*100}%</td>
+                                        <td>
+                                            {$vo.is_state=='1'?'已开启':'<span style="color: #999">已关闭</span>'}
+                                        </td>
+                                    </tr>
+                                    {/volist}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- end row -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- container -->
+        </div>
+        <!-- content -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Right content here -->
+    <!-- ============================================================== -->
+</div>
+<!-- END wrapper -->
+
+{include file="common/footer" /}

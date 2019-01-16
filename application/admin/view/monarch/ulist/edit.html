@@ -1,0 +1,349 @@
+<!--<link rel="stylesheet" href="{$flag}/font-awesome.min.css">-->
+<!--<link rel="stylesheet" href="{$flag}/layeropen.css?v=1">-->
+<link rel="stylesheet" href="{$layui}/css/layui.css">
+
+
+
+<link rel="stylesheet" href="{$open}/open.css">
+<script src="{$js}/jquery-2.2.1.min.js"></script>
+<script src="{$layer}/layer.js"></script>
+<script src="{$layui}/layui.js" charset="utf-8"></script>
+
+
+<style>
+    /**{*/
+        /*margin:0;padding:0;border:0;font-weight:normal;vertical-align:baseline;background:transparent;*/
+    /*}*/
+
+    /*body{*/
+        /*overflow-y: hidden;*/
+    /*}*/
+    /*顶部显示圆角显示*/
+    #layui-layer-iframe2{
+        border-radius: 6px;
+
+    }
+    .clearfix{*zoom: 1;}
+    .clearfix:before,.clearfix:after
+    {display: table;line-height: 0;content: "";}
+    .clearfix:after{clear: both;}
+    .t_title {
+        font-size: 20px;
+        color: #333333;
+        text-align: center;
+        line-height: 48px;
+        border-bottom: 1px solid #ddd;
+    }
+    /*body部分*/
+    .pop_balance {
+        width: 420px;
+        display: block;
+    }
+    /*body部分*/
+
+    /*box部分*/
+    .detail {
+        padding: 30px 70px 40px 35px;
+    }
+    /*box部分*/
+
+    /*row box部分*/
+    .pop_form .row {
+        margin-bottom: 20px;
+    }
+    /*row box部分*/
+
+    /*row部分*/
+    .pop_channel .detail .tit {
+        width: 95px;
+    }
+    .pop_form .tit {
+        text-align: right;
+        display: block;
+        float: left;
+        line-height: 35px;
+        font-size: 14px;
+        color: #333333;
+    }
+    .pop_channel .detail .info {
+        width: 600px;
+    }
+    .pop_form .info {
+        float: right;
+        line-height: 35px;
+    }
+    /*row部分*/
+
+    /*row input元素部分*/
+    .pop .ipt_txt {
+        width: 100%;
+    }
+    .pop_form .ipt {
+        padding: 0 20px;
+        border: 1px solid #ddd;
+        height: 35px;
+        line-height: 35px;
+    }
+    input[type="button"], input[type="submit"], input[type="reset"], input[type="text"] {
+        -webkit-appearance: none;
+    }
+    .ipt {
+        display: block;
+    }
+    /*row input元素部分*/
+
+    /*row select元素部分*/
+    .pop_select {
+        width: 100%;
+        text-align: left;
+    }
+    .pop_select {
+        text-align: left;
+    }
+    .fl {
+        float: left;
+    }
+    body, input, h1, h2, h3, h4, h5, h6, p, textarea, table, div, ul, li, select {
+        font-family: Microsoft YaHei;
+        margin: 0;
+        padding: 0;
+        color: inherit;
+        line-height: 1;
+    }
+    /*row select元素部分*/
+
+    /*row checkbox 元素部分*/
+    /*.pop_chk {*/
+        /*width: 50%;*/
+        /*display: inline-block;*/
+        /*height: 38px;*/
+        /*line-height: 38px;*/
+        /*background-color: #009688;*/
+        /*color: #fff;*/
+        /*white-space: nowrap;*/
+        /*text-align: center;*/
+        /*font-size: 14px;*/
+        /*border: none;*/
+        /*border-radius: 2px;*/
+        /*cursor: pointer;*/
+    /*}*/
+    /*row checkbox 元素部分*/
+
+    /*row button元素部分*/
+    .ipt_button {
+        cursor: pointer;
+    }
+
+    .pop_form .ipt_button:hover {
+        box-shadow: 0 0 5px #5967dc;
+    }
+    .pop_channel .ipt_button {
+        margin-top: 35px;
+    }
+    .pop_form .ipt_button {
+        width: 140px;
+        height: 40px;
+        background: #5967dc;
+        text-align: center;
+        line-height: 40px;
+        font-size: 16px;
+        color: #fff;
+        border: none;
+        margin: 0 auto;
+        display: block;
+    }
+    /*row button元素部分*/
+
+    /*row textarea元素部分*/
+    .pop_textarea {
+        display: block;
+        width: 100%;
+        height: 110px;
+        border: 1px solid #ddd;
+        padding: 10px 20px;
+        font-size: 14px;
+        color: #333;
+        resize: none;
+    }
+    .pop_textarea:hover {
+        transition: all .2s;
+    }
+    textarea {
+        -webkit-appearance: none;
+    }
+    /*row textarea元素部分*/
+
+    /*row layerui select 部分*/
+    .layui-form-select dl dd.layui-this {
+        background-color: #706ac9;
+    }
+    .layui-form-select .layui-edge {
+        background: url({$images}/icon_14.png) no-repeat right center;
+        background-size: cover;
+        width: 10px;
+        height: 6px;
+        margin-top: -3px;
+        border-style: initial;
+    }
+    /*row layerui select 部分*/
+</style>
+<div class="pop pop_channel">
+    <a href="javascript:;" class="close"></a>
+    <h5 class="t_title">编辑管理员</h5>
+    <div class="detail">
+        <form class="layui-form" action="" id="ajaxform">
+            <div class="pop_form">
+                <div class="row clearfix">
+                    <span class="tit">管理员类型</span>
+                    <div class="info">
+                        <div class="pop_select fl">
+                            <select name="utype">
+                                <option value="2" {$list.utype=='2'?'selected':''}>子管理员</option>
+                                <option value="1" {$list.utype=='1'?'selected':''}>总管理员</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">管理员ID</span>
+                    <div class="info">
+                        {$list.adminid}
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">管理员名称</span>
+                    <div class="info">
+                        <input type="text" name="adminname" class="ipt ipt_txt" placeholder="" value="{$list.adminname}"/>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">密码</span>
+                    <div class="info">
+                        <input type="text" name="adminpass" class="ipt ipt_txt" placeholder="" value=""/>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">真实姓名</span>
+                    <div class="info">
+                        <input type="text" name="realname" class="ipt ipt_txt" placeholder="" value="{$list.realname}"/>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">安全码开关</span>
+                    <div class="info">
+                        <div class="pop_select fl">
+                            <select name="is_safe" lay-filter="test">
+                                <option value="0" {$list.is_safe=="0"?"selected":'';}>暂时关闭</option>
+                                <option value="1" {$list.is_safe=="1"?"selected":'';}>正式开通</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row clearfix" style="display: {$list.is_safe=='0'?'none':''}" id="safekey">
+                    <span class="tit">安全码</span>
+                    <div class="info">
+                        <input type="text" name="safekey" class="ipt ipt_txt" placeholder="请输入6位安全码" value="{$list.safekey}" maxlength="6"/>
+                    </div>
+                </div>
+                <div class="row clearfix" id="is_whiteip">
+                    <span class="tit">登录IP限制</span>
+                    <div class="info">
+                        <div class="pop_select fl">
+                            <select name="is_whiteip" lay-filter="is_whiteip">
+                                <option value="0" {$list.is_whiteip=="0"?"selected":'';}>不设置</option>
+                                <option value="1" {$list.is_whiteip=="1"?"selected":'';}>根据IP地址</option>
+                                <option value="2" {$list.is_whiteip=="2"?"selected":'';}>根据IP地址段</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row clearfix" style="display: {$list.is_whiteip=='0'?'none':''}" id="whiteip">
+                    <span class="tit">IP地址内容</span>
+                    <div class="info">
+                        <textarea class="pop_textarea" name="whiteip" id="" cols="30" rows="10" placeholder="多个IP地址或IP段中间用‘|’隔开，留空为不限制">{$list.whiteip}</textarea>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">操作权限</span>
+                    <div class="info">
+                        <?php $i=0;foreach($viewlimit_json as $k => $v): ?>
+                        <label for="" style="width: 120px;display: inline-block"><input type="checkbox" name="viewlimit[]" style="display: none" value="{$k}" {:in_array($k,$list.viewlimit)?'checked':''}>{$v}</label>
+                        <?php $i++;if($i%4=='0')echo "<br>"; ?>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">帐户状态</span>
+                    <div class="info">
+                        <div class="pop_select fl">
+                            <select name="is_state">
+                                <option value="1" {$list.is_state=="1"?"selected":'';}>正式开通</option>
+                                <option value="0" {$list.is_state=="0"?"selected":'';}>暂时关闭</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <input type="button" value="保存修改" class="ipt_button" onclick="submitform();return false;"/>
+            </div>
+            <input type="hidden" name="adminid" value="{$list.adminid}">
+        </form>
+    </div>
+</div>
+
+
+<script>
+    layui.use(['form'], function(){
+        var form = layui.form;
+        form.on('select(test)', function(data){
+            var is_safe = data.value;
+            if(is_safe=='1') {
+                $('#safekey').show();
+            }else{
+                $('#safekey').hide();
+            }
+        });
+        form.on('select(is_whiteip)', function(data){
+            var is_whiteip = data.value;
+            if(is_whiteip!='0') {
+                $('#whiteip').show();
+            }else{
+                $('#whiteip').hide();
+            }
+        });
+    });
+</script>
+<script>
+    // window.onload = function () {
+    //     setTimeout('changepwd()', 500)
+    //     ;
+    // };
+    // function changepwd() {
+    //     $('[name="adminpass"]').attr('type','password').val('')
+    // }
+</script>
+<script>
+    function submitform() {
+        $.post(
+            "{:url('ulist/editsave')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>

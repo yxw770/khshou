@@ -1,0 +1,94 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<link rel="stylesheet" href="{$flag}/font-awesome.min.css">
+<style>
+    .icon{
+        text-align: center;
+    }
+</style>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<div class="main auto">
+    <div class="main_wrap">
+        <div class="m_top clearfix">
+            <div class="m_search fl clearfix">
+                <form class="layui-form" action="">
+                    <div class="s_box clearfix fl">
+                        <div class="s_select fl">
+                            <select name="ktype">
+                                <option value="">全部类型</option>
+                                <option value="userid" {:input('ktype')=='userid'?"selected":'';}>商户ID</option>
+                                <option value="username" {:input('ktype')=='username'?"selected":'';}>商户名称</option>
+                            </select>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_input fl">
+                            <input type="text" name="keyword" class="ipt ipt_txt" value="{:input('keyword')}"/>
+                        </div>
+                    </div>
+                    <button class="search_btn fl">搜索</button>
+                    <input type="hidden" name="do" value="search">
+                </form>
+            </div>
+        </div>
+        <div class="m_content">
+
+            <table class="pub_table">
+                <thead>
+                <th width="7%">商户ID</th>
+                <th width="11%">商户名</th>
+                <th width="7%">收款人</th>
+                <th width="11%">身份证号</th>
+                <th width="7%">收款方式</th>
+                <th width="11%">收款账号</th>
+                <th width="8%">收款银行</th>
+                <th width="12%">开户地址</th>
+                <th width="7%">操作</th>
+                </thead>
+                <tbody>
+                <tr>
+                    {volist name="list" id="vo"}
+                    <td>{$vo.userid}</td>
+                    <td>
+                        <em class="c_purple">{$vo.username}</em>
+                    </td>
+                    <td onclick="showContent('查看用户','{:url('userlist/userinfo','userid='.$vo.userid)}','500px','548px')"><a href="javascript:;" class="usernamePop">{$vo.realname}</a></td>
+                    <td>
+                        {$vo.idcard}
+                    </td>
+                    {if $vo.ptype=='1'}
+                    <td>支付宝</td>
+                    <td>{$vo.alipay}</td>
+                    {elseif $vo.ptype=='2'}
+                    <td>银行卡</td>
+                    <td>{$vo.card}</td>
+                    {elseif $vo.ptype=='3'}
+                    <td>微信</td>
+                    <td>{$vo.weixin}</td>
+                    {elseif $vo.ptype=='0'}
+                    <td>未设置</td>
+                    <td>未设置</td>
+                    {/if}
+                    <td>{$vo.bankname}</td>
+                    <td>{$vo.bankaddr}</td>
+                    <td>
+                        <a href="javascript:;" class="icon edit editPopButton" onclick="showContent('编辑用户','{:url('userpaylist/edit','userid='.$vo.userid)}','500px','553px')"></a>
+                        <!--<a href="#" class="icon email"></a>-->
+                        <!--<a href="#" class="icon delete"></a>-->
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {$page}
+</div>
+<script>
+    layui.use(['form'], function () {
+    });
+</script>
+{include file="common/footer" /}

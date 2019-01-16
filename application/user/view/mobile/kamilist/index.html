@@ -1,0 +1,95 @@
+{include file="common/header" /}
+<body>
+<!-- 顶部 -->
+<!--部分页面top后面有style样式添加-->
+<div class="top" style="padding-bottom: 0">
+    <div class="top_con">
+        <span>库存卡密</span>
+        <a class="back" href="{:url('/')}"><img src="{$images}/back.png" width="7" height="11"></a>
+        <a class="user_name"><i class="iconfont icon-mine"></i></a>
+    </div>
+</div>
+<!-- 列表 -->
+<div class="list_bg">
+    <form action="" method="get">
+        <select name="goodlistid" class="select1" onchange="this.parentElement.submit();">
+            <option value="">全部商品</option>
+            {volist name="goodlist_arr" id="vo"}
+            <option value="{$vo.goodlistid}" {:input('goodlistid')==$vo.goodlistid?"selected":'';}>{$vo.goodname}</option>
+            {/volist}
+        </select>
+        <input type="hidden" name="do" value="search">
+    </form>
+    <form action="{:url('kamilist/delall')}" method="post" id="ajaxform">
+        <ul>
+            {volist name="list" id="vo"}
+            <li>
+                <div class="j_box_title"><i class="fa fa-credit-card"></i> {$vo.goodname}<a class="j_price">商品价格：{$vo.price}元</a></div>
+                <div class="j_box_con">
+                    <p>卡号： <span class="j_link">{$vo.cardnumber}</span><br>卡密： {$vo.cardpassword}</p>
+                    <p><a href="javascript:void(0)" onclick="del('{$vo.productid}')" class="j_btn" style="color:#f17d83">删除</a></p>
+                    <div id="clear"></div>
+                </div>
+            </li>
+            {/volist}
+        </ul>
+    </form>
+</div>
+
+<style>
+    .pagination {
+        /*padding: 32px 0;*/
+        text-align: left;
+        font-size: 12px;
+        color: #666;
+        position: relative;
+    }
+    .m-pages a{
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid #e3e5eb;
+        border-left: 1px solid #e3e5eb;
+        border-top: 1px solid #e3e5eb;
+        display: inline-block;
+        font-size: 12px;
+        height: 30px;
+        line-height: 30px;
+        overflow: hidden;
+        text-align: center;
+        vertical-align: top;
+        width: 30px;
+    }
+</style>
+<div class="pagination">
+    {$page}
+</div>
+<script>
+    function del(id) {
+        $.post(
+            "{:url('kamilist/del')}",
+            {productid:id},
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}

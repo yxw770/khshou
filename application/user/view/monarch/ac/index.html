@@ -1,0 +1,118 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+
+<div class="main clearfix">
+    {include file="common/left_nav" /}
+
+    <div class="container addcoupon scroll">
+        <div class="box init b1">
+            <div class="title">
+                加优惠券  <span>coupons</span>
+            </div>
+            <form action="{:url('ac/addsave')}" class="clearfix" id="ajaxform" method="get">
+                <div class="item clearfix">
+                    <span class="left">折扣面额</span>
+                    <div class="right first">
+                        <input type="text" name="amount" value="1">
+                            元
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">生成数量</span>
+                    <div class="right">
+                        <input type="text" name="count" value="1">
+                        <span class="ext">件</span>
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">有效期</span>
+                    <div class="right">
+                        <select name="validity">
+                            <?php for ($i = 1; $i <= 30; $i++): ?>
+                            <option value="{$i}">{$i}天</option>
+                            <?php endfor; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">绑定商品分类</span>
+                    <div class="right">
+                        <select name="goodlistid">
+                            <option value="is_all">全部</option>
+                            {volist name="arr" id="vo"}
+                            <option value="{$vo.goodlistid}">{$vo.goodname}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">备注信息</span>
+                    <div class="right">
+                        <textarea name="remark" id=""></textarea>
+                        <div class="select">
+                            <div class="f">
+                                <input type="checkbox" name="is_export" id="c1" value="1">
+                                <label for="c1">添加完成后导出优惠券到文本txt</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn">
+                    <button class="t1" onclick="export_order()">onclick 保存设置</button>
+                    <button class="t1" onclick="submitform();return false;">get 保存设置</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function submitform() {
+        if($("input[name='is_export']").is(':checked')){
+            console.log(1);
+            if(export_order()) {
+                setTimeout('window.location.reload()', 3000);
+            }
+        }else {
+            $.post(
+                "{:url('ac/addsave')}",
+                $("#ajaxform").serialize(),
+                function (data) {
+                    data = eval("(" + data + ")");
+                    // console.log(data);
+                    if (data.status == '1') {
+                        layer.msg(data.msg, {
+                            icon: 6,
+                            time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            window.parent.location.reload();
+                        });
+                    } else if(data.status=='0') {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                        });
+                    }
+                }
+                // , "json"
+            );
+        }
+    }
+</script>
+
+<script>
+    function export_order() {
+        var amount = $('[name="amount"]').val();
+        var count = $('[name="count"]').val();
+        var validity = $('[name="validity"]').val();
+        var goodlistid = $('[name="goodlistid"]').val();
+        var remark = $('[name="remark"]').val();
+        window.location.href = "{:url('ac/export')}?amount=" + amount + "&count=" + count + "&validity=" + validity + "&goodlistid=" + goodlistid + "&remark=" + remark;
+        return true;
+    }
+</script>
+{include file="common/footer" /}

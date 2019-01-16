@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no" />
+    <title>微信安全支付</title>
+    <script src="{$js}/jquery.min.js"></script>
+    <script src="{$js}/jquery.qrcode.min.js"></script>
+    <script src="{$js}/clipboard.min.js"></script>
+    <script src="{$layer}/layer.js"></script>
+</head>
+<style>
+    body,p{
+        font-family: "Microsoft Yahei", "微软雅黑", "Pinghei";
+    }
+</style>
+<body style="background: #fff;">
+<div style="border: solid 2px #4BB4ED;border-radius: 5px">
+<header>
+    <p style="background: rgb(50,122,183);margin: 0;text-align: center;color: #fff;height: 37px;line-height: 37px">微信安全支付</p>
+    <p style="background: rgb(217,237,247);margin: 0;text-align: center;color: rgb(78,134,162);height: 40px;line-height: 40px">请保存二维码图片打开微信从相册选择并支付</p>
+</header>
+<section id="qrcode" style="display: block;margin: 0 auto;width: 250px">
+</section>
+<section>
+    <p style="background: rgb(217,237,247);margin: 0;text-align: center;color: rgb(78,134,162);height: 40px;line-height: 40px">或 <label class="copy_btn" data-clipboard-action="copy" data-clipboard-target="#a1" style="color: #feb41c;cursor: pointer;font-weight: 500">点击复制</label> 以下链接到微信打开：</p>
+</section>
+<section>
+    <p id="a1" style="padding: 5px 32px;color: rgb(80,142,194);width: auto;word-wrap:break-word; word-break:break-all;border-bottom: 1px solid #999"></p>
+</section>
+<section>
+    <p style="padding: 0 11px;text-indent:11px;color: #333;width: auto;word-wrap:break-word; word-break:break-all;border-bottom: 1px solid #999;font-size: 14px;margin: 0;font-weight: 500">提示：你可以将以上链接发到自己微信的聊天框（在微信内顶部搜索框可以搜到自己的微信），即可进入支付</p>
+</section>
+<section>
+    <p style="padding: 0 11px;text-indent:11px;color: #333;width: auto;word-wrap:break-word; word-break:break-all;border-bottom: 1px solid #999;font-size: 18px;margin: 0;text-align: center;font-weight: 500" id="msg">支付成功自动跳转查看结果</p>
+</section>
+
+</div>
+<script>
+    $(function () {
+        jQuery(function () {
+            // console.log(window.location.href);
+            // var url = window.location.href;
+            var url = '{$url}';
+            $('#a1').html(url);
+            jQuery('#qrcode').qrcode(
+                {
+                    render: "canvas",    //设置渲染方式，有table和canvas，使用canvas方式渲染性能相对来说比较好
+                    width: 250,				//二维码的宽度
+                    height: 250,				//二维码的高度
+                    // foreground: "#cc674a",				//二维码的后景色
+                    background: "#FFF",				//二维码的前景色
+                    text: encodeURI('{:htmlspecialchars_decode($url)}'),				//扫描二维码后显示的内容,可以直接填一个网址，扫描二维码后自动跳向该链接
+                    // src: 'photo.jpg'             //二维码中间的图片
+                });
+        });
+    })
+</script>
+<script>
+    var clipboard = new Clipboard('.copy_btn');
+
+    clipboard.on('success', function(e) {
+        layer.msg('已复制', {icon: 1, time: 2000});
+        // console.log(e);
+    });
+
+    clipboard.on('error', function(e) {
+        layer.msg('复制失败！请手动复制', {icon: 2, time: 2000});
+        // console.log(e);
+    });
+</script>
+
+<script>
+    //校验是否已经付款
+    function oderquery() {
+        var orderid = '{$orderid}';
+        var time = {:time()};
+        $.post(
+            "{:url('ajax/checkOrderid')}",
+            {orderid:orderid,time:time},
+            function (data) {
+                data = eval("(" + data + ")");
+                // console.log(data);
+                if (data.status == '1') {
+                    $("#msg").html("请稍候，正在处理付款结果...");
+                    window.location.href = "/orderquery?kw={$orderid}";
+                    clearInterval(setInterval1);
+
+                }
+            }
+            // ,"json"
+        );
+    }
+    var setInterval1 = setInterval('oderquery()', 3000);
+</script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<link rel="stylesheet" href="{$flag}/font-awesome.min.css">
+<link rel="stylesheet" href="{$flag}/layeropen.css?v=1">
+<script src="{$js}/jquery-2.2.1.min.js"></script>
+<script src="{$layer}/layer.js"></script>
+
+<style>
+    *{
+        margin:0;padding:0;border:0;font-weight:normal;vertical-align:baseline;background:transparent;
+    }
+    /*顶部显示圆角显示*/
+    #layui-layer-iframe2{
+        border-radius: 6px;
+
+    }
+    .t_title {
+        font-size: 20px;
+        color: #333333;
+        text-align: center;
+        line-height: 48px;
+        border-bottom: 1px solid #ddd;
+    }
+    .pop_tagging {
+        display: none;
+    }
+    .pop_tagging .detail {
+        padding: 40px 70px;
+    }
+    .pop_form .row {
+        margin-bottom: 20px;
+    }
+    .pop_tagging .info {
+        width: 310px;
+    }
+    .pop_form .info {
+        float: right;
+    }
+    .pop_textarea {
+        display: block;
+        width: 100%;
+        height: 110px;
+        border: 1px solid #ddd;
+        padding: 10px 20px;
+        font-size: 14px;
+        color: #333;
+        resize: none;
+    }
+    .pop_form .ipt_button {
+        width: 140px;
+        height: 40px;
+        background: #5967dc;
+        text-align: center;
+        line-height: 40px;
+        font-size: 16px;
+        color: #fff;
+        border: none;
+        margin: 0 auto;
+        display: block;
+    }
+    .fa{
+        padding: 5px;
+        margin-right: 10px;
+        border: 1px solid #dadada;
+    }
+    .flag{
+        cursor: pointer;
+    }
+    .fa.cur {
+        border-color: #51ba35;
+        background: url({$images}/icon_57.png) no-repeat center;
+        background-size: 10px;
+        background-position: bottom right;
+
+    }
+    .pop .close {
+        background: url({$images}/pop_close.png) no-repeat center;
+        background-size: cover;
+        width: 40px;
+        height: 40px;
+        display: block;
+        position: absolute;
+        right: -40px;
+        top: -40px;
+    }
+</style>
+<div class="pop pop_tagging" style="display: block;">
+    <a href="javascript:;" class="close"></a>
+    <h5 class="t_title">为{$list.username}做标注</h5>
+    <div class="detail">
+        <form class="layui-form" action="" id="ajaxform">
+            <div class="pop_form">
+                <div class="row clearfix">
+                    <span class="tit">商户名称</span>
+                    <div class="info">
+                        {$list.username}
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">可结金额</span>
+                    <div class="info">
+                        {$unpayment}
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">标记</span>
+                    <div class="info">
+                        <label href="javascript:;" class="flag">
+                            <i class="fa fa-flag {$list.flag=='0'?'cur':''}" style="color:#ccc"></i>
+                            <input type="radio" style="display: none" name="flag" value="0">
+                        </label>
+                        <label href="javascript:;" class="flag">
+                            <i class="fa fa-flag {$list.flag=='1'?'cur':''}" style="color:#eee366"></i>
+                            <input type="radio" style="display: none" name="flag" value="1">
+                        </label>
+                        <label href="javascript:;" class="flag">
+                            <i class="fa fa-flag {$list.flag=='2'?'cur':''}" style="color:#feb41c"></i>
+                            <input type="radio" style="display: none" name="flag" value="2">
+                        </label>
+                        <label href="javascript:;" class="flag">
+                            <i class="fa fa-flag {$list.flag=='3'?'cur':''}" style="color:#5dcc3e"></i>
+                            <input type="radio" style="display: none" name="flag" value="3">
+                        </label>
+                        <label href="javascript:;" class="flag">
+                            <i class="fa fa-flag {$list.flag=='4'?'cur':''}" style="color:#ff6868"></i>
+                            <input type="radio" style="display: none" name="flag" value="4">
+                        </label>
+                        <label href="javascript:;" class="flag">
+                            <i class="fa fa-flag {$list.flag=='5'?'cur':''}" style="color:#c69cfe"></i>
+                            <input type="radio" style="display: none" name="flag" value="5">
+                        </label>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <span class="tit">备注</span>
+                    <div class="info">
+                        <textarea name="remark" class="pop_textarea">{$list.remark}</textarea>
+                    </div>
+                </div>
+                <input type="hidden" name="userid" value="{$list.userid}">
+                <input type="button" value="立即保存" class="ipt_button" onclick="submitform();return false;">
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $(".info label").click(function(){
+        $(this).siblings("label").find('i').removeClass("cur");
+        $(this).find('i').addClass("cur");
+    });
+</script>
+<script>
+    function submitform() {
+        $.post(
+            "{:url('userlist/flagsave')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>

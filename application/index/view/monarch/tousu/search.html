@@ -1,0 +1,40 @@
+{include file="common/header" /}
+<body style="background: url('{$images}/se5_bg.jpg')">
+{include file="common/orhter_top_nav" /}
+<div class="se5_card" style="margin-top: 120px;margin-bottom: 60px">
+    <div class="search_box" style="margin-top: 0px">
+        <form action="{:url('tousu/searchResult')}" method="get" id="ajaxform">
+        <i class="iconfont icon-sousuo"></i>
+        <input type="text" name="kw" value="{:input('kw')}" placeholder="请输入投诉的订单号查询" class="order_input">
+        <button>查 询</button>
+        </form>
+    </div>
+</div>
+<script>
+    function submitform() {
+        $.get(
+            "{:url('tousu/searchResult')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.href = "{:url('goodlist/index')}";
+                        // window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}

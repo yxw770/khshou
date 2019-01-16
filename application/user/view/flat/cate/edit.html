@@ -1,0 +1,58 @@
+{include file="common/header" /}
+<link rel="stylesheet" href="{$css}/style.css">
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<section class="box-right">
+    <form action="{:url('cate/edit')}" method="post" id="ajaxform">
+        <div class="Journal">
+            <div class="jrl-title">商品分类</div>
+            <div class="gc-title clear">
+                <div style="width: 77%;">分类名称</div>
+                <div style="width: 20%;">分类排序</div>
+            </div>
+            <div class="gc-form clear">
+                <input type="text" style="width: 73%" name="catename" class="gc-mc" value="{$list.catename}" maxlength="20">
+                <input type="text" style="width: 10%" name="sortid" class="gc-px" value="{$list.sortid}" maxlength="3">
+            </div>
+            <div class="gc-btn">
+                <button type="button" onclick="submitform()" class="btn btn-purple1 waves-effect waves-light">保存配置</button>
+                <span>(当前操作需要保存设置后才能生效)</span>
+            </div>
+        </div>
+        <input type="hidden" name="goodcateid" value="{$list.goodcateid}">
+    </form>
+</section>
+<script>
+    function submitform() {
+        var test = $("#ajaxform").serialize();
+        $.post(
+            "{:url('cate/editsave')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.href = "{:url('/cate')}";
+                        // window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}

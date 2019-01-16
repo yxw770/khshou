@@ -1,0 +1,243 @@
+    {include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+<style>
+    input[type=password]{
+        display: inline-block;
+        height: 40px;
+        line-height: 38px;
+        border: 1px solid #e3e5eb;
+        padding-left: 16px;
+        border-radius: 4px;
+        width: 400px;
+    }
+    .left{
+        width: 120px !important;
+    }
+</style>
+<body>
+{include file="common/top_nav" /}
+
+<div class="main clearfix">
+    {include file="common/left_nav" /}
+
+    <div class="container safety scroll">
+        <div class="box init b1">
+            <div class="title">安全设置
+                <span>security settings</span></div>
+            <div class="subtitle">安全密码</div>
+            <form action="" class="clearfix" id="ajaxform">
+                {if !empty($list.usersafekey)}
+                <div class="item clearfix">
+                    <span class="left">原安全密码</span>
+                    <div class="right">
+                        <input name="old_usersafekey" type="password" placeholder="原安全密码" minlength="6" maxlength="20" value="">
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">新安全密码</span>
+                    <div class="right">
+                        <input name="usersafekey" type="password" placeholder="新安全密码" minlength="6" maxlength="20" value="">
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">重新输入新安全密码</span>
+                    <div class="right">
+                        <input name="confirm_usersafekey" type="password" placeholder="重新输入新安全密码" minlength="6" maxlength="20" value="">
+                    </div>
+                </div>
+                {elseif empty($list.usersafekey)}
+                <div class="item clearfix">
+                    <span class="left">新安全密码</span>
+                    <div class="right">
+                        <input name="usersafekey" type="password" placeholder="新安全密码" minlength="6" maxlength="20" value="">
+                    </div>
+                </div>
+                <div class="item clearfix">
+                    <span class="left">重新输入新安全密码</span>
+                    <div class="right">
+                        <input name="confirm_usersafekey" type="password" placeholder="重新输入新安全密码" minlength="6" maxlength="20" value="">
+                    </div>
+                </div>
+                {/if}
+                <div class="item clearfix">
+                    <span class="left">开启安全密码</span>
+                    <div class="right">
+                        <div class="radio">
+                            <input type="radio" name="is_safekey" {$list.is_safekey==0?'checked':''} id="r1" value="0">
+                            <label for="r1">关闭</label>
+                        </div>
+                        <div class="radio">
+                            <input type="radio" name="is_safekey" {$list.is_safekey==1?'checked':''}  id="r2" value="1">
+                            <label for="r2">开启</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn">
+                    <button class="t1" onclick="submitform();return false;">保存设置</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+{if !empty($list.usersafekey)}
+<script>
+    function submitform() {
+        var old_usersafekey = $('input[name="old_usersafekey"]').val();
+        var usersafekey = $('input[name="usersafekey"]').val();
+        var confirm_usersafekey = $('input[name="confirm_usersafekey"]').val();
+        if(old_usersafekey=='') {
+            layer.msg('请输入原安全密码', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="old_usersafekey"]').focus();
+            return false;
+        }
+        if(old_usersafekey.length<6) {
+            layer.msg('原安全密码至少6位', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="old_usersafekey"]').focus();
+            return false;
+        }
+        if(usersafekey=='') {
+            layer.msg('请输入新安全密码', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="usersafekey"]').focus();
+            return false;
+        }
+        if(usersafekey.length<6) {
+            layer.msg('新安全密码至少6位', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="usersafekey"]').focus();
+            return false;
+        }
+        if(confirm_usersafekey=='') {
+            layer.msg('请输入确认新安全密码', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="confirm_usersafekey"]').focus();
+            return false;
+        }
+        if(confirm_usersafekey.length<6) {
+            layer.msg('确认新安全密码至少6位', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="confirm_usersafekey"]').focus();
+            return false;
+        }
+        if(usersafekey!=confirm_usersafekey) {
+            layer.msg('新安全密码输入和确认新安全密码不一致', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="confirm_password"]').focus();
+            return false;
+        }
+        $.post(
+            "{:url('safekey/retsave')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                data = eval("(" + data + ")");
+                // console.log(data);
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.reload();
+                        // window.location.href = "{:url('/login')}";
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+{elseif empty($list.usersafekey)}
+<script>
+    function submitform() {
+        var usersafekey = $('input[name="usersafekey"]').val();
+        var confirm_usersafekey = $('input[name="confirm_usersafekey"]').val();
+        if(usersafekey=='') {
+            layer.msg('请输入新安全密码', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="usersafekey"]').focus();
+            return false;
+        }
+        if(usersafekey.length<6) {
+            layer.msg('新安全密码至少6位', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="usersafekey"]').focus();
+            return false;
+        }
+        if(confirm_usersafekey=='') {
+            layer.msg('请输入确认新安全密码', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="confirm_usersafekey"]').focus();
+            return false;
+        }
+        if(confirm_usersafekey.length<6) {
+            layer.msg('确认新安全密码至少6位', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="confirm_usersafekey"]').focus();
+            return false;
+        }
+        if(usersafekey!=confirm_usersafekey) {
+            layer.msg('新安全密码输入和确认新安全密码不一致', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="confirm_password"]').focus();
+            return false;
+        }
+        $.post(
+            "{:url('safekey/editsave')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                data = eval("(" + data + ")");
+                // console.log(data);
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.reload();
+                        // window.location.href = "{:url('/login')}";
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+{/if}
+{include file="common/footer" /}

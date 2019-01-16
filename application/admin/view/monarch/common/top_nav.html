@@ -1,0 +1,69 @@
+<!--头部-->
+<div class="head">
+    <div class="auto clearfix">
+        <a href="/" class="hd_logo fl" target="_blank">
+            <img src="{$images}/logo3.png" alt="" class="img" style="width: auto;"/>
+        </a>
+        <div class="hd_right fr">
+            <div class="hd_user">
+                <img src="{$images}/img1.png" alt="" class="hdimg"/>
+                Hello,<em class="name">{:session('admin.adminname')}</em>
+            </div>
+            <div class="hd_icons">
+                <a href="/boss.php" class="lk">
+                    <img src="{$images}/icon_01.png" alt="" class="icon"/>
+                </a>
+                <a href="{:url('set/index')}" class="lk">
+                    <img src="{$images}/icon_02.png" alt="" class="icon"/>
+                </a>
+                <a href="#" class="lk" onclick="showContent('订单通知','{:url('index/notifyhost')}','500px','353px')">
+                    <img src="{$images}/icon_03.png" alt="" class="icon"/>
+                </a>
+                <a href="#" class="lk" onclick="refreshCache();">
+                    <img src="{$images}/icon_04.png" alt="" class="icon"/>
+                </a>
+                <a href="{:url('/tousu')}" class="lk">
+                    <img src="{$images}/icon_05.png" alt="" class="icon"/>
+                    <em class="msg_notice"></em>
+                </a>
+                <a href="/orderquery" target="_blank" class="lk">
+                    <img src="{$images}/icon_06.png" alt="" class="icon"/>
+                </a>
+                <a href="{:url('index/logout')}" class="quit">
+                    <img src="{$images}/icon_07.png" alt="" class="icon"/>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function refreshCache() {
+        layer.msg('缓存刷新中', {
+            icon: 1,
+            time: 30000 //1.5秒关闭（如果不配置，默认是3秒）
+        });
+        $.post(
+            "{:url('index/refreshCache')}",
+            {id:1},
+            function (data) {
+                data = eval("(" + data + ")");
+                // console.log(data);
+                if (data.status == '1') {
+                    layer.closeAll();
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        // window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>

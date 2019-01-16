@@ -1,0 +1,44 @@
+{include file="common/header" /}
+<link rel="stylesheet" href="{$css}/style.css">
+<link rel="stylesheet" href="{$css}/page.css">
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+
+<section class="box-right">
+    <div class="Journal">
+        <div class="jrl-title">登陆日志
+            <span>只保留显示最近的登录日志</span>
+            <i class="i-red">*</i>
+        </div>
+        <table class="table table-striped m-0">
+            <thead>
+            <tr>
+                <th>商户ID</th>
+                <th>商户账号</th>
+                <th>登录时间</th>
+                <th>登录IP</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="list" id="vo"}
+            <tr>
+                <td>{$vo.userid}</td>
+                <td>{$vo.username}</td>
+                <td>{$vo.logtime}</td>
+                <td style="cursor: pointer;color: #1E9FFF" onclick="window.open('http://www.baidu.com/s?wd={$vo.logip}&rsv_spt=1&issp=1&rsv_bp=0&ie=utf-8&tn=baiduhome_pg')">{$vo.logip}</td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        {$page}
+    </div>
+</section>
+{include file="common/footer" /}

@@ -1,0 +1,289 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<link rel="stylesheet" href="{$flag}/font-awesome.min.css">
+<style>
+    .icon{
+        text-align: center;
+    }
+    .laydate-set-ym {
+        height: 30px;
+        line-height: 30px;
+        margin-top: -3px;
+    }
+</style>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<div class="main auto">
+    <div class="main_wrap">
+        <div class="m_top clearfix">
+            <div class="m_search fl clearfix">
+                <form class="layui-form" action="">
+                    <div class="s_box clearfix fl">
+                        <div class="s_select fl">
+                            <select name="result_status">
+                                <option value=""  {:input('result_status')==''?'selected':''}>投诉处理</option>
+                                <option value="0" {:input('result_status')=='0'?'selected':''}>待处理</option>
+                                <option value="1" {:input('result_status')=='1'?'selected':''}>支持买家</option>
+                                <option value="2" {:input('result_status')=='2'?'selected':''}>支持卖家</option>
+                            </select>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_select fl">
+                            <select name="report_status">
+                                <option value=""  {:input('report_status')==''?'selected':''}>投诉状态</option>
+                                <option value="0" {:input('report_status')=='0'?'selected':''}>举证期</option>
+                                <option value="1" {:input('report_status')=='1'?'selected':''}>投诉结束</option>
+                                <option value="2" {:input('report_status')=='2'?'selected':''}>平台审核</option>
+                            </select>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_select fl">
+                            <select name="report_type">
+                                <option value="" {:input('report_type')==''?'selected':''}>举报原因</option>
+                                <option value="无效卡密" {:input('report_type')=='无效卡密'?'selected':''}>无效卡密</option>
+                                <option value="虚假商品" {:input('report_type')=='虚假商品'?'selected':''}>虚假商品</option>
+                                <option value="非法商品" {:input('report_type')=='非法商品'?'selected':''}>非法商品</option>
+                                <option value="侵权商品" {:input('report_type')=='侵权商品'?'selected':''}>侵权商品</option>
+                                <option value="不能购买" {:input('report_type')=='不能购买'?'selected':''}>不能购买</option>
+                                <option value="恐怖色情" {:input('report_type')=='恐怖色情'?'selected':''}>恐怖色情</option>
+                                <option value="其他投诉" {:input('report_type')=='其他投诉'?'selected':''}>其他投诉</option>
+                            </select>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_input fl s_input_keyword">
+                            <input type="text" name="keyword" class="ipt ipt_txt" value="{:input('keyword')}" placeholder="请输入用户名或订单号"/>
+                        </div>
+                    </div>
+                    <button class="search_btn fl">搜索</button>
+                    <input type="hidden" name="do" value="search">
+                </form>
+            </div>
+            <a href="javascript:;" class="build_cat fl" id="">全部设为已读</a>
+        </div>
+        <div class="m_content">
+            <table class="pub_table request_table">
+                <thead>
+                <th width="10%">投诉订单</th>
+                <th width="5%">订单<br>金额</th>
+                <th width="3%">举报<br>原因</th>
+                <th width="5%">联系<br>方式</th>
+                <th width="5%">联系<br>电话</th>
+                <th width="5%">商户<br>名称</th>
+                <th width="9%">投诉<br>类型</th>
+                <th width="9%">投诉<br>内容</th>
+                <th width="4%">投诉<br>截图</th>
+                <th width="7%">投诉开<br>始时间</th>
+                <th width="7%">投诉结<br>束时间</th>
+                <th width="3%">投诉<br>状态</th>
+                <th width="4%">投诉<br>处理</th>
+                <th width="5%">退款<br>处理</th>
+                <th width="5%">退款<br>金额</th>
+                <th width="12%">操作</th>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td>
+                        {$vo.report_orderid}
+                    </td>
+                    <td>
+                        <em class="c_red">{$vo.maijia_pay}</em>
+                    </td>
+                    <td>
+                        <em class="c_org">{$vo.maijia_contact_pay}</em>
+                    </td>
+                    <td>{$vo.maijia_contact}</td>
+                    <td>
+                        <em class="c_purple">{$vo.maijia_telephone}</em>
+                    </td>
+                    <td>{$vo.seller_username}</td>
+                    <td>{$vo.report_type}</td>
+                    <td>{$vo.maijia_remark}</td>
+                    <td>
+                        <a href="javascript:void (0);" class="c_red" onclick="window.open('{$vo.report_pay_img}')">点击<br>查看</a>
+                    </td>
+                    <td>{$vo.report_creattime}</td>
+                    <td>{$vo.report_finishtime}</td>
+                    {if $vo.report_status=='0'}
+                    <td><em class="c_purple">举证<br>期内</em></td>
+                    {elseif $vo.report_status=='1'}
+                    <td><em style="color: #999">结束</em></td>
+                    {elseif $vo.report_status=='2'}
+                    <td><em style="color: burlywood">平台<br>审核</em></td>
+                    {/if}
+                    {if $vo.result_status=='0'}
+                    <td><em class="c_purple">待处理</em></td>
+                    {elseif $vo.result_status=='1'}
+                    <td><em style="color: #4734de">支持<br>买家</em></td>
+                    {elseif $vo.result_status=='2'}
+                    <td><em style="color: #de293f">支持<br>卖家</em></td>
+                    {/if}
+                    {if $vo.result_status=='1'}
+                        {if $vo.refund_status=='0'}
+                        <td><em style="color: #de37ca">待处理</em></td>
+                        {elseif $vo.refund_status=='1'}
+                        <td><em style="color: #999">退款<br>成功</em></td>
+                        {elseif $vo.refund_status=='2'}
+                        <td><em class="c_purple">退款中</em></td>
+                        {/if}
+                    {elseif $vo.result_status=='0'}
+                        <td><em style="color: burlywood">未定</em></td>
+                    {elseif $vo.result_status=='2'}
+                        <td><em style="color: #de293f">不退款</em></td>
+                    {/if}
+                    <td>
+                        <em class="c_red">{$vo.refund_price}</em>
+                    </td>
+                    <td>
+                        <a href="{:url('userlist/login','userid='.$vo.seller_userid)}" class="icon admin" target="_blank"></a>
+                        <a href="javascript:void(0);" class="icon examine examinePopButton" onclick="showContent('平台审核','{:url('tousu/shenhe','id='.$vo.id)}','800px','364px')"></a>
+                        <a href="javascript:void(0);" class="icon backmoney backMoneyButton" onclick="showContent('处理退款','{:url('tousu/tuikuan','id='.$vo.id)}','800px','759px')"></a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {$page}
+</div>
+<script>
+    function refund(orderlistid,orderid,is_buylist) {
+        if(is_buylist=='1') {
+            layer.confirm('请确定已经完成该笔订单的退款', {
+                title: "订单编号：" + orderid,
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                $.post(
+                    "{:url('orderlist/refundsave')}",
+                    // $("#ajaxform").serialize(),
+                    {orderlistid: orderlistid},
+                    function (data) {
+                        console.log(data);
+                        data = eval("(" + data + ")");
+                        if (data.status == '1') {
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                window.parent.location.reload();
+                            });
+                        } else if (data.status == '0') {
+                            layer.msg(data.msg, {
+                                icon: 5,
+                                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                            });
+                        }
+                    }
+                    // , "json"
+                );
+            });
+        }
+        else if(is_buylist=='0'){
+            layer.msg('该笔订单未付款，不能进行退款操作', {
+                icon: 0,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+        }
+        else{
+            layer.msg('该笔订单已退款，不能进行退款操作', {
+                icon: 0,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+        }
+    }
+</script>
+<script>
+    function togglefrozen(orderlistid,orderid,is_frozen,is_buylist) {
+        if(is_buylist!='4'&&is_buylist!='7') {
+            if (is_frozen == '1') {
+                layer.confirm('确定解冻该笔订单？', {
+                    title: "订单编号：" + orderid,
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    $.post(
+                        "{:url('orderlist/togglefrozen')}",
+                        // $("#ajaxform").serialize(),
+                        {
+                            orderlistid: orderlistid,
+                            is_frozen: '0'
+                        },
+                        function (data) {
+                            console.log(data);
+                            data = eval("(" + data + ")");
+                            if (data.status == '1') {
+                                layer.msg(data.msg, {
+                                    icon: 6,
+                                    time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                                }, function () {
+                                    window.parent.location.reload();
+                                });
+                            } else if (data.status == '0') {
+                                layer.msg(data.msg, {
+                                    icon: 5,
+                                    time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                                });
+                            }
+                        }
+                        // , "json"
+                    );
+                });
+            }
+            else if (is_frozen == '0') {
+                layer.confirm('是否冻结该笔订单？', {
+                    title: "订单编号：" + orderid,
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    $.post(
+                        "{:url('orderlist/togglefrozen')}",
+                        // $("#ajaxform").serialize(),
+                        {
+                            orderlistid: orderlistid,
+                            is_frozen: '1'
+                        },
+                        function (data) {
+                            console.log(data);
+                            data = eval("(" + data + ")");
+                            if (data.status == '1') {
+                                layer.msg(data.msg, {
+                                    icon: 6,
+                                    time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                                }, function () {
+                                    window.parent.location.reload();
+                                });
+                            } else if (data.status == '0') {
+                                layer.msg(data.msg, {
+                                    icon: 5,
+                                    time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                                });
+                            }
+                        }
+                        // , "json"
+                    );
+                });
+            }
+        }else{
+            layer.msg("该笔订单已经退款", {
+                icon: 0,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+        }
+    }
+</script>
+<script>
+    layui.use(['form','laydate'], function () {
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#to_time' //指定元素
+        });
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#from_time' //指定元素
+        });
+    });
+</script>
+{include file="common/footer" /}

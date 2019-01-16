@@ -1,0 +1,162 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<link rel="stylesheet" href="{$flag}/font-awesome.min.css">
+<style>
+    .icon{
+        text-align: center;
+    }
+</style>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<div class="main auto">
+    <div class="main_wrap">
+        <div class="m_top clearfix">
+            <div class="m_search fl clearfix">
+                <form class="layui-form" action="">
+                    <div class="s_box clearfix fl">
+                        <div class="s_select fl">
+                            <select name="ktype">
+                                <option value="">选择类型</option>
+                                <option value="userid" {:input('ktype')=='userid'?"selected":'';}>商户ID</option>
+                                <option value="username" {:input('ktype')=='username'?"selected":'';}>商户名称</option>
+                            </select>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_input fl">
+                            <input type="text" name="keyword" class="ipt ipt_txt" value="{:input('keyword')}"/>
+                        </div>
+                    </div>
+                    <button class="search_btn fl">搜索</button>
+                    <input type="hidden" name="do" value="search">
+                </form>
+            </div>
+            <div class="m_buttons fr">
+                <a href="?" class="lk cur">全部</a>
+                <!--<a href="#" class="lk">自动结算</a>-->
+                <!--<a href="#" class="lk">商户提现</a>-->
+                <!--<a href="#" class="lk">审核模式</a>-->
+            </div>
+        </div>
+        <div class="m_content proxy_content">
+
+            <table class="pub_table">
+                <thead>
+                <th width="5%">商户ID</th>
+                <th width="10%">商户名</th>
+                <th width="7%">收款人</th>
+                <th width="7%">收款方式</th>
+                <th width="10%">收款账号</th>
+                <th width="7%">申请方式</th>
+                <th width="7%">申请结算金额</th>
+                <th width="7%">手续费</th>
+                <th width="11%">时间</th>
+                <th width="11%">操作</th>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td>{$vo.userid}</td>
+                    <td>
+                        <em class="c_purple">{$vo.username}</em>
+                    </td>
+                    <td onclick="showContent('查看用户','{:url('userlist/userinfo','userid='.$vo.userid)}','500px','548px')"><a href="javascript:;" class="usernamePop">{$vo.realname}</a></td>
+
+                    {if $vo.ptype=='1'}
+                    <td><em class="c_red">支付宝</em></td>
+                    <td><em class="c_red">{$vo.alipay}</em></td>
+                    {elseif $vo.ptype=='2'}
+                    <td><em class="c_red">银行卡</em></td>
+                    <td><em class="c_red">{$vo.card}</em></td>
+                    {elseif $vo.ptype=='0'}
+                    <td>未设置</td>
+                    {/if}
+
+                    <td>手动提现</td>
+                    <td>{$vo.usermoney}</td>
+                    <td>{$vo.fee}</td>
+                    <td>{$vo.addtime}</td>
+                    <td>
+                        <a style="line-height: 34px;" href="javascript:;" class="icon" onclick="showContent('标记用户','{:url('userlist/flag','userid='.$vo.userid)}','540px','530px')">
+                            {if $vo.flag=='0'}
+                            <i class="fa fa-flag" style="color:#ccc"></i>
+                            {elseif $vo.flag=='1'}
+                            <i class="fa fa-flag" style="color:#eee366"></i>
+                            {elseif $vo.flag=='2'}
+                            <i class="fa fa-flag" style="color:#feb41c"></i>
+                            {elseif $vo.flag=='3'}
+                            <i class="fa fa-flag" style="color:#5dcc3e"></i>
+                            {elseif $vo.flag=='4'}
+                            <i class="fa fa-flag" style="color:#ff6868"></i>
+                            {elseif $vo.flag=='5'}
+                            <i class="fa fa-flag" style="color:#c69cfe"></i>
+                            {/if}
+                        </a>
+                        <a href="javascript:;" class="icon money moneyBalancePop" onclick="withdraw({$vo.paymentid},'{$vo.username}',{$vo.is_state},{$vo.usermoney-$vo.fee})"></a>
+                        <a href="{:url('userlist/login','userid='.$vo.userid)}" class="icon success" target="_blank"></a>
+                        <!--<a href="#" class="icon record"></a>-->
+                        <!--<a href="#" class="icon delete"></a>-->
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {$page}
+</div>
+<script>
+    layui.use(['form'], function () {
+    });
+</script>
+<script>
+    function withdraw(id,username,is_state,paymoney) {
+        if(is_state=='0') {
+            layer.confirm('请确定已经完成'+username+'的手动提现结算', {
+                title: "结算金额：" + paymoney,
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                $.post(
+                    "{:url('withdraw/editsave')}",
+                    // $("#ajaxform").serialize(),
+                    {
+                        id: id
+                    },
+                    function (data) {
+                        // console.log(data);
+                        data = eval("(" + data + ")");
+                        if (data.status == '1') {
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                window.parent.location.reload();
+                            });
+                        } else if (data.status == '0') {
+                            layer.msg(data.msg, {
+                                icon: 5,
+                                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                            });
+                        }
+                    }
+                    // , "json"
+                );
+            });
+        }
+        else if(is_state=='1'){
+            layer.msg('已经结算，不能操作', {
+                icon: 0,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+        }
+        else{
+            layer.msg('已经结算，不能操作', {
+                icon: 0,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+        }
+    }
+</script>
+{include file="common/footer" /}

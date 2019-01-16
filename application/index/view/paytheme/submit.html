@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <title></title>
+    <!--    <script src="https://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>-->
+    <script src="{$js}/jquery.min.js"></script>
+    <script src="{$layer}/layer.js"></script>
+    <style>
+        body{
+            font-family: "Microsoft Yahei", "微软雅黑", "Pinghei";
+        }
+        button,a{
+            border: none;
+            font-size: 16px;
+        }
+        .order_show{
+            padding:20px;
+        }
+        .order_info{
+            line-height:30px;
+            font-size:14px;
+            color:#666;
+            padding:20px;
+        }
+        .order_pay{
+            line-height:30px;
+            font-size:16px;
+            color:#333;
+            padding:20px;
+            border-bottom:1px solid #eee;
+        }
+        .order_pay img{
+            float: left;
+            margin-right: 20px;
+        }
+        .order_pay p{
+            margin: 0;
+            float: left;
+        }
+        .order_pay p span{
+            color: crimson;
+        }
+        .order_btn1, .order_btn2 {
+            display: block;
+            text-decoration: none;
+            color: #fff;
+            margin: 10px;
+            float: left;
+            height: 40px;
+            line-height: 40px;
+            width: calc(50% - 20px);
+            text-align: center;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .order_btn1{
+            background: crimson;
+        }
+        .order_btn2{
+            background: #ccc;
+        }
+    </style>
+</head>
+<body style="height: 100%">
+<div class="order_show">
+    <div class="order_pay">
+        <!--<img src="/link/form/images/order_pay.png" alt="">-->
+        <p>
+            支付金额： <span>{$ordermoney}</span><br>
+            支付方式： <span>{$channelname}</span>
+        </p>
+        <div style="clear: both"></div>
+    </div>
+    <div class="order_info">
+        订单编号： <span>{$orderid}</span><br>
+        商品名称： <span style="word-break:break-all;">{$goodname}</span><br>
+        购买数量： <span>{$quantity}</span>
+    </div>
+    <div class="paybtn" id="d1">
+        <?php if(isMobile()&&$channelname=="微信公众号"): ?>
+        <?php if( strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') == false )://不在微信浏览器内打开网页 ?>
+        <button id="pay_btn2" type="button" class="order_btn1" style="margin-left: 10px" onclick="window.open('/bank?orderid={$orderid}&url={:urlencode($url_directory)}')">确认付款</button>
+        <?php endif;?>
+
+        <?php if( strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false )://在微信浏览器内打开网页 ?>
+        <button id="pay_btn2" type="button" class="order_btn1" style="margin-left: 10px" onclick="window.open('{:urldecode($url_directory)}')">确认付款</button>
+        <?php endif;?>
+        <?php else: ?>
+        <button id="pay_btn2" type="button" class="order_btn1" style="margin-left: 10px" onclick="window.open('{:urldecode($url_directory)}')">确认付款</button>
+        <?php endif;?>
+        <a onclick="back_url()" class="order_btn2">重新选择</a>
+    </div>
+    <div class="paybtn" style="display:none;" id="d2">
+        <a href="/orderquery?kw={$orderid}" id="pay_smg" target="_blank" class="order_btn1"> 等待付款中...</a>
+        <a onclick="back_url()"class="order_btn2" style="margin-left: 10px">返回商品</a>
+    </div>
+</div>
+
+<script>
+
+    /*
+     * 关闭窗口
+     */
+    function back_url() {
+        clearInterval(setInterval1);
+        layer.closeAll(); //疯狂模式，关闭所有层
+    }
+
+    $(function(){
+        /*
+         * 绑定点击触发事件
+         */
+        $("#d1").click(function(){
+            $("#d1").hide();
+            $("#d2").show();
+            // setTimeout('oderquery(1)',3000);
+        });
+    });
+
+
+
+</script>
+
+<script>
+    //校验是否已经付款
+    function oderquery() {
+        var orderid = '{$orderid}';
+        var time = {:time()};
+        $.post(
+            "{:url('ajax/checkOrderid')}",
+            {orderid:orderid,time:time},
+            function (data) {
+                data = eval("(" + data + ")");
+                // console.log(data);
+                if (data.status == '1') {
+                    $("#pay_smg").html("付款成功，查看卡密");
+                    clearInterval(setInterval1);
+
+                }
+            }
+            // ,"json"
+        );
+    }
+
+    var setInterval1 = setInterval('oderquery()', 3000);
+</script>
+<script>
+    // //延时3秒不能点击确认
+    // $('#pay_btn2').click(function () {
+    //     $(this).attr('onclick', 'return false;');
+    //     setTimeout('change_pay_btn2()', 3000);
+    // });
+    // function change_pay_btn2() {
+    //     $('#pay_btn2').removeAttr('onclick');
+    // }
+</script>
+</body>
+</html>

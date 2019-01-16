@@ -1,0 +1,163 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<link rel="stylesheet" href="{$flag}/font-awesome.min.css">
+<style>
+    .icon{
+        text-align: center;
+    }
+    .ipt_txt {
+        width: 100%;
+    }
+
+    .accessinfo_con .ipt {
+        padding: 0 20px;
+        border: 1px solid #ddd;
+        height: 35px;
+        line-height: 35px;
+        display: block;
+        margin-top: 10px;
+    }
+    .accessinfo_con input[type="button"], input[type="submit"], input[type="reset"], input[type="text"] {
+        -webkit-appearance: none;
+    }
+    .accessinfo_con .item{
+        border: 1px solid #eaecf2;
+        box-shadow: 0 0 10px #eee;
+    }
+</style>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<div class="main auto">
+    <div class="main_wrap">
+        <div class="m_top clearfix">
+            <a href="javascript:;" class="build_cat" id="buildAccessButton" onclick="showContent('添加新的接入商','{:url('accessinfo/add')}','420px','503px')">+ 添加新的接入商</a>
+        </div>
+        <div class="m_content">
+            <div class="accessinfo_con">
+                <ul class="list clearfix">
+                    {volist name="list" id="vo"}
+                    <form action="" id="ajaxform_{$vo.providerid}">
+                        <li class="item">
+                            <h6 class="title">{$vo.providerid} {$vo.providername} {$vo.directory}</h6>
+                            <p class="font">
+                                <span class="tit">邮箱账号  </span>
+                                <input name="apiurl" type="text" class="ipt ipt_txt" value="{$vo.apiurl}"/>
+                            </p>
+                            <p class="font">
+                                <span class="tit">接入ID  </span>
+                                <input name="accountid" type="text" class="ipt ipt_txt" value="{$vo.accountid}"/>
+                            </p>
+                            <p class="font">
+                                <span class="tit">接入密钥  </span>
+                                <input name="password" type="text" class="ipt ipt_txt" value="{$vo.password}"/>
+                            </p>
+                            <div class="btns">
+                                <a href="javascript:void(0);" class="lk delete" onclick="del({$vo.providerid});return false;">删除</a>
+                                <a href="javascript:void(0);" class="lk save" onclick="submitform({$vo.providerid});return false;">保存设置</a>
+                                {if $vo.is_state=='1'}
+                                <a href="javascript:void(0);" onclick="toggleState({$vo.providerid},'0');return false;" class="lk close">已开启</a>
+                                {else/}
+                                <a href="javascript:void(0);" onclick="toggleState({$vo.providerid},'1');return false;" style="background-color: #999" class="lk close">已关闭</a>
+                                {/if}
+                            </div>
+                        </li>
+                        <input type="hidden" name="providerid" value="{$vo.providerid}">
+                    </form>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {$page}
+</div>
+<script>
+    layui.use(['form'], function () {
+    });
+</script>
+<script>
+    function submitform(providerid) {
+        $.post(
+            "{:url('accessinfo/editsave')}",
+            $("#ajaxform_"+providerid).serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+<script>
+    function del(providerid) {
+        $.post(
+            "{:url('accessinfo/del')}",
+            {
+                providerid:providerid
+            },
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+<script>
+    function toggleState(providerid,is_state) {
+        $.post(
+            "{:url('accessinfo/toggleState')}",
+            {
+                providerid:providerid,
+                is_state:is_state
+            },
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}

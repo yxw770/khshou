@@ -1,0 +1,138 @@
+{include file="common/header" /}
+<script src="{$js}/saveFile.js"></script>
+<script src="{$layer}/layer.js"></script>
+
+<body>
+<div class="top_bg">
+    {include file="common/orhter_top_nav" /}
+</div>
+<style>
+    .contact_list {
+        margin-bottom: 40px;
+        padding-bottom: 40px;
+        border-bottom: 1px dashed #eee
+    }
+
+    .contact_list li {
+        float: left;
+        width: 33.3%;
+        text-align: center
+    }
+
+    .contact_list li a {
+        cursor: text;
+        display: inline-block;
+        padding: 0 15px;
+        height: 40px;
+        border: 1px solid #eee;
+        background: #f8f8f8;
+        color: #666;
+        font-weight: 700;
+        font-size: 18px;
+        font-family: Arial;
+        line-height: 40px
+    }
+
+    .contact_list li p {
+        margin: 20px 0 0 0;
+        font-size: 14px;
+        line-height: 30px
+    }
+
+    @media (max-width:800px) {
+        .contact_list li {
+            float: none;
+            margin-top: 40px;
+            width: 100%
+        }
+    }
+</style>
+<div class="banner_bg">
+    <div class="container">
+        <h3>查询订单 <span class="mobile_hide">/ Orederquery</span></h3></div>
+</div>
+<div class="odsrch-wp">
+    <div class="wrapper">
+        <form id="formSearch" action="" method="get">
+            <div class="search_box2">
+                <input style="left: 50px" type="text" name="kw" value="{:input('kw')}" placeholder="请输入订单号或联系方式查询" class="cx_text">
+                <button type="button" onclick="btnClick()" class="search_btn"><img src="{$images}/search_icon.png" alt="查询"></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="wrapper">
+    <div class="odtips">
+        免责声明：平台为次日结算，款项结算给商户后所出现的售后问题请自行与卖家协商。订单投诉：通过订单号查询订单，可在【订单投诉】等待平台处理。
+    </div>
+</div>
+<div class="wrapper">
+    <div class="odnotice" style="margin-bottom: 30px;">
+        <h3>发卡网防骗提醒：</h3>
+        <p>1、卡密为“联系QQ拿货，加QQ群拿货”2、卡密为“付款成功，等待充值”3、商品有问题，卖家不售后 4、以各种理由推脱到第二天遇到以上或售后问题，请及时联系我们的客服QQ：{$qtarr.qq}</p>
+    </div>
+    <?php if(empty($list)&&input('kw')): ?>
+    <div class="oderr-none">
+        <img src="{$images}/ico_06.png">
+        <p>没有查询到订单信息</p>
+    </div>
+    <?php endif; ?>
+    {volist name="list" id="vo"}
+    <div class="oderr">
+        <h3>订单信息</h3>
+        <p>订单编号：<b>{$vo.orderid}</b><br>下单时间：<b>{$vo.addtime}</b><br>交易金额：<b>{$vo.ordermoney}</b>元<br>支付金额：<b>{$vo.paymoney}</b>元<br>订单状态：
+
+        {if $vo.is_frozen=='0'}
+            {if $vo.is_buylist=='1'}
+            <font style="color:green">已付款</font>
+            {elseif $vo.is_buylist=='11'}
+            <font style="color:green">卖家库存不足，请联系卖家上架卡密</font>
+            {elseif $vo.is_buylist=='3'}
+            <font style="color:green">投诉中</font>
+            {elseif $vo.is_buylist=='7'}
+            <font style="color:green">已退款</font>
+            {elseif $vo.is_buylist=='0'}
+            <font style="color:green">未付款</font>
+            {/if}
+        {elseif $vo.is_frozen=='1'}
+            <font style="color:green">已冻结</font>
+        {/if}
+        </p>
+        {if $vo.is_buylist=='1'&&$vo.is_frozen=='0'}
+        <h3><b style="color: #FF0000;">卡密信息</b><a href="javascript:;" rel="nofollow" onclick="saveFile('{$vo.orderid}')"><img src="{$images}/down.png" alt=""> 导出为TXT文件</a></h3>
+        <p id="{$vo.orderid}" style="color:#fe825a;padding:4px 10px;border: 1px dashed rgba(254,130,90,0.3);background: rgba(254,130,90,0.08)">{volist name="$vo.kami" id="vo2"}卡号：{$vo2.cardnumber}{$vo2.cardpassword?"----".$vo2.cardpassword:''}<br>{/volist}</p>
+        <h3>商品说明</h3>
+        <p>{$vo.instrucation}</p>
+        <a target="_blank" rel="nofollow" href="http://wpa.qq.com/msgrd?v=3&uin={$vo.userqq}&site=qq&menu=yes" class="qq_btn">商品问题, 联系商户QQ：{$vo.userqq}<img src="{$images}/qq.png" alt=""></a>
+        <a target="_blank" rel="nofollow" style="float: right" href="{:url('/tousu')}?orderid={$vo.orderid}" class="qq_btn">投诉该卖家(请当天投诉)</a>
+        {/if}
+    </div>
+    {/volist}
+</div>
+<script type="text/javascript">
+    function btnClick() {
+        $('#formSearch').submit();
+    }
+
+    function submitForm() {
+        $('#formSearch').submit();
+    }
+    // 回车键监听
+    // 验证码位置按钮
+    $('[name=kw]').keydown(function(e) {
+        // 兼容FF和IE和Opera
+        var theEvent = e || window.event;
+        var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+        if(code == 13) {
+            submitForm();
+            return false;
+        }
+        return true;
+    });
+</script>
+{include file="common/footer" /}
+</div>
+</div>
+{include file="common/footer_mobile" /}

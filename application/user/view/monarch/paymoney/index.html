@@ -1,0 +1,70 @@
+{include file="common/header" /}
+<body>
+{include file="common/top_nav" /}
+
+<div class="main clearfix">
+  {include file="common/left_nav" /}
+    <div class="container settle scroll">
+        <div class="box init b1">
+    <div class="title">结算记录  <span>Settlement records</span>
+      <span class="tip">结算状态公供参考，点击流水号或状态可以看到备注信息，已结算款项最迟在当天下午5时之前到账。</span>
+    </div>
+          <!--<?php var_dump($list) ?>-->
+          <!--{:dump($list)}-->
+    <div class="table">
+      <table>
+        <thead>
+          <tr>
+            <td>流水号</td>
+            <td>支付日期</td>
+            <td>转账金额</td>
+            <td>手续费</td>
+            <td>到账金额</td>
+            <td>清算方式</td>
+            <td>状态</td>
+          </tr>
+        </thead>
+        <tbody>
+        {volist name="list" id="vo"}
+        <tr>
+            <td>{$vo.id}</td>
+            <td>{$vo.addtime}</td>
+            <td class="orange">￥{$vo.usermoney==''?'0.00':$vo.usermoney}</td>
+            <td>￥{$vo.fee}</td>
+            <td class="orange">￥{$vo.settlement==''?'0.00':$vo.settlement}</td>
+            <td>{$vo.is_user=='1'?'手动提现':'自动结算'}</td>
+            <td><span class="done">{$vo.is_state=='1'?'已结算':'未结算'}</span></td>
+          </tr>
+        {/volist}
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <p class="left">
+        全部到账金额金额<span class="orange">0.00</span>元&nbsp;&nbsp;&nbsp;手续费<span class="orange">0.00</span>元
+      </p>
+      <!--<p class="right">-->
+        <!--本页：<span class="blue">12</span>条数据&nbsp;&nbsp;&nbsp;总共：<span class="blue">100</span>条数据-->
+      <!--</p>-->
+      <!--<div class="m-pages">-->
+        <!--<div class="wrap clearfix">-->
+          <!--<a class="prev" href=""><i>上一页</i></a>-->
+          <!--<a class="pHide current" href="javascript:;"><i>1</i></a>-->
+          <!--<a href=""><i>2</i></a>-->
+          <!--<a href=""><i>3</i></a>-->
+          <!--<a href=""><i>4</i></a>-->
+          <!--<a href=""><i>5</i></a>-->
+          <!--<a href=""><i>6</i></a>-->
+          <!--<a href=""><i>7</i></a>-->
+          <!--<a href=""><i>···</i></a>-->
+          <!--<a href=""><i>99</i></a>-->
+          <!--<a class="next" href=""><i>下一页</i></a>-->
+        <!--</div>-->
+      <!--</div>-->
+
+      {$page}
+    </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="./js/main8f91.js"></script><script type="text/javascript" src="./js/settle8f91.js"></script></body>

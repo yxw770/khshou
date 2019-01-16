@@ -1,0 +1,116 @@
+<!--头部-->
+<header class="clear">
+    <a href="#" class="logo">
+        <img src="{$images}/m_ts_logo.png" style="max-width:100%;max-height:60px;margin-top: 10px;" alt="">
+    </a>
+    <ul class="nav-mul">
+        <li>
+            <a href="{:url('/paymoney')}">
+                <i class="icon nav-m-icon1"></i>
+                <p>结算记录</p>
+            </a>
+        </li>
+        <li>
+            <a href="{:url('/complain')}">
+                <i class="icon nav-m-icon2"></i>
+                <p>投诉管理</p>
+            </a>
+        </li>
+        <li>
+            <a href="{:url('/goodlist')}">
+                <i class="icon nav-m-icon3"></i>
+                <p>商品列表</p>
+            </a>
+        </li>
+        <li>
+            <a href="{:url('kami/add')}">
+                <i class="icon nav-m-icon4"></i>
+                <p>添加卡密</p>
+            </a>
+        </li>
+        <li>
+            <a href="{:url('/order')}">
+                <i class="icon nav-m-icon5"></i>
+                <p>订单管理</p>
+            </a>
+        </li>
+        <li>
+            <a href="{:url('/withdraw')}">
+                <i class="icon nav-m-icon6"></i>
+                <p>申请提现</p>
+            </a>
+        </li>
+    </ul>
+    <ul class="header-ic">
+        <li><i class="icon zmdi-user"></i>
+            <a href="{:url('/useruuserinfo')}">{:session('user.username')} </a>
+        </li>
+        <li>
+            <a href="{:url('/useruuserinfo')}" class="text-custom">
+                <i class="icon zmdi-power1"></i> 设置
+            </a>
+        </li>
+        <li>
+            <a href="#" class="text-custom m-zt">
+                <i class="icon zmdi-power3"></i> 切换主题
+            </a>
+        </li>
+        <li>
+            <a href="{:url('index/logout')}" class="text-custom">
+                <i class="icon zmdi-power2"></i> 退出
+            </a>
+        </li>
+    </ul>
+</header>
+<style>
+    .layui-layer-iframe,.layui-layer-page{
+        border-radius: 6px;
+        overflow: hidden;
+    }
+</style>
+<div class="modal in modal-zt" id="waModal" role="dialog" aria-labelledby="waModalLable" style="display: none; padding-right: 17px;">
+    <div class="modal-dialog modal-lg modal-ztd" style="border:none;border-radius:99px;padding:0;position: fixed;left: calc(50% - 425px);top: calc(50% - 139px)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <div class="modal-title">切换主题</div>
+            </div>
+            <div class="modal-body">
+                <div class="list-group">
+                    <?php foreach (unserialize(qttheme) as $k => $v): ?>
+                    <a href="{:url('index/changeTheme')}?theme={$k}" class="list-group-item {$k==session('user.usertheme')?'zt-active':''}">{$v}
+                        {if($k==session('user.usertheme'))}
+                        <span class="badge">
+                            <i class="glyphicon glyphicon-ok"></i>
+                        </span>
+                        {/if}
+                    </a>
+                    <?php endforeach; ?>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function() {
+        $(document).on('click', '.m-zt', function() {
+            $(".modal-zt").css('display', 'block')
+        });
+        $(document).on('click', '.modal1', function() {
+            $(".dmodal1").css('display', 'block')
+        });
+        $(document).on('click', '.modal2', function() {
+            $(".dmodal2").css('display', 'block')
+        });
+        $(document).on('click', '.modal3', function() {
+            $(".dmodal3").css('display', 'block')
+        });
+        $(document).on('click', '.close', function() {
+            $(".modal").css('display', 'none')
+        });
+        $(document).on('click', '.btn-default', function() {
+            $(".modal").css('display', 'none')
+        });
+    });
+</script>

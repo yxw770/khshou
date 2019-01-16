@@ -1,0 +1,136 @@
+{include file="common/header" /}
+<body>
+<!-- 顶部 -->
+<!--部分页面top后面有style样式添加-->
+<div class="top" style="padding-bottom: 0">
+    <div class="top_con">
+        <span>商品管理</span>
+        <a class="back" onclick="history.go(-1)"><img src="{$images}/back.png" width="7" height="11"></a>
+        <a class="user_name"><i class="iconfont icon-mine"></i></a>
+    </div>
+</div>
+<!-- 列表 -->
+<div class="list_bg">
+    <form class="form-inline" method="get" action="">
+        <select class="select1" name="cateid" onchange="this.parentElement.submit()">
+            <option value="">全部分类</option>
+            {volist name="cate_arr" id="vo"}
+            <option value="{$vo.goodcateid}" {:input('cateid')==$vo.goodcateid?"selected":'';}>{$vo.catename}</option>
+            {/volist}
+        </select>
+        <input type="hidden" name="do" value="search">
+    </form>
+    <ul>
+        {volist name="list" id="vo"}
+        <li>
+            <div class="j_box_title">{$vo.goodname}
+                <a class="j_price">销售价格：{$vo.price}元</a></div>
+            <div class="j_box_con">
+                <p>库存卡数：
+                    <a href="{:url('/kamilist')}?goodlistid={$vo.goodlistid}&do=search" class="j_link">{$vo.count_onsell_kami}张 &nbsp;&nbsp;&nbsp;
+                        <i class="fa fa-angle-right "></i>
+                    </a>
+                    <br>已经卖出：
+                    <a href="{:url('/sold')}?goodlistid={$vo.goodlistid}&ktype=order&keyword=&do=search" class="j_link">{$vo.count_selled_kami}张 &nbsp;&nbsp;&nbsp;
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </p>
+                <p>
+                    {if $vo.is_state=='1'}
+                    <a onclick="togglestate({$vo.goodlistid},'0')" class="j_btn" style="color:#658fe1">上架中</a>
+                    {else/}
+                    <a onclick="togglestate({$vo.goodlistid},'1')" class="j_btn" style="color:#658fe1">已下架</a>
+                    {/if}
+                    <a href="javascript:void(0)" onclick="showContent('分类链接','{:url('goodlist/link','goodlistid='.$vo.goodlistid)}','90%','90%')" class="j_btn">链接</a>
+                    <br>
+                    <a href="{:url('kami/add','goodlistid='.$vo.goodlistid)}" class="j_btn">加卡</a>
+                    <a href="{:url('goodlist/edit','goodlistid='.$vo.goodlistid)}" class="j_btn">编辑</a>
+                    <a href="javascript:;" onclick="del('{$vo.goodlistid}');return false;" class="j_btn" style="color:#e573c5">删除</a></p>
+                <div id="clear"></div>
+            </div>
+        </li>
+        {/volist}
+    </ul>
+</div>
+<style>
+    .pagination {
+        /*padding: 32px 0;*/
+        text-align: left;
+        font-size: 12px;
+        color: #666;
+        position: relative;
+    }
+    .m-pages a{
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid #e3e5eb;
+        border-left: 1px solid #e3e5eb;
+        border-top: 1px solid #e3e5eb;
+        display: inline-block;
+        font-size: 12px;
+        height: 30px;
+        line-height: 30px;
+        overflow: hidden;
+        text-align: center;
+        vertical-align: top;
+        width: 30px;
+    }
+</style>
+<div class="pagination">
+    {$page}
+</div>
+<script>
+    function togglestate(id,is_state) {
+        $.post(
+            "{:url('goodlist/togglestate')}",
+            {
+                goodlistid: id,
+                is_state: is_state,
+            },
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg('操作成功', {time: 1000, icon: 6});
+                    // $('#record_'+id).fadeOut();
+                    parent.location.reload();
+                } else {
+                    layer.msg('操作失败', {time: 1000, icon: 5});
+                }
+            }
+            ,"json"
+        );
+    }
+</script>
+<script>
+    function del(id) {
+        $.post(
+            "{:url('goodlist/del')}",
+            {goodlistid:id},
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+{include file="common/footer" /}
+
+

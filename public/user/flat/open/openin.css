@@ -1,0 +1,11 @@
+/*layer弹窗显示圆角*/
+.layui-layer-iframe{
+    border-radius: 6px;
+    overflow: hidden;
+}
+/*顶部显示圆角显示*/
+/*.title{*/
+    /*border-radius: 6px;*/
+/*}*/
+
+

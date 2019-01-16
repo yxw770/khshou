@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>管理登录页面</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <link rel="stylesheet" href="/admin/monarch/login/css/htbootstrap.min.css">
+    <link rel="stylesheet" href="/admin/monarch/login/css/animate.css">
+    <link rel="stylesheet" href="/admin/monarch/login/css/htloginstyle.css">
+    <script src="/admin/monarch/login/js/jquery-2.2.1.min.js"></script>
+    <script src="/admin/monarch/login/layer/layer.js"></script>
+
+</head>
+<body class="style-3">
+
+<div class="container">
+    <div class="row">
+        <h2 class="hy">欢迎来到新创管理后台</h2>
+        <div class="col-md-4 col-md-push-8">
+            <!-- Start Sign In Form -->
+            <form action="{:url('login/login')}" class="fh5co-form animated fadeInLeft" id="ajaxform" data-animate-effect="fadeInLeft" method="post">
+                <div class="form-group" style="margin-top: 30px;">
+                    <label class="sr-only">用户名</label>
+                    <input name="adminname" type="text" class="form-control" id="username" placeholder="用户名" autocomplete="off">
+                    <img src="/admin/monarch/login/images/admin.png" alt="" style="width: 30px;" class="tu1"/>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="sr-only">密码</label>
+                    <input name="adminpass" type="password" class="form-control" id="password" placeholder="密码" autocomplete="off">
+                    <img src="/admin/monarch/login/images/password.png" alt="" style="width: 25px;" class="tu2"/>
+                </div>
+                <div class="form-group">
+                    <label class="sr-only">安全码</label>
+                    <input name="safekey" type="password" class="form-control" id="safepwd" placeholder="安全码" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <!--<input type="submit" value="登 录" class="btn btn-primary form-control">-->
+                    <input type="button" value="登 录" class="btn btn-primary form-control" onclick="submitform();return false;">
+                </div>
+            </form>
+            <!-- END Sign In Form -->
+        </div>
+    </div>
+    <div class="row" style="padding-top: 25%; clear: both;">
+        <div class="col-md-12 text-center"><p><small>&copy; All Rights Reserved. 新创自动发卡系统 Version&nbsp;›&nbsp;1.1</small></p></div>
+    </div>
+</div>
+
+
+<!--ajax登录-->
+<script>
+    function submitform() {
+        $.post(
+            "{:url('login/login')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                data = eval("(" + data + ")");
+                console.log(data);
+                if (data.status == '1') {
+                    // layer.msg(data.msg, {
+                    //     icon: 6,
+                    //     time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    // }, function(){
+                    //     window.location.href = "/empress";
+                    // });
+                    window.location.href = "{:url('/')}";
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+<script>
+    <?php if(session('?login_msg')):?>
+    <?php if(session('login_msg')=='退出成功'):?>
+    layer.msg("<?php echo session('login_msg') ?>", {
+        icon: 6,
+        time: 2000 //1.5秒关闭（如果不配置，默认是3秒）
+    });
+    <?php else:?>
+    layer.msg("<?php echo session('login_msg') ?>", {
+        icon: 5,
+        time: 2000 //1.5秒关闭（如果不配置，默认是3秒）
+    });
+    <?php endif; ?>
+    <?php endif; ?>
+</script>
+
+</body>
+</html>
+

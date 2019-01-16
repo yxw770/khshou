@@ -1,0 +1,108 @@
+<?php $controller=request()->controller(); ?>
+<?php $action=request()->action(); ?>
+<div class="hd_menu">
+    <div class="auto clearfix">
+        <div class="hd_nav fl">
+            <li class="{:in_array($controller,['Index'])?'cur':''}">
+                <a href="{:url('/')}" style="background: none">后台主页</a>
+                <div class="hd_menu_drop">
+                    <div class="auto">
+                        <!--<a href="" class="user ">用户信息</a>-->
+                        <!--<a href="" class="access ">接入信息</a>-->
+                        <!--<a href="" class="loginlog ">登录日志</a>-->
+                        <!--<a href="" class="goods ">商品管理</a>-->
+                    </div>
+                </div>
+            </li>
+            <li class="{:in_array($controller,['Userlist','Userpaylist','Userloglist','Goodslist'])?'cur':''}">
+                <a href="javascript:void(0);">用户管理</a>
+                <div class="hd_menu_drop">
+                    <div class="auto">
+                        <a href="{:url('/userlist')}" class="user {$controller=='Userlist'&&$action=='index'?'cur':''}">用户列表</a>
+                        <a href="{:url('/userpaylist')}" class="access {$controller=='Userpaylist'&&$action=='index'?'cur':''}">接入信息</a>
+                        <a href="{:url('/userloglist')}" class="loginlog {$controller=='Userloglist'&&$action=='index'?'cur':''}">登录日志</a>
+                        <a href="{:url('/goodslist')}" class="goods {$controller=='Goodslist'&&$action=='index'?'cur':''}">商品管理</a>
+                    </div>
+                </div>
+            </li>
+            <li class="{:in_array($controller,['Orderlist','Busanalysis','Channelanalysis','Timedata'])?'cur':''}">
+                <a href="javascript:void(0);">订单管理</a>
+                <div class="hd_menu_drop">
+                    <div class="auto">
+                        <a href="{:url('/orderlist')}" class="ordermanage {$controller=='Orderlist'&&$action=='index'?'cur':''}">订单管理</a>
+                        <a href="{:url('/busanalysis')}" class="busanalysis {$controller=='Busanalysis'&&$action=='index'?'cur':''}">商户分析</a>
+                        <a href="{:url('/channelanalysis')}" class="channelanalysis {$controller=='Channelanalysis'&&$action=='index'?'cur':''}">通道分析</a>
+                        <a href="{:url('/timedata')}" class="timedata {$controller=='Timedata'&&$action=='index'?'cur':''}">实时数据</a>
+                    </div>
+                </div>
+            </li>
+            <li class="{:in_array($controller,['Settlement','DlSettlement','Withdraw','Settlementlog','Settlementsum'])?'cur':''}">
+                <a href="#">结算管理</a>
+                <div class="hd_menu_drop">
+                    <div class="auto">
+                        <a href="{:url('/settlement')}" class="settlement {$controller=='Settlement'&&$action=='index'?'cur':''}">商户结算</a>
+                        <a href="{:url('/dl_settlement')}" class="settlement {$controller=='DlSettlement'&&$action=='index'?'cur':''}">商户代理订单结算</a>
+                        <a href="{:url('/withdraw')}" class="proxy {$controller=='Withdraw'&&$action=='index'?'cur':''}">用户提现</a>
+                        <a href="{:url('/settlementlog')}" class="settlementlog {$controller=='Settlementlog'&&$action=='index'?'cur':''}">结算记录</a>
+                        <a href="{:url('/settlementsum')}" class="loginlog {$controller=='Settlementsum'&&$action=='index'?'cur':''}">结算统计</a>
+                    </div>
+                </div>
+            </li>
+            <li class="{:in_array($controller,['Accessinfo','Channel'])?'cur':''}">
+                <a href="#">支付接口</a>
+                <div class="hd_menu_drop">
+                    <div class="auto">
+                        <a href="{:url('/accessinfo')}" class="accessinfo {$controller=='Accessinfo'&&$action=='index'?'cur':''}">接入商信息</a>
+                        <a href="{:url('/channel')}" class="channel {$controller=='Channel'&&$action=='index'?'cur':''}">通道列表</a>
+                    </div>
+                </div>
+            </li>
+            <li class="{:in_array($controller,['Psd','Log','Ulist'])?'cur':''}">
+                <a href="#">管理账户</a>
+                <div class="hd_menu_drop">
+                    <div class="auto">
+                        <a href="{:url('/psd')}" class="psd {$controller=='Psd'&&$action=='index'?'cur':''}">修改密码</a>
+                        <a href="{:url('/log')}" class="loginlog {$controller=='Log'&&$action=='index'?'cur':''}">登录日志</a>
+                        <a href="{:url('/ulist')}" class="channel {$controller=='Ulist'&&$action=='index'?'cur':''}">管理员列表</a>
+
+                        <!--<a href="#" class="regcode">注册码管理</a>-->
+                    </div>
+                </div>
+            </li>
+            <li class="{:in_array($controller,['Arccat','Arclist'])?'cur':''}">
+                <a href="#">文章管理</a>
+                <div class="hd_menu_drop">
+                    <div class="auto">
+                        <a href="{:url('/arccat')}" class="arccat  {$controller=='Arccat'&&$action=='index'?'cur':''}">文章分类</a>
+                        <a href="{:url('/arclist')}" class="arclist {$controller=='Arclist'&&$action=='index'?'cur':''}">文章列表</a>
+                    </div>
+                </div>
+            </li>
+            <!--<li>-->
+                <!--<a href="#">过滤关键字</a>-->
+                <!--<div class="hd_menu_drop">-->
+                    <!--<div class="auto">-->
+                        <!--<a href="#" class="user">订单管理</a>-->
+                        <!--<a href="#" class="access">商户分析</a>-->
+                        <!--<a href="#" class="loginlog cur">通道分析</a>-->
+                        <!--<a href="#" class="goods">实时数据</a>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</li>-->
+        </div>
+        <div class="hd_search fr">
+            <form class="layui-form" action="/orderquery" target="_blank">
+                <label style="width: 20px;height: 40px;display: inline-block;position: absolute;z-index: 555" onclick="window.open('/orderquery?kw='+$('#orderid_ipt').val())"></label>
+                <input style="z-index: 1" type="text" name="kw" class="ipt ipt_txt" id="orderid_ipt" placeholder="输入订单查询"/>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $('.hd_nav li a').click(function () {
+        $('.hd_menu_drop').hide();
+        $(this).siblings('div').show();
+        $(this).parent('li').siblings('li').removeClass('cur');
+        $(this).parent('li').addClass('cur');
+    })
+</script>

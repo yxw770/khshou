@@ -1,0 +1,45 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+
+<div class="main clearfix">
+    {include file="common/left_nav" /}
+
+    <div class="container login scroll">
+        <div class="box init b1">
+            <div class="title">登录日志
+                <span>Logon log</span></div>
+            <div class="table">
+                <table>
+                    <thead>
+                    <tr>
+                        <td>商户编号</td>
+                        <td>商户名称</td>
+                        <td>登录日期</td>
+                        <td>登录IP</td></tr>
+                    </thead>
+                    <tbody>
+                    {volist name="list" id="vo"}
+                    <tr>
+                        <td>{$vo.userid}</td>
+                        <td>{$vo.username}</td>
+                        <td>{$vo.logtime}</td>
+                        <td style="cursor: pointer;color: #1E9FFF" onclick="window.open('http://www.baidu.com/s?wd={$vo.logip}&rsv_spt=1&issp=1&rsv_bp=0&ie=utf-8&tn=baiduhome_pg')">{$vo.logip}</td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                {$page}
+            </div>
+        </div>
+    </div>
+
+</div>
+{include file="common/footer" /}

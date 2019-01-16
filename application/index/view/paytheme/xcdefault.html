@@ -1,0 +1,289 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{$list.sitename} - {$sitetile}</title>
+    <meta name="description" content="{$description}" />
+    <meta name="keywords" content="{$sitekeyword}" />
+    <!--    模版页面样式文件开始-->
+    <link href="{$css}/pay_basic_9.css" rel="stylesheet" type="text/css">
+    <link href="{$css}/iconfont.css" rel="stylesheet" type="text/css">
+    <link href="{$css}/sweetalert.css" rel="stylesheet" type="text/css">
+    <!--<link href="{$css}/thickbox.css" rel="stylesheet" type="text/css">-->
+    <script src="{$js}/jquery.min.js"></script>
+    <!--    模版页面样式文件结束-->
+    <!--    核心文件开始-->
+    <script src="{$common}/js/1106111321_layer.js"></script>
+    <!--    核心文件结束-->
+    <!--    支付方式样式文件开始-->
+    <script src="{$js}/pay3.js"></script>
+    <script src="{$js}/sweetalert.min.js"></script>
+    <script src="{$layer}/layer.js"></script>
+    <script src="{$common}/js/jquery.qrcode.min.js"></script>
+    <!--    支付方式样式文件结束-->
+</head>
+<body>
+<style>
+    *{
+        font-family: Microsoft YaHei;
+    }
+    .zy-tc{
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        background: rgba(0,0,0,0.5);
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+    .tanchu{
+        width: 40%;
+        margin: 5% auto;
+        background: #fff;
+        border-color:#dddddd;
+        border-radius:2px ;
+        padding: 25px;
+        color: #797979;
+    }
+    .zy-tc .tanchu .tanchu-content .tanchu-header {
+        border-bottom-width: 2px;
+        margin: 0;
+        padding: 0;
+        border-bottom: 2px solid #e5e5e5;
+    }
+    .zy-tc .tanchu .tanchu-content .tanchu-body {
+        padding: 20px;
+        color: #797979;
+    }
+    .zy-tc .tanchu .tanchu-content .tanchu-body p{
+        line-height: 35px;
+    }
+    .zy-tc .tanchu .tanchu-content .tanchu-footer {
+        padding: 0;
+        padding-top: 15px;
+        text-align: right;
+        border-top: 1px solid #e5e5e5;
+    }
+    .tanchu-footer button{
+        padding: 1%;
+        background-color: #ffa106;
+        color: #fff;
+        margin: 0 1%;
+        border: 1px solid transparent;
+    }
+</style>
+<script>
+    $(function() {
+        $(document).on('click', '.btn-no', function() {
+            $(".zy-tc").css('display', 'none')
+        });
+        $(document).on('click', '.btn-yes', function() {
+            $(".zy-tc").css('display', 'none')
+        });
+    });
+</script>
+<div class="zy-tc" tabindex="-1" style="display:block; padding-right: 17px;">
+    <div class="tanchu">
+        <div class="tanchu-content">
+            <div class="tanchu-header">
+                <h4 class="tanchu-title">购买须知</h4>
+            </div>
+            <div class="tanchu-body">
+
+                <p>1、本站仅是提供自动发卡服务并非销 售商只保证卡密正确有效，商品使用和相关售后问题请自行联系卖家处理解决!</p>
+
+                <p>2、建议先咨询卖家商品用途后购买，购买的卡密充值成功表示交易成功，非卡密问题概不退款!<span style="color: #ffa106;">（重要提示:我司不提供实物商品的担保交易，购买需要邮寄商品都是骗子，请勿付款，并联系我司客服进行投诉：投诉QQ：{:cache('guestconfig')['qq']}）</span></p>
+
+                <p>3、如遇假卡/诈骗/赌博/钓鱼/色情/套现等情况，请在{:cache('guestconfig')['sitename']}查询订单后点击举报投诉及时进行反馈，投诉有效期:购买当天23: 00前进行投诉，逾期不支持！投诉客服QQ：{:cache('guestconfig')['qq']}，工作时间：08:30 - 24:00我们将在第一时间回复您谢谢!</p>
+
+                <p>4、商品使用问题全部联系卖家处理--咨询卖家QQ</p>
+
+            </div>
+            <div class="tanchu-footer">
+                <button type="button" class="btn-no" data-dismiss="tanchu">不明白，稍后购买</button>
+                <button type="button" class="btn-yes" data-dismiss="tanchu">明白了，我要购买</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<header>
+    <div class="logo"><a href=""><img src="{$images}/logo.png" alt=""></a></div>
+    <div class="menu">
+        <ul>
+            <li><a href="/"><i class="iconfont icon-shouye"></i>官网首页</a></li>
+            <li><a href="http://wpa.qq.com/msgrd?v=1&uin={$list.qq}&site=957ka.com&menu=yes'" target="_blank"><i class="iconfont icon-xiaoxi"></i>联系卖家</a></li>
+        </ul>
+    </div>
+    <a href="/orderquery" target="_blank" class="search_btn"><i class="iconfont icon-sousuo"></i>订单查询</a>
+</header>
+<form method="post" target="_blank" id="ajaxform">
+    <div class="main_form">
+        <div class="left_img"><div class="ewm">扫码手机支付<label id="qrcode" style="height: 100px;width:100px;display:block;padding: 10px;margin: 0 auto;background-color: #fff;margin-top: 10px;"></label></div><div class="seller_info"><i class="iconfont icon-dianpu-copy"></i>{$list.sitename} <br><div>数字卡密</div><div>自动发货</div><div>安全保障</div></div><a class="gg_btn"><i class="iconfont icon-gonggao1-copy"></i></a></div>
+        <div class="right_con">
+            <div class="seller_form">
+                <ul>
+                    {if $flag=='links'}
+                    <!--            如果是店铺链接开始-->
+                    <li>
+                        <span class="form_title">商品分类</span>
+                        <select name="cateid" onchange="selectcateid()">
+                            <option value="">请选择分类</option>
+                            {volist name="cate_arr" id="vo"}
+                            <option value="{$vo.goodcateid}" >{$vo.catename}</option>
+                            {/volist}
+                        </select>
+                    </li>
+
+                    <li>
+                        <span class="form_title">商品名称</span>
+                        <select name="goodlistid" onchange="selectgoodid()" style="display: inline-block;">
+                            <option value="">请选择商品</option>
+                        </select>
+                        <a class="spsm"><i class="iconfont icon-shuoming1"></i> 商品说明</a>
+                    </li>
+                    <!--            如果是店铺链接结束-->
+                    {elseif($flag=='lists')/}
+                    <!--            如果是分类链接开始-->
+                    <li>
+                        <span class="form_title">商品分类</span>
+                        {$catename}
+                    </li>
+
+                    <li>
+                        <span class="form_title">商品名称</span>
+                        <!--            如果是单个商品链接开始-->
+                        <select name="goodlistid" onchange="selectgoodid()" style="display: inline-block;">
+                            <option value="">请选择商品</option>
+                            {volist name="goodlist_arr" id="vo"}
+                            <option value="{$vo.goodlistid}" >{$vo.goodname}</option>
+                            {/volist}
+                        </select>
+                        <a class="spsm"><i class="iconfont icon-shuoming1"></i> 商品说明</a>
+                    </li>
+                    <!--            如果是分类链接结束-->
+                    {elseif($flag=='detail')/}
+                    <!--            如果是单个商品链接开始-->
+                    <li>
+                        <span class="form_title">商品名称</span>
+                        {$goodname}
+                        <select name="goodlistid" style="display: none;">
+                            <option value="{$goodlistid}" selected>{$goodname}</option>
+                        </select>
+                        <script>
+                            $(function () {
+                                selectgoodid();
+                            })
+                        </script>
+                        <a class="spsm"><i class="iconfont icon-shuoming1"></i> 商品说明</a>
+                    </li>
+                    <!--            如果是单个商品链接结束-->
+                    {/if}
+
+
+
+                    <li><span class="form_title">购买数量<a>(<span class="green" id="kucun"></span>)</a></span><input name="quantity" onkeyup="changequantity()" type="text" value="1"></li>
+                    <li><span class="form_title">商品单价<a href="#" id="wholesale" style="display:none;">(查看批发价格)</a></span><p class="pf_txt"><span id="price">0.00</span> 元</p></li>
+                    <div id="wholesaledetail" class="tishi2" style="display:none;">批发价信息</div>
+                    <li><span class="form_title">联系方式</span><input class="phone_num" name="contact" onchange="changecontact()" type="text" placeholder="推荐填写手机号或邮箱号"></li>
+                    <li style="display:none" id="pwd1"><span class="form_title">取卡密码</span><input type="text" onblur="checkpwd1()" name="pwd1" placeholder="[必填]请输入取卡密码（6-20位）"></li>
+                    <li style="display:none" id="pwd2"><span class="form_title">取卡密码</span><input type="text" onblur="checkpwd2()" name="pwd2" placeholder="[选填]请输入取卡密码（6-20位）"></li>
+                    <li><span class="form_title">辅助功能</span><label class="fz_lab">短信提醒<input type="checkbox" id="is_rev_sms" name="is_tel" value="1"></label><label class="fz_lab">邮箱提醒<input name="is_email" type="checkbox" id="email" value="1"></label><label class="fz_lab">使用优惠券<input type="checkbox" id="youhui"></label></li>
+                    <li class="youhui_show" style="display: none"><span class="form_title">优惠券</span><input type="text" name="couponcode" onchange="checkCoupon()" placeholder="请填写你的优惠券"><span id="discouponcode" style="display:none; color: red"> <span id="checkcoupon" style="display:none"> 正在查询...</span></span></li>
+                    <li class="email_show" style="display: none" id="email_show"><span class="form_title">邮箱地址</span><input type="email" name="email" onchange="changeemail()" placeholder="填写你常用的邮箱地址"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="pay_box">
+        <div class="pay_menu">
+            <div class="pay pay_cj_1 checked1"><img src="{$images}/pay1.png" width="18" height="18" style="vertical-align:middle"> 扫码支付</div>
+        </div>
+        <div class="pay_list1">
+            {if in_array('alipay',$payway_arr)}
+            <label class="lab3 checked2"><input name="payway" type="radio" value="ALIPAY" checked="">
+                <img src="{$images}/ALIPAY.jpg"></label>
+            {/if}
+            {if in_array('weixin',$payway_arr)}
+            <label class="lab3"><input name="payway" value="WEIXIN" type="radio">
+                <img src="{$images}/WEIXIN.jpg"></label>
+            {/if}
+            {if in_array('qqrcode',$payway_arr)}
+            <label class="lab3"><input name="payway" value="qqrcode" type="radio">
+                <img src="{$images}/qqrcode.jpg"></label>
+            {/if}
+            {if in_array('jdsm',$payway_arr)}
+            <label class="lab3"><input name="payway" value="jdsm" type="radio">
+                <img src="{$images}/jdsm.png"></label>
+            {/if}
+
+        </div>
+    </div>
+    <span id="remark" style="display: none"></span>
+    <footer>{$copyright}</footer>
+    <div class="right_fix"><a href="http://wpa.qq.com/msgrd?v=1&uin={$list.qq}&site=957ka.com&menu=yes'" target="_blank"><i class="iconfont icon-qq"></i>咨询卖家</a></div>
+    <div class="pay_bottom" style="display: block;"><div class="pay_info"><b>商品名称：</b><span id="onchange_goodname"></span><br><b>购买数量：</b>x<span id="onchange_quantity">1</span></div>¥ <span id="tprice">0.00</span>
+    <span>
+        <input type="submit" class="check_pay_btn" value="确认支付" onclick="submitform();return false;">
+    </span>
+    </div>
+    <input type="hidden" name="userid" value="{$list.userid}">
+    <input type="hidden" name="{$linkid}_token" value="{$list.token}">
+    <!--是否支持批发优惠（1：是，0：否）-->
+    <input type="hidden" name="is_wholesale">
+    <!--库存显示方式，（0：默认，1：具体库存数量，2：库存范围显示）-->
+    <input type="hidden" name="kucun_status">
+    <!--库存数量-->
+    <input type="hidden" name="kucun">
+    <!--是否支持优惠券（1：是，0：否）-->
+    <input type="hidden" name="is_coupon">
+    <!--优惠金额-->
+    <input type="hidden" name="amount">
+    <!--短信提醒-->
+    <input type="hidden" name="tel_amount">
+    <!--买家购买时是否填写取卡密码（1：是，0：否，2：选填）-->
+    <input type="hidden" name="psd_limit">
+    <!--买家购买时填写的联系方式进行正则匹配（1：是，0：否，其他：可以使用的位数）-->
+    <input type="hidden" name="contact_limit">
+    <!--商品起购数量-->
+    <input type="hidden" name="low_limit">
+    <!--赋值单价-->
+    <input type="hidden" name="price">
+    <!--linkid-->
+    <input type="hidden" name="linkid" value="{$linkid}">
+</form>
+<span id="remark" style="display: none"></span>
+
+<script>
+    $(function () {
+        $('.gg_btn').click(function () {
+            swal({
+                title:"商户公告",
+                text: '{$gonggao}',
+                confirmButtonText: "我知道了"
+            });
+        });
+        $('.spsm').click(function () {
+            swal({
+                title:"商品说明",
+                html:true,
+                text: "<span id='remark1'></span>",
+                confirmButtonText: "我知道了",
+            });
+
+            $('#remark1').text($('#remark').text());
+        });
+        $("[name='goodlistid']").change(function(){
+            var goodidText=$("[name='goodlistid']").find("option:selected").text();
+            $('#onchange_goodname').text(goodidText);
+        });
+        $("input[name='quantity']").change(function(){
+            var quantityText=$("input[name='quantity']").val();
+            $('#onchange_quantity').text(quantityText);
+        });
+    });
+</script>
+
+</body></html>

@@ -1,0 +1,46 @@
+{include file="common/header" /}
+<script src="{$open}/jquery.qrcode.min.js"></script>
+
+<body>
+<div class="list_bg">
+    <div class="link_box"><strong>1.短链接<span style="color: #f17d83">(推荐)</span>：</strong><p id="a1" onclick="window.open('{$list.short_url}')">{$list.short_url}</p> <a class="copy_btn" data-clipboard-action="copy" data-clipboard-target="#a1">复制链接</a><br>
+    </div>
+    <div class="link_box"><strong>2.系统单一支付地址：</strong><p id="a2" onclick="window.open('{$list.long_url}')">{$list.long_url}</p> <a class="copy_btn" data-clipboard-action="copy" data-clipboard-target="#a2">复制链接</a><br>
+    </div>
+    <div class="link_box"><strong>3.二维码支付地址：</strong><br>
+        <label id="qrcode"></label>
+        <!--<img src="http://qr.liantu.com/api.php?text=http://957ka.net/Ff" width="180" height="180" style="margin-left:20px;">-->
+        <br>
+    </div>
+</div>
+<script src="{$js}/clipboard.min.js"></script>
+<script>
+    var clipboard = new Clipboard('.copy_btn');
+
+    clipboard.on('success', function(e) {
+        console.log(e);
+        layer.msg('复制成功！',{icon:1,time:2000})
+    });
+
+    clipboard.on('error', function(e) {
+        console.log(e);
+        layer.msg('复制失败！',{icon:2,time:2000})
+
+    });
+</script>
+<script>
+    jQuery(function(){
+        var url = '{$list.long_url}';
+        jQuery('#qrcode').qrcode(
+            {
+                render : "canvas",    //设置渲染方式，有table和canvas，使用canvas方式渲染性能相对来说比较好
+                width: 100,				//二维码的宽度
+                height: 100,				//二维码的高度
+                // foreground: "#cc674a",				//二维码的后景色
+                background: "#FFF",				//二维码的前景色
+                text:url,				//扫描二维码后显示的内容,可以直接填一个网址，扫描二维码后自动跳向该链接
+                // src: 'photo.jpg'             //二维码中间的图片
+            });
+    })
+</script>
+</body>

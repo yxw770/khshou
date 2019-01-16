@@ -1,0 +1,159 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<link rel="stylesheet" href="{$flag}/font-awesome.min.css">
+<style>
+    .icon{
+        text-align: center;
+    }
+    .laydate-set-ym {
+        height: 30px;
+        line-height: 30px;
+        margin-top: -3px;
+    }
+    .main {
+        margin-top: 70px;
+    }
+</style>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<div class="main auto pt60">
+    <div class="main_wrap">
+        {include file="set/set" /}
+        <div class="m_content system_content">
+            <form class="layui-form" action="" id="ajaxform">
+                <div class="system_base">
+                    <div class="row clearfix">
+                        <span class="tit">站点名称</span>
+                        <div class="info">
+                            <input type="text" name="sitename" class="ipt ipt_txt" value="{$list.sitename}"/>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <span class="tit">标题说明</span>
+                        <div class="info">
+                            <input type="text" name="sitetile" class="ipt ipt_txt" value="{$list.sitetile}"/>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <span class="tit">关键字</span>
+                        <div class="info">
+                            <input type="text" name="sitekeyword" class="ipt ipt_txt" placeholder="自动发卡平台，发卡平台，自动发卡，新创自动发卡平台，新创卡平台" value="{$list.sitekeyword}"/>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <span class="tit">站点简介</span>
+                        <div class="info">
+                            <textarea name="description" class="textarea site_brief" placeholder="新创自动发卡平台极受用户欢迎的自动发卡平台，发卡平台对比917自动发卡平台费率更低，自动发卡平台指出APP管理、提供API接口、微信公众号在线管理！">{$list.description}</textarea>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <span class="tit">百度认证</span>
+                        <div class="info">
+                            <textarea name="baidu_verification" class="textarea site_brief" placeholder="请输入百度认证代码中content属性的值">{$list.baidu_verification}</textarea>
+                        </div>
+                    </div>
+                    <!--<div class="row clearfix">-->
+                    <!--<span class="tit">站点开关</span>-->
+                    <!--<div class="info">-->
+                    <!--<div class="system_select">-->
+                    <!--<select>-->
+                    <!--<option value="1">站点开启</option>-->
+                    <!--<option value="2">站点开启</option>-->
+                    <!--<option value="3">站点开启</option>-->
+                    <!--</select>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="row clearfix">-->
+                    <!--<span class="tit">站点关闭提示</span>-->
+                    <!--<div class="info">-->
+                    <!--<input type="text" class="ipt ipt_txt" value="升级，稍等"/>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="row clearfix">-->
+                    <!--<span class="tit">统计代码</span>-->
+                    <!--<div class="info">-->
+                    <!--<textarea name="" class="textarea statscode">-->
+                    <!--var _hmt=_hmt || [];-->
+                    <!--(function(){      var hn=document.createElement(”script”);-->
+                    <!--var hn=document.createElement(”script”);-->
+                    <!--var hn=document.createElement(”script”);-->
+                    <!--</textarea>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="row clearfix">-->
+                    <!--<span class="tit">被投诉次数限制</span>-->
+                    <!--<div class="info">-->
+                    <!--<div class="system_select">-->
+                    <!--<select>-->
+                    <!--<option value="1">100次</option>-->
+                    <!--<option value="2">100次</option>-->
+                    <!--<option value="3">100次</option>-->
+                    <!--</select>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="row clearfix">-->
+                    <!--<span class="tit">短网址功能</span>-->
+                    <!--<div class="info">-->
+                    <!--<div class="system_select">-->
+                    <!--<select>-->
+                    <!--<option value="1">ft12</option>-->
+                    <!--<option value="2">ft12</option>-->
+                    <!--<option value="3">ft12</option>-->
+                    <!--</select>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="row clearfix">-->
+                    <!--<span class="tit">商品加密</span>-->
+                    <!--<div class="info">-->
+                    <!--<div class="system_select">-->
+                    <!--<select>-->
+                    <!--<option value="1">未开启</option>-->
+                    <!--<option value="2">未开启</option>-->
+                    <!--<option value="3">未开启</option>-->
+                    <!--</select>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <input type="button" value="保存设置" class="ipt_button" onclick="submitform();return false;"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function submitform() {
+        $.post(
+            "{:url('set/editsave')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+<script>
+    layui.use(['form'], function () {
+    });
+</script>
+{include file="common/footer" /}

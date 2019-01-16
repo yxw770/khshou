@@ -1,0 +1,117 @@
+{include file="common/header" /}
+<script src="{$layer}/layer.js"></script>
+    <style>
+        @media (max-width: 800px) {
+            .yzm_box input {
+                width: calc(100% - 20px);
+            }
+            .kf {
+                width: 65% !important;
+            }
+        }
+
+        .kf {
+            width: 260px;
+            float: left;
+            border-radius: 3px 0 0 3px;
+            border: none;
+            display: block;
+            height: 40px;
+            padding: 0 5px;
+            margin: 20px auto 0 auto;
+            background: #fff;
+            font-size: 14px;
+        }
+    </style>
+<body class="login_bg">
+<div class="container">
+    <div class="logo_top">
+        <a href="#"><img src="{$images}/logo1.png" alt=""></a>
+    </div>
+    <div class="login_title">
+        <h3>重置密码</h3>
+    </div>
+    <form id="ajaxform">
+    <div class="login_form">
+        <input name="password" type="password" placeholder="新密码" minlength="6" maxlength="20" value="">
+        <input name="confirm_password" type="password" placeholder="确认新密码" minlength="6" maxlength="20" value="">
+        <div class="clear"></div>
+        <button type="button" id="btnRegister" onclick="submitform();return false;">重置密码</button>
+    </div>
+        <input type="hidden" name="id" value="{$id}">
+        <input type="hidden" name="token" value="{$token}">
+    </form>
+</div>
+
+<script>
+    function submitform() {
+        var password = $('input[name="password"]').val();
+        var confirm_password = $('input[name="confirm_password"]').val();
+        if(password=='') {
+            layer.msg('请输入新密码', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="password"]').focus();
+            return false;
+        }
+        if(password.length<6) {
+            layer.msg('请输入6位以上新密码', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="password"]').focus();
+            return false;
+        }
+        if(confirm_password=='') {
+            layer.msg('请输入确认新密码', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="confirm_password"]').focus();
+            return false;
+        }
+        if(confirm_password.length<6) {
+            layer.msg('请输入6位以上确认新密码', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="confirm_password"]').focus();
+            return false;
+        }
+        if(password!=confirm_password) {
+            layer.msg('新密码输入和确认新密码不一致', {
+                icon: 5,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+            $('input[name="confirm_password"]').focus();
+            return false;
+        }
+        $.post(
+            "{:url('retpwd/retsave')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                data = eval("(" + data + ")");
+                // console.log(data);
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.href = "{:url('/login')}";
+                    });
+                    // window.location.href = "/center";
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+</body>
+
+</html>

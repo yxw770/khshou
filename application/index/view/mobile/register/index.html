@@ -1,0 +1,124 @@
+{include file="common/header" /}
+<script src="{$layer}/layer.js"></script>
+    <style>
+        @media (max-width: 800px) {
+            .yzm_box input {
+                width: calc(100% - 20px);
+            }
+            .kf {
+                width: 65% !important;
+            }
+        }
+
+        .kf {
+            width: 260px;
+            float: left;
+            border-radius: 3px 0 0 3px;
+            border: none;
+            display: block;
+            height: 40px;
+            padding: 0 5px;
+            margin: 20px auto 0 auto;
+            background: #fff;
+            font-size: 14px;
+        }
+    </style>
+<body class="login_bg">
+<div class="container">
+    <div class="logo_top">
+        <a href="#"><img src="{$images}/logo1.png" alt=""></a>
+    </div>
+    <div class="login_title">
+        <h3>商户注册</h3>
+        <p>只需1分钟拥有属于你的商户后台<br>
+            <font style="color:#ffc107;font-size: 14px;">注意：此为商户注册通道，买家购卡无需注册</font>
+        </p>
+    </div>
+    <form id="ajaxform">
+    <div class="login_form">
+        <input type="tel" name="username" value="" placeholder="用户名" maxlength="20">
+        <input type="tel" name="tel" value="" placeholder="注册手机号" maxlength="11">
+        <input type="tel" name="email" value="" placeholder="邮箱地址" maxlength="50">
+        <input type="password" name="password" placeholder="密码" maxlength="20">
+        <input type="password" name="password_confirm" placeholder="确认密码" maxlength="20">
+        {if($is_sms)}
+        <div class="yzm_box">
+            <input type="text" name="chkcode" placeholder="短信验证码" maxlength="6" class="yzm">
+            <a href="JavaScript:;" onclick="getCode();" class="yzm_btn" id="click_checkcode">获取验证码</a>
+        </div>
+        <script>
+            function getCode(){
+                var phone=$('[name="tel"]').val();
+                var reg=/\d{11}/;
+                if(phone=='' || !reg.test(phone)){
+                    layer.msg('请填写正确的手机号码！');
+                    $('[name="tel"]').focus();
+                    return false;
+                }
+                $.post(
+                    "{:url('register/sms')}",
+                    {phone:phone,t:new Date().getTime()},
+                    function(data){
+                        data = eval("(" + data + ")");
+                        if (data.status == '1') {
+                            layer.msg(data.msg);
+                            $('#click_checkcode').removeAttr('onclick');
+                            $('#click_checkcode').html('<i class="times">80</i>秒后重发');
+                            timeC(80);
+                        } else {
+                            layer.msg(data.msg);
+                            $('#click_checkcode').attr('onclick','getCode()');
+                        }
+                    },'json');
+            }
+
+            function timeC(t){
+                if(t==0){
+                    $('#click_checkcode').attr('onclick','getCode()');
+                    $('#click_checkcode').text('获取验证码');
+                } else {
+                    t=t-1;
+                    $('#click_checkcode .times').text(t);
+                    setTimeout('timeC('+t+')',1000);
+                }
+            }
+        </script>
+        {/if}
+        <div class="clear"></div>
+        <button type="button" id="btnRegister" onclick="submitform();return false;">注 册</button>
+        <p>已有账号？
+            <a href="{:url('/login')}">登录</a>
+        </p>
+    </div>
+    </form>
+</div>
+
+<script>
+    function submitform() {
+        $.post(
+            "{:url('register/register_save')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                data = eval("(" + data + ")");
+                // console.log(data);
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.href = "{:url('/login')}";
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            },
+            "json"
+        );
+    }
+</script>
+</body>
+
+</html>

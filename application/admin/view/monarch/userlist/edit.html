@@ -1,0 +1,279 @@
+<!--<link rel="stylesheet" href="{$flag}/font-awesome.min.css">-->
+<!--<link rel="stylesheet" href="{$flag}/layeropen.css?v=1">-->
+<link rel="stylesheet" href="{$layui}/css/layui.css">
+
+
+<script src="{$js}/jquery-2.2.1.min.js"></script>
+<script src="{$layer}/layer.js"></script>
+<script src="{$layui}/layui.js" charset="utf-8"></script>
+
+
+<style>
+    /**{*/
+        /*margin:0;padding:0;border:0;font-weight:normal;vertical-align:baseline;background:transparent;*/
+    /*}*/
+
+    body{
+        overflow-y: hidden;
+    }
+    /*顶部显示圆角显示*/
+    #layui-layer-iframe2{
+        border-radius: 6px;
+
+    }
+    .t_title {
+        font-size: 20px;
+        color: #333333;
+        text-align: center;
+        line-height: 48px;
+        border-bottom: 1px solid #ddd;
+    }
+    .detail {
+        padding: 30px 35px 45px;
+    }
+
+    .pop_useredit li {
+        float: left;
+        margin-bottom: 20px;
+        width: 49%;
+    }
+
+    .pop_useredit li .tit {
+        width: 115px;
+    }
+    .pop_form .tit {
+        text-align: right;
+        display: block;
+        float: left;
+        line-height: 35px;
+        font-size: 14px;
+        color: #333333;
+    }
+
+    .pop_useredit li .info {
+        width: 220px;
+        position: relative;
+    }
+
+    .pop_form .info {
+        float: right;
+        line-height: 35px;
+    }
+    .pop_select {
+        width: 100%;
+        text-align: left;
+    }
+
+    .fl {
+        float: left;
+    }
+    .pop_select .layui-input {
+        height: 35px;
+        line-height: 35px;
+        font-size: 14px;
+        color: #333;
+        padding: 0 20px;
+        border: 1px solid #ddd;
+    }
+    .pop .ipt_txt {
+        width: 100%;
+    }
+
+    .pop_form .ipt {
+        padding: 0 20px;
+        border: 1px solid #ddd;
+        height: 35px;
+        line-height: 35px;
+    }
+    .pop_useredit .pop_textarea {
+        position: absolute;
+        height: 85px;
+    }
+    .pop_textarea {
+        display: block;
+        width: 100%;
+        height: 110px;
+        border: 1px solid #ddd;
+        padding: 10px 20px;
+        font-size: 14px;
+        color: #333;
+        resize: none;
+    }
+
+    .pop_useredit .js {
+        height: 85px;
+    }
+
+    .pop_form .ipt_button {
+        width: 140px;
+        height: 40px;
+        background: #5967dc;
+        text-align: center;
+        line-height: 40px;
+        font-size: 16px;
+        color: #fff;
+        border: none;
+        margin: 0 auto;
+        display: block;
+        cursor: pointer;
+    }
+    .pop_useredit li.last {
+        width: 100%;
+    }
+    .pop_useredit li.last .info {
+        width: 350px;
+        float: left;
+        margin-left: 15px;
+    }
+    .pop_useredit .tag {
+        font-size: 13px;
+        color: #333333;
+    }
+    .clearfix{*zoom: 1;}
+    .clearfix:before,.clearfix:after
+    {display: table;line-height: 0;content: "";}
+    .clearfix:after{clear: both;}
+
+</style>
+<div class="pop pop_useredit">
+    <a href="javascript:;" class="close"></a>
+    <h5 class="t_title">编辑用户信息</h5>
+    <div class="detail">
+        <form class="layui-form" action="{:url('userlist/editsave')}" id="ajaxform" method="post">
+            <div class="pop_form">
+                <ul class="list clearfix">
+                    <li>
+                        <span class="tit">设置状态</span>
+                        <div class="info">
+                            <div class="pop_select fl">
+                                <select name="is_state">
+                                    <option value="0" {$list.is_state=='0'?'selected':''}>正在审核</option>
+                                    <option value="1" {$list.is_state=='1'?'selected':''}>审核通过</option>
+                                    <option value="2" {$list.is_state=='2'?'selected':''}>已冻结</option>
+                                </select>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="tit">商户后台主题</span>
+                        <div class="info">
+                            <div class="pop_select fl">
+                                <select name="usertheme">
+                                    <?php foreach($usertheme_arr as $k => $v): ?>
+                                    <option value="{$k}">{$v}</option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="tit">商户ID</span>
+                        <div class="info">
+                            {$list.userid}
+                        </div>
+                    </li>
+                    <li>
+                        <span class="tit">商户名登录名</span>
+                        <div class="info">
+                            {$list.username}
+                        </div>
+                    </li>
+                    <li>
+                        <span class="tit">联系QQ</span>
+                        <div class="info">
+                            <input type="text" name="qq" class="ipt ipt_txt" placeholder="qq" value="{$list.qq}"/>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="tit">登录密码</span>
+                        <div class="info">
+                            <input type="text" name="password" class="ipt ipt_txt" placeholder=""/>
+                        </div>
+                    </li>
+                    <!--<li>-->
+                        <!--<span class="tit">重置安全密码</span>-->
+                        <!--<div class="info">-->
+                            <!--<a href="#" class="resetpsd">点击重置</a>-->
+                        <!--</div>-->
+                    <!--</li>-->
+                    <li>
+                        <span class="tit">联系手机</span>
+                        <div class="info">
+                            <input type="text" name="tel" class="ipt ipt_txt" placeholder="" value="{$list.tel}" maxlength="11"/>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="tit">联系邮箱</span>
+                        <div class="info">
+                            <input type="text" name="email" class="ipt ipt_txt" placeholder="" value="{$list.email}"/>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="tit">店铺名称</span>
+                        <div class="info">
+                            <input type="text" name="sitename" class="ipt ipt_txt" placeholder="" value="{$list.sitename}"/>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="tit">店铺地址</span>
+                        <div class="info">
+                            <input type="text" name="siteurl" class="ipt ipt_txt" placeholder="" value="{$list.siteurl}"/>
+                        </div>
+                    </li>
+                    <li class="js">
+                        <span class="tit">商家公告</span>
+                        <div class="info">
+                            <textarea name="usernotice" id="" cols="30" rows="10" class="pop_textarea">{$list.usernotice}</textarea>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="tit">商户购买页面</span>
+                        <div class="info">
+                            <div class="pop_select fl">
+                                <select name="paytheme">
+                                    <?php foreach($paytheme_arr as $k => $v): ?>
+                                    <option value="{$k}" {$list.paytheme==$k?'selected':''}>{$v}</option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <input type="hidden" name="userid" value="{$list.userid}">
+                <!--<input type="submit" value="保存用户1" class="ipt_button" />-->
+                <input type="button" value="保存用户" class="ipt_button" onclick="submitform();return false;"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    layui.use(['form'], function () {
+    });
+</script>
+<script>
+    function submitform() {
+        $.post(
+            "{:url('userlist/editsave')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>

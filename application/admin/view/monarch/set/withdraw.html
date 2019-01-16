@@ -1,0 +1,127 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<link rel="stylesheet" href="{$flag}/font-awesome.min.css">
+<style>
+    .icon{
+        text-align: center;
+    }
+    .laydate-set-ym {
+        height: 30px;
+        line-height: 30px;
+        margin-top: -3px;
+    }
+    .main {
+        margin-top: 70px;
+    }
+</style>
+
+<body>
+<?php $controller=request()->controller(); ?>
+<?php $action=request()->action(); ?>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<div class="main auto pt60">
+    <div class="main_wrap">
+        {include file="set/set" /}
+        <div class="m_content system_content">
+            <form class="layui-form" action="" id="ajaxform">
+                <div class="system_base">
+                    <div class="row clearfix">
+                        <span class="tit">提现开关</span>
+                        <div class="info">
+                            <div class="system_select">
+                                <select name="is_takecashstate">
+                                    <option value="1" {$list.is_takecashstate=='1'?'selected':''}>提现开启</option>
+                                    <option value="0" {$list.is_takecashstate=='0'?'selected':''}>暂时关闭</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <span class="tit">允许提现时间</span>
+                        <div class="info">
+                            <div class="system_select fl">
+                                <select name="takecashfrom">
+                                    <?php for ($i = 0; $i < 24; $i++): ?>
+                                    <option value="{$i}" {$list.takecashfrom==$i?'selected':''}>{$i}点</option>
+                                    <?php endfor; ?>
+                                </select>
+                            </div>
+                            <em class="fz fl">至</em>
+                            <div class="system_select fl">
+                                <select name="takecashto">
+                                    <?php for ($i = 0; $i < 24; $i++): ?>
+                                    <option value="{$i}" {$list.takecashto==$i?'selected':''}>{$i}点</option>
+                                    <?php endfor; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <span class="tit">最低结算金额</span>
+                        <div class="info">
+                            <input type="text" name="takecashlowest" class="ipt ipt_txt" value="{$list.takecashlowest}"/>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <span class="tit">提现次数限制</span>
+                        <div class="info">
+                            <div class="system_select">
+                                <select name="takecashtime">
+                                    <?php for ($i = 1; $i < 11; $i++): ?>
+                                    <option value="{$i}" {$list.takecashtime==$i?'selected':''}>{$i}次</option>
+                                    <?php endfor; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <span class="tit">结算手续费率</span>
+                        <div class="info">
+                            <input type="text" name="fee" class="ipt ipt_txt w170 fl" value="{$list.fee}"/><em class="fz fl">元</em>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <span class="tit">手续费上限</span>
+                        <div class="info">
+                            <input type="text" name="feemost" class="ipt ipt_txt w170 fl" value="{$list.feemost}"/><em class="fz fl">元</em>
+                        </div>
+                    </div>
+                    <input type="button" value="保存设置" class="ipt_button" onclick="submitform();return false;"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function submitform() {
+        $.post(
+            "{:url('set/editsave')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+<script>
+    layui.use(['form'], function () {
+    });
+</script>
+{include file="common/footer" /}

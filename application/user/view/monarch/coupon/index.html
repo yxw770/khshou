@@ -1,0 +1,204 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+<style>
+    .coupon.container .box .table label {
+        padding-top: 2px;
+    }
+</style>
+<body>
+{include file="common/top_nav" /}
+
+<div class="main clearfix">
+    {include file="common/left_nav" /}
+
+    <div class="container coupon scroll">
+        <div class="box init b1">
+            <div class="title">
+                查优惠券 <span>Check coupons</span>
+            </div>
+            <div class="table">
+                <form action="" method="get">
+                    <div class="bar">
+                        <span class="t1">选择商品：</span>
+                        <select name="goodlistid">
+                            <option value="">全部商品</option>
+                            {volist name="goodlist_arr" id="vo"}
+                            <option value="{$vo.goodlistid}" {:input('goodlistid')==$vo.goodlistid?"selected":'';}>{$vo.goodname}</option>
+                            {/volist}
+                        </select>
+                        <span class="t1">状态：</span>
+                        <select name="is_state" id="" class="type">
+                            <option value="">全部</option>
+                            <option value="1">已使用</option>
+                            <option value="0">未使用</option>
+                        </select>
+                        <input type="text" name="keyword" value="{:input('keyword')}" placeholder="">
+                        <button class="btn1">立即查询</button>
+                        <button class="btn2" onclick="window.location.href='{:url("/ac")}'">生成优惠券</button>
+                    </div>
+                    <input type="hidden" name="do" value="search">
+                </form>
+                <form action="{:url('coupon/delall')}" method="post" id="ajaxform">
+                    <table class="tab2">
+                        <thead>
+                        <tr>
+                            <td style="text-align:left">优惠券号码</td>
+                            <td style="text-align:left">绑定商品</td>
+                            <td>面额</td>
+                            <td>生成时间</td>
+                            <td>有效期</td>
+                            <td>状态</td>
+                            <td>管理</td>
+                            <td>
+                                <input type="checkbox" class="all_check" id="c1">
+                                <label for="c1"></label>
+                            </td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {volist name="list" id="vo"}
+                        <tr>
+                            <td style="text-align:left">{$vo.couponcode}</td>
+                            {if $vo.is_all=='1'}
+                            <td style="text-align:left">全部商品</td>
+                            {else/}
+                            <td style="text-align:left">{$vo.goodname}</td>
+                            {/if}
+                            <td>{$vo.amount}</td>
+                            <td>{$vo.addtime}</td>
+                            <td>{$vo.gptime}</td>
+                            {if $vo.is_state=='1'}
+                            <td>已使用</td>
+                            {elseif $vo.is_state=='0'}
+                            <td>未使用</td>
+                            {/if}
+                            <td>
+                                <a href="javascript:;" onclick="del('{$vo.couponid}');return false;">删除</a>
+                            </td>
+                            <td>
+                                <input name="listid[]" type="checkbox" id="t{$vo.couponid}" value="{$vo.couponid}">
+                                <label for="t{$vo.couponid}"></label>
+                            </td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                    <!--<button class="del" >删除</button>-->
+                </form>
+                <button class="del" onclick="delall()">删除</button>
+            </div>
+            <div class="pagination" style="padding-top: 0">
+                {$page}
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function submitform() {
+        if ($("input[name='is_export']").is(':checked')) {
+            console.log(1);
+            if (export_order()) {
+                setTimeout('window.location.reload()', 3000);
+            }
+        } else {
+            $.post(
+                "{:url('ac/addsave')}",
+                $("#ajaxform").serialize(),
+                function (data) {
+                    data = eval("(" + data + ")");
+                    // console.log(data);
+                    if (data.status == '1') {
+                        layer.msg(data.msg, {
+                            icon: 6,
+                            time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            window.parent.location.reload();
+                        });
+                    } else if (data.status == '0') {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                        });
+                    }
+                }
+                // , "json"
+            );
+        }
+    }
+</script>
+<script>
+    function delall() {
+        var test = $("#ajaxform").serialize();
+        console.log(test);
+        $.post(
+            "{:url('coupon/delall')}",
+            $("#ajaxform").serialize(),
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+<script>
+    function del(id) {
+        $.post(
+            "{:url('coupon/del')}",
+            {couponid:id},
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+<script>
+    $(".all_check").click(function () {
+        $(".tab2").find("input:checkbox").prop("checked", true);
+    });
+    $(".back_check").click(function () {
+        $(".tab2 input:checkbox").each(function () {
+            if ($(this).is(':checked')) {
+                // console.log("1");
+                $(this).prop("checked", false);
+                // $(this).removeAttr("checked");
+            }
+            else {
+                // console.log("12");
+                $(this).prop("checked", true);
+            }
+        });
+    });
+</script>
+{include file="common/footer" /}
+</body>

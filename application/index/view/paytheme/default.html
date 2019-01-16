@@ -1,0 +1,342 @@
+
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{$list.sitename} - {$sitetile}</title>
+    <link href="{$css}/pay_basic.css" rel="stylesheet" type="text/css">
+    <script src="{$js}/jquery.min.js"></script>
+    <!--    点击购买遮罩弹窗结束-->
+    <!--    核心文件开始-->
+    <script src="{$common}/js/1106111321_layer.js"></script>
+    <!--    核心文件结束-->
+    <!--    支付方式样式文件开始-->
+    <script src="{$js}/pay3.js"></script>
+    <script src="{$layer}/layer.js"></script>
+    <script src="{$common}/js/jquery.qrcode.min.js"></script>
+    <!--    支付方式样式文件结束-->
+
+</head>
+
+<body>
+<style>
+    *{
+        font-family: Microsoft YaHei;
+    }
+    .zy-tc{
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        background: rgba(0,0,0,0.5);
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+    .tanchu{
+        width: 40%;
+        margin: 5% auto;
+        background: #fff;
+        border-color:#dddddd;
+        border-radius:2px ;
+        padding: 25px;
+        color: #797979;
+    }
+    .zy-tc .tanchu .tanchu-content .tanchu-header {
+        border-bottom-width: 2px;
+        margin: 0;
+        padding: 0;
+        border-bottom: 2px solid #e5e5e5;
+    }
+    .zy-tc .tanchu .tanchu-content .tanchu-body {
+        padding: 20px;
+        color: #797979;
+    }
+    .zy-tc .tanchu .tanchu-content .tanchu-body p{
+        line-height: 35px;
+    }
+    .zy-tc .tanchu .tanchu-content .tanchu-footer {
+        padding: 0;
+        padding-top: 15px;
+        text-align: right;
+        border-top: 1px solid #e5e5e5;
+    }
+    .tanchu-footer button{
+        padding: 1%;
+        background-color: #ffa106;
+        color: #fff;
+        margin: 0 1%;
+        border: 1px solid transparent;
+    }
+</style>
+<script>
+    $(function() {
+        $(document).on('click', '.btn-no', function() {
+            $(".zy-tc").css('display', 'none')
+        });
+        $(document).on('click', '.btn-yes', function() {
+            $(".zy-tc").css('display', 'none')
+        });
+    });
+</script>
+<div class="zy-tc" tabindex="-1" style="display:block; padding-right: 17px;">
+    <div class="tanchu">
+        <div class="tanchu-content">
+            <div class="tanchu-header">
+                <h4 class="tanchu-title">购买须知</h4>
+            </div>
+            <div class="tanchu-body">
+
+                <p>1、本站仅是提供自动发卡服务并非销 售商只保证卡密正确有效，商品使用和相关售后问题请自行联系卖家处理解决!</p>
+
+                <p>2、建议先咨询卖家商品用途后购买，购买的卡密充值成功表示交易成功，非卡密问题概不退款!<span style="color: #ffa106;">（重要提示:我司不提供实物商品的担保交易，购买需要邮寄商品都是骗子，请勿付款，并联系我司客服进行投诉：投诉QQ：{:cache('guestconfig')['qq']}）</span></p>
+
+                <p>3、如遇假卡/诈骗/赌博/钓鱼/色情/套现等情况，请在{:cache('guestconfig')['sitename']}查询订单后点击举报投诉及时进行反馈，投诉有效期:购买当天23: 00前进行投诉，逾期不支持！投诉客服QQ：{:cache('guestconfig')['qq']}，工作时间：08:30 - 24:00我们将在第一时间回复您谢谢!</p>
+
+                <p>4、商品使用问题全部联系卖家处理--咨询卖家QQ</p>
+
+            </div>
+            <div class="tanchu-footer">
+                <button type="button" class="btn-no" data-dismiss="tanchu">不明白，稍后购买</button>
+                <button type="button" class="btn-yes" data-dismiss="tanchu">明白了，我要购买</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="top_bg">
+    <div class="container">
+        <!--顶部导航-->
+        <div class="top">
+            <div class="logo">{$sitetile}</div>
+            <div class="main_menu">
+                <ul>
+                    <li><a href="/">首页</a></li>
+                    <li><a href="/orderquery">订单查询</a></li>
+                </ul>
+            </div>
+        </div>
+        <!--联系卖家-->
+        <div class="seller_name"><b>卖家QQ：</b> {$list.qq}
+            <a class="text_color kf btn" target="_blank" href="http://wpa.qq.com/msgrd?v=1&uin={$list.qq}&site=957ka.com&menu=yes'">
+            <img src="{$images}/qq.png" alt="">
+            联系卖家
+        </a>
+        </div>
+        <!--卖家公告-->
+        <div class="gg_bg"><b>商家公告：{$gonggao}</b> </div>
+        <!--内容主体-->
+        <div class="main_bg">
+            <form method="post" target="_blank" id="ajaxform">
+                <!--选择商品-->
+                <div class="title"><img src="{$images}/title1.png" alt=""></div>
+                <!--选择商品表单-->
+                <div class="choose_good_form">
+                    <div class="my_box" style="height:auto; line-height:24px; font-size:14px; padding:10px;color:#e69800;background: #fff;border: 2px dashed #e69800">
+                        <div class="my_right" style="width: calc(100% - 8px)"><strong>商品说明</strong>：<span id="remark"></span></div>
+                    </div>
+                    {if $flag=='links'}
+                    <!--            如果是店铺链接开始-->
+                    <div class="my_box">
+                        <div class="my_left">商品分类：</div>
+                        <div class="my_right">
+                            <select name="cateid" onchange="selectcateid()">
+                                <option value="">请选择分类</option>
+                                {volist name="cate_arr" id="vo"}
+                                <option value="{$vo.goodcateid}" >{$vo.catename}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="my_box">
+                        <div class="my_left">商品名称：</div>
+                        <div class="my_right">
+                            <img src="{$common}/images/load.gif" id="goodid_img" style="line-height: 42px;margin-top: 17px;display: none;">
+                            <select name="goodlistid" onchange="selectgoodid()" style="display: inline-block;">
+                                <option value="">请选择商品</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--            如果是店铺链接结束-->
+                    {elseif($flag=='lists')/}
+                    <!--            如果是分类链接开始-->
+                    <div class="my_box">
+                        <div class="my_left">商品分类：</div>
+                        <div class="my_right">
+                            {$catename}
+                        </div>
+                    </div>
+                    <div class="my_box">
+                        <div class="my_left">商品名称：</div>
+                        <div class="my_right">
+                            <img src="{$common}/images/load.gif" id="goodid_img" style="line-height: 42px;margin-top: 17px;display: none;">
+                            <select name="goodlistid" onchange="selectgoodid()" style="display: inline-block;">
+                                <option value="">请选择商品</option>
+                                {volist name="goodlist_arr" id="vo"}
+                                <option value="{$vo.goodlistid}" >{$vo.goodname}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+                    <!--            如果是分类链接结束-->
+                    {elseif($flag=='detail')/}
+                    <!--            如果是单个商品链接开始-->
+                    <div class="my_box">
+                        <div class="my_left">商品名称：</div>
+                        <div class="my_right">
+                            <img src="{$common}/images/load.gif" id="goodid_img" style="line-height: 42px;margin-top: 17px;display: none;">
+                            {$goodname}
+                            <select name="goodlistid" style="display: none;">
+                                <option value="{$goodlistid}" selected>{$goodname}</option>
+                            </select>
+                            <script>
+                                $(function () {
+                                    selectgoodid();
+                                })
+                            </script>
+                        </div>
+                    </div>
+                    <!--            如果是单个商品链接结束-->
+                    {/if}
+                    <div class="my_box">
+                        <div class="my_left">商品单价：</div>
+                        <div class="my_right">
+                            <img src="{$common}/images/load.gif" id="price_img" style="line-height: 42px;margin-top: 17px;display: none;">
+                            <span class="big_text" id="price">0.00</span>元
+                            <a href="#" id="wholesale" style="display:none;">(查看批发价格)</a>
+                            <div id="wholesaledetail" class="tishi2" style="display:none;">批发价信息</div>
+                        </div>
+                    </div>
+                    <div class="my_box">
+                        <div class="my_left">购买数量：</div>
+                        <div class="my_right">
+                            <input name="quantity" onkeyup="changequantity()" type="text" value="1" />
+                            <span class="green" id="kucun" style="float: left;position: absolute;left: 765px;top:221px" ></span>
+                        </div>
+                    </div>
+                    <div class="my_box">
+                        <div class="my_left">联系方式：</div>
+                        <div class="my_right">
+                            <input class="phone_num" name="contact" onchange="changecontact()" type="text" placeholder="推荐填写手机号或邮箱号 订单查询的重要凭证!" maxlength="20" >
+                        </div>
+                    </div>
+                    <div class="my_box">
+                        <div class="my_left">特色服务：</div>
+                        <div class="my_right">
+                            <label class="lab1"><input type="checkbox" name="is_tel" value="1">短信提醒[收费0.1元]</label>
+                            <label class="lab1"><input type="checkbox" name="is_email" value="1" id="email">邮箱提醒[免费]</label>
+                        </div>
+                    </div>
+                    <div class="my_box email_show" style="display:none" id="email_show">
+                        <div class="my_left">邮箱地址：</div>
+                        <div class="my_right"><input type="text" name="email" onchange="changeemail()" placeholder="填写你常用的邮箱地址"></div>
+                    </div>
+
+                    <div class="my_box" id="pwd1" style="display:none">
+                        <div class="my_left">取卡密码：</div>
+                        <div class="my_right"><input type="text" name="pwd1" onblur="checkpwd1()" placeholder="[必填]请输入取卡密码（6-20位）" maxlength="20"></div>
+                    </div>
+                    <div class="my_box" id="pwd2" style="display:none">
+                        <div class="my_left">取卡密码：</div>
+                        <div class="my_right">
+                            <input type="text" name="pwd2" onblur="checkpwd2()" placeholder="[选填]请输入取卡密码（6-20位）" maxlength="20">
+                        </div>
+                    </div>
+                    <div class="my_box" style="display:none" id="coupon">
+                        <div class="my_left">优惠券：</div>
+                        <div class="my_right">
+                            <input type="text" name="couponcode" placeholder="请填写你的优惠券" onblur="checkCoupon()" style="width: 200px">
+                        </div>
+                    </div>
+                    <div class="my_box" id="discouponcode" style="display:none">
+                        <div class="my_left">优惠卷详情：</div>
+                        <div class="my_right">
+                            <span id="checkcoupon" style="display:none"><img src="{$images}/load.gif"> 正在查询...</span>
+                        </div>
+                    </div>
+                    <div class="my_box" style="height:auto; font-size:18px; margin-bottom:0 ; padding:0 10px;color:#e69800;background: #fff;border: none">
+                        应付总额： <b id="tprice">0.00</b>元
+                    </div>
+                </div>
+                <!--卖家信息-->
+                <div class="seller_info">
+                    <h3>卖家信息</h3>
+                    <p>店铺名称： {$list.sitename}<br>卖家网站：{$list.siteurl}<br>商品类型： 数字卡密<br>发货类型： 自动发货<br>卖家Q Q： {$list.qq}</p>
+                    <div class="ewm" style="padding: 0;width: 100px;height: 100px;" id="qrcode"></div>
+                    <div style="text-align: center;color: #fff;font-size: 14px">扫描二维码手机支付</div>
+                </div>
+                <div class="clear"></div>
+                <!--付款方式-->
+                <div class="title"><img src="{$images}/title2.png" alt=""></div>
+                <div class="pay_box">
+                    <div class="pay_menu">
+                        <!--                扫码支付-->
+                        <div class="pay pay_cj_1 checked1"><img src="{$images}/pay1.png" width="18" height="18" style="vertical-align:middle"> 扫码支付</div>
+                    </div>
+
+                    <!--                扫码支付-->
+                    <div class="pay_list1">
+                        {if in_array('alipay',$payway_arr)}
+                        <label class="lab3 checked2">
+                            <input name="payway" value="ALIPAY" type="radio" checked>
+                            <img src="{$images}/ALIPAY.jpg" width="142" height="42">
+                        </label>
+                        {/if}
+                        {if in_array('weixin',$payway_arr)}
+                        <label class="lab3">
+                            <input name="payway" value="WEIXIN" type="radio">
+                            <img src="{$images}/wx.jpg" width="142" height="42">
+                        </label>
+                        {/if}
+                        {if in_array('qqrcode',$payway_arr)}
+                        <label class="lab3">
+                            <input name="payway" value="qqrcode"type="radio">
+                            <img src="{$images}/qqrcode.jpg" width="142" height="42">
+                        </label>
+                        {/if}
+                        {if in_array('jdsm',$payway_arr)}
+                        <label class="lab3">
+                            <input name="payway" value="jdsm" type="radio">
+                            <img src="{$images}/jdsm.png" width="142" height="42">
+                        </label>
+                        {/if}
+                    </div>
+                    <div>
+                        <input type="submit" class="check_pay" value="确认支付" onclick="submitform();return false;">
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <input type="hidden" name="userid" value="{$list.userid}">
+                <input type="hidden" name="{$linkid}_token" value="{$list.token}">
+                <!--是否支持批发优惠（1：是，0：否）-->
+                <input type="hidden" name="is_wholesale">
+                <!--库存显示方式，（0：默认，1：具体库存数量，2：库存范围显示）-->
+                <input type="hidden" name="kucun_status">
+                <!--库存数量-->
+                <input type="hidden" name="kucun">
+                <!--是否支持优惠券（1：是，0：否）-->
+                <input type="hidden" name="is_coupon">
+                <!--优惠金额-->
+                <input type="hidden" name="amount">
+                <!--短信提醒-->
+                <input type="hidden" name="tel_amount">
+                <!--买家购买时是否填写取卡密码（1：是，0：否，2：选填）-->
+                <input type="hidden" name="psd_limit">
+                <!--买家购买时填写的联系方式进行正则匹配（1：是，0：否，其他：可以使用的位数）-->
+                <input type="hidden" name="contact_limit">
+                <!--商品起购数量-->
+                <input type="hidden" name="low_limit">
+                <!--赋值单价-->
+                <input type="hidden" name="price">
+                <!--linkid-->
+                <input type="hidden" name="linkid" value="{$linkid}">
+            </form>
+
+        </div>
+    </div>
+</div>
+<div class="foot">
+    {$copyright}
+</div>
+</body>
+</html>

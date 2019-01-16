@@ -1,0 +1,143 @@
+{include file="common/header" /}
+	<body>
+		<div class="top_bg">
+			{include file="common/orhter_top_nav" /}
+		</div>
+		<div class="banner_bg">
+			<div class="container">
+				<h3>关于我们 <span>/ About Us</span></h3></div>
+		</div>
+		<div class="main_box">
+			<div class="title1">公司介绍
+				<div class="title_line"></div>
+			</div>
+			<div class="clear"></div>
+			<p class="com_text">
+				{$qtarr.sitename}是一家专注于移动互联网领域，致力于为用户提供便捷式应用程序的创新型未来互联网企业。
+            {$qtarr.sitename}科技旗下产品均使用轻简约风格，应用程序使用简单，界面排版简约明了。用极客精神做产品，用互联网思维为用户提供更好的服务是我们的初衷。</p>
+			<div class="title1">公司优势
+				<div class="title_line"></div>
+			</div>
+			<ul class="service">
+				<li>
+					<h1>服务器安全</h1>
+					<p>采用群集服务器，防御高遍布全球，无论用户身在何处，均能获得流畅安全可靠的体验。</p>
+				</li>
+				<li>
+					<h1>资金保障</h1>
+					<p>商户的资金，全部是次日结算当天到账，资金平均停留的时间不超过12小时，您的资金安全将得到充分的保障。</p>
+				</li>
+				<li>
+					<h1>费率超低</h1>
+					<p>支付渠道直接对接官方，直接去掉中间商的差价，因此我们可以给商户提供更低廉的费率。</p>
+				</li>
+				<li>
+					<h1>操作简单</h1>
+					<p>简约的UI交互体验可以给您一个体验度极高的商户后台，更好的下单体验。</p>
+				</li>
+			</ul>
+			<div class="clear"></div>
+		</div>
+		<style media="screen">
+			@media (max-width: 800px) {
+				.right_fix {
+					display: none;
+				}
+			}
+			
+			.right_fix {
+				position: fixed;
+				right: 2px;
+				height: 42px;
+				width: 42px;
+				line-height: 42px;
+				font-size: 12px;
+				text-align: center;
+				border-radius: 4px;
+				color: #fff;
+				background: rgba(51, 51, 79, .3);
+				z-index: 1001;
+				cursor: pointer;
+				transition: .2s
+			}
+			
+			.right_fix i {
+				font-size: 28px
+			}
+			
+			.right_fix:hover {
+				background: rgba(100, 143, 247, .9)
+			}
+			
+			.tel_fix {
+				bottom: 105px;
+				overflow: hidden;
+				font-size: 16px
+			}
+			
+			.tel_fix img {
+				margin: 0 10px
+			}
+			
+			.tel_fix:hover {
+				width: auto;
+				padding-right: 10px
+			}
+			
+			.qq_fix {
+				bottom: 150px;
+				overflow: hidden;
+				font-size: 16px
+			}
+			
+			.qq_fix img {
+				margin: 0 10px
+			}
+			
+			.qq_fix:hover {
+				width: auto;
+				padding-right: 10px
+			}
+			
+			.wx_fix {
+				bottom: 195px
+			}
+			
+			.ewm_show {
+				display: none;
+				position: absolute;
+				left: -330px;
+				top: 0;
+				width: 300px;
+				padding: 15px;
+				line-height: 24px;
+				text-align: right;
+				background: #fff;
+				color: #33334f;
+				box-shadow: 0 1px 4px rgba(0, 0, 0, .14)
+			}
+			
+			.ewm_show img {
+				float: left
+			}
+			
+			.ewm_show span {
+				float: right
+			}
+			
+			.ewm_show span h3 {
+				font-size: 18px;
+				margin-bottom: 20px
+			}
+			
+			.ewm_show span p {
+				font-size: 12px;
+				line-height: 24px;
+				color: rgba(51, 51, 79, .6)
+			}
+		</style>
+		<!--底部 pc-->
+		{include file="common/footer" /}
+		</div>
+	</div>
+{include file="common/footer_mobile" /}

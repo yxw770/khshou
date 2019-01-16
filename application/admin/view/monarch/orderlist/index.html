@@ -1,0 +1,295 @@
+{include file="common/header" /}
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<link rel="stylesheet" href="{$flag}/font-awesome.min.css">
+<style>
+    .icon{
+        text-align: center;
+    }
+    .laydate-set-ym {
+        height: 30px;
+        line-height: 30px;
+        margin-top: -3px;
+    }
+</style>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<div class="main auto">
+    <div class="main_wrap">
+        <div class="m_top clearfix">
+            <div class="m_search fl clearfix">
+                <form class="layui-form" action="">
+                    <div class="s_box clearfix fl">
+                        <div class="s_input fl">
+                            <input style="cursor: pointer" type="text" name="from_time" id="from_time" class="ipt ipt_txt" value="{:input('from_time')}" placeholder="请选择开始日期" readonly>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_input fl">
+                            <input style="cursor: pointer" type="text" name="to_time" id="to_time" class="ipt ipt_txt" value="{:input('to_time')}" placeholder="请选择日期" readonly>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_select fl">
+                            <select name="is_payment">
+                                <option value="" {:input('is_payment')==''?"selected":'';}>结算状态</option>
+                                <option value="0" {:input('is_payment')=='0'?"selected":'';}>未结算</option>
+                                <option value="1" {:input('is_payment')=='1'?"selected":'';}>已结算</option>
+                            </select>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_select fl">
+                            <select name="is_buylist">
+                                <option value="" {:input('is_buylist')==''?"selected":'';}>支付状态</option>
+                                <option value="0" {:input('is_buylist')=='0'?"selected":'';}>未付款</option>
+                                <option value="1" {:input('is_buylist')=='1'?"selected":'';}>已付款</option>
+                            </select>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_select fl">
+                            <select name="channelid">
+                                <option value="">支付类型</option>
+                                {volist name="paychannel_arr" id="vo"}
+                                <option value="{$vo.channelid}" {:input('channelid')==$vo.channelid?"selected":'';}>{$vo.channelname}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_select fl">
+                            <select name="ktype">
+                                <option value="userid" {:input('ktype')=='userid'?"selected":'';}>商户ID</option>
+                                <option value="username" {:input('ktype')=='username'?"selected":'';}>商户名称</option>
+                                <option value="orderid" {:input('ktype')=='orderid'?"selected":'';}>订单编号</option>
+                                <option value="contact" {:input('ktype')=='contact'?"selected":'';}>买家信息</option>
+                                <option value="goodname" {:input('ktype')=='goodname'?"selected":'';}>商品名称</option>
+                            </select>
+                        </div>
+                        <em class="y_line fl"></em>
+                        <div class="s_input fl">
+                            <input type="text" name="keyword" class="ipt ipt_txt" value="{:input('keyword')}"/>
+                        </div>
+                    </div>
+                    <button class="search_btn fl">搜索</button>
+                    <input type="hidden" name="do" value="search">
+                </form>
+            </div>
+            <div class="m_buttons fl" style="margin-top: 20px">
+                <a href="?all=1" class="lk {:input('all')=='1'?"cur":'';}">全部</a>
+                <a href="?is_buylist=0&do=search" class="lk {:input('is_buylist')=='0'?"cur":'';}">未付款</a>
+                <a href="?is_buylist=1&do=search" class="lk {:input('is_buylist')=='1'?"cur":'';}">已付款</a>
+                <a href="?is_buylist=7&do=search" class="lk {:input('is_buylist')=='7'?"cur":'';}">已退款</a>
+                <a href="?search_tips=0&do=search" class="lk {:input('search_tips')=='0'?"cur":'';}">未领取卡密</a>
+                <a href="?is_frozen=1&do=search" class="lk {:input('is_frozen')=='1'?"cur":'';}">已冻结</a>
+            </div>
+        </div>
+        <div class="m_content proxy_content">
+
+            <table class="pub_table">
+                <thead>
+                <th width="7%">商户名称</th>
+                <th width="13%">商品名称</th>
+                <th width="9%">买家信息</th>
+                <th width="5%">订单号</th>
+                <th width="8%">订单日期</th>
+                <th width="5%">通道名称</th>
+                <th width="5%">提交金额</th>
+                <th width="5%">成功金额</th>
+                <th width="5%">商户收入</th>
+                <th width="5%">平台收入</th>
+                <th width="5%">状态栏</th>
+                <th width="7%">来源IP</th>
+                <th width="12%">操作</th>
+                <th width="5%">结算栏</th>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td>
+                        <a href="javascript:;" class="c_purple orderInfoPop">{$vo.username}</a>
+                    </td>
+                    <td>{$vo.goodname}</td>
+                    <td>{$vo.contact}</td>
+                    <td>
+                        <em class="c_red" style="cursor: pointer;" onclick="window.open('/orderquery?kw={$vo.orderid}')">{$vo.orderid}</em>
+                    </td>
+                    <td>{$vo.addtime}</td>
+                    <td>
+                        <em class="c_blue">{$vo.channelname}</em>
+                    </td>
+                    <td>{$vo.ordermoney}</td>
+                    <td>{$vo.paymoney}</td>
+                    <td>{$vo.paymoney*$vo.userproportion}</td>
+                    <td>{$vo.paymoney*$vo.ptproportion}</td>
+                    {if $vo.is_frozen=='0'}
+                        {if $vo.is_buylist=='1'}
+                        <td style="color: #ff9331">已付款</td>
+                        {elseif $vo.is_buylist=='7'}
+                        <td style="color: #3a2764">已退款</td>
+                        {elseif $vo.is_buylist=='11'}
+                        <td style="color: #4344c1">库存不足</td>
+                        {elseif $vo.is_buylist=='3'}
+                        <td style="color: #c13d57">投诉中</td>
+                        {elseif $vo.is_buylist=='7'}
+                        <td style="color: #774b3b">已退款</td>
+                        {elseif $vo.is_buylist=='0'}
+                        <td style="color: #999">未付款</td>
+                        {/if}
+                    {elseif $vo.is_frozen=='1'}
+                        <td style="color: #eb5653;font-weight: bold">已冻结</td>
+                    {/if}
+                    <td>{$vo.ip}</td>
+                    <td>
+                        <a href="{:url('userlist/login','userid='.$vo.userid)}" class="icon success" target="_blank"></a>
+                        <a href="javascript:void(0);" class="icon yen" onclick="refund({$vo.orderlistid},'{$vo.orderid}',{$vo.is_buylist});return false;"></a>
+                        <a href="#" class="icon lock" onclick="togglefrozen({$vo.orderlistid},'{$vo.orderid}',{$vo.is_frozen},{$vo.is_buylist});return false;"></a>
+                    </td>
+                    {if $vo.is_payment=='0'}
+                    <td>未结算</td>
+                    {else/}
+                    <td style="color: #ff9331">已结算</td>
+                    {/if}
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {$page}
+</div>
+<script>
+    function refund(orderlistid,orderid,is_buylist) {
+        if(is_buylist=='1') {
+            layer.confirm('请确定已经完成该笔订单的退款', {
+                title: "订单编号：" + orderid,
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                $.post(
+                    "{:url('orderlist/refundsave')}",
+                    // $("#ajaxform").serialize(),
+                    {orderlistid: orderlistid},
+                    function (data) {
+                        console.log(data);
+                        data = eval("(" + data + ")");
+                        if (data.status == '1') {
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                window.parent.location.reload();
+                            });
+                        } else if (data.status == '0') {
+                            layer.msg(data.msg, {
+                                icon: 5,
+                                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                            });
+                        }
+                    }
+                    // , "json"
+                );
+            });
+        }
+        else if(is_buylist=='0'){
+            layer.msg('该笔订单未付款，不能进行退款操作', {
+                icon: 0,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+        }
+        else{
+            layer.msg('该笔订单已退款，不能进行退款操作', {
+                icon: 0,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+        }
+    }
+</script>
+<script>
+    function togglefrozen(orderlistid,orderid,is_frozen,is_buylist) {
+        if(is_buylist!='4'&&is_buylist!='7') {
+            if (is_frozen == '1') {
+                layer.confirm('确定解冻该笔订单？', {
+                    title: "订单编号：" + orderid,
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    $.post(
+                        "{:url('orderlist/togglefrozen')}",
+                        // $("#ajaxform").serialize(),
+                        {
+                            orderlistid: orderlistid,
+                            is_frozen: '0'
+                        },
+                        function (data) {
+                            console.log(data);
+                            data = eval("(" + data + ")");
+                            if (data.status == '1') {
+                                layer.msg(data.msg, {
+                                    icon: 6,
+                                    time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                                }, function () {
+                                    window.parent.location.reload();
+                                });
+                            } else if (data.status == '0') {
+                                layer.msg(data.msg, {
+                                    icon: 5,
+                                    time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                                });
+                            }
+                        }
+                        // , "json"
+                    );
+                });
+            }
+            else if (is_frozen == '0') {
+                layer.confirm('是否冻结该笔订单？', {
+                    title: "订单编号：" + orderid,
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    $.post(
+                        "{:url('orderlist/togglefrozen')}",
+                        // $("#ajaxform").serialize(),
+                        {
+                            orderlistid: orderlistid,
+                            is_frozen: '1'
+                        },
+                        function (data) {
+                            console.log(data);
+                            data = eval("(" + data + ")");
+                            if (data.status == '1') {
+                                layer.msg(data.msg, {
+                                    icon: 6,
+                                    time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                                }, function () {
+                                    window.parent.location.reload();
+                                });
+                            } else if (data.status == '0') {
+                                layer.msg(data.msg, {
+                                    icon: 5,
+                                    time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                                });
+                            }
+                        }
+                        // , "json"
+                    );
+                });
+            }
+        }else{
+            layer.msg("该笔订单已经退款", {
+                icon: 0,
+                time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+            });
+        }
+    }
+</script>
+<script>
+    layui.use(['form','laydate'], function () {
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#to_time' //指定元素
+        });
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#from_time' //指定元素
+        });
+    });
+</script>
+{include file="common/footer" /}

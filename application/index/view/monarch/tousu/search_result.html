@@ -1,0 +1,96 @@
+{include file="common/header" /}
+<style>
+    .bottom_btn a {
+        display: block;
+        float: left;
+        height: 40px;
+        line-height: 40px;
+        font-size: 14px;
+        border-radius: 2px;
+        color: #fff;
+        width: 200px;
+        margin-right: 0;
+    }
+    .bottom_btn a:first-child {
+        background: #f17d83;
+        width: 210px;
+        margin-left: 10px;
+    }
+    .bottom_btn a:last-child {
+        background: #389ef3;
+        margin-left: 40px;
+    }
+</style>
+<body style="background: url('{$images}/se5_bg.jpg')">
+{include file="common/orhter_top_nav" /}
+<div class="se5_card order_right" style="margin-top: 40px;margin-bottom: 60px;width: 480px">
+    <div class="order_tips order_result">
+        <img src="{$images}/clock.png" alt=""><!--<img src="images/gou.png" alt=""><img src="images/check.png" alt="">-->
+        <span id="lesstime_span">投诉举证期结束</span>
+        <!-- 倒计时 -->
+        <div id="remainSeconds" style="display:none"><?php echo $lesttime; ?></div>
+        <span id="remainTime" style="color: #FE825A"></span>
+        <div class="clear"></div>
+        <br>
+    </div>
+    <h3>投诉信息</h3>
+    <br>
+    <p>
+        <?php switch ($lists['report_status']){
+            case '0':
+                $report_msg = '卖家处理中';
+                break;
+            case '1':
+                $report_msg = '投诉处理完成';
+                break;
+            case '2':
+                $report_msg = '平台处理中';
+                break;
+        } ?>
+        <?php switch ($lists['result_status']){
+            case '':
+                $result_msg = '投诉处理中';
+                break;
+            case '1':
+                $result_msg = '支持买家';
+                break;
+            case '2':
+                $result_msg = '支持卖家';
+                break;
+        } ?>
+        投诉订单： <?php echo $lists['report_orderid'] ?><br><br>
+        投诉类别： <?php echo $lists['report_type'] ?><br><br>
+        联系方式： <a href="http://wpa.qq.com/msgrd?v=3&uin={$qq}&site=qq&menu=yes" target="_blank"><?php echo $qq ?></a><br><br>
+        投诉时间： <?php echo $lists['report_creattime'] ?><br><br>
+        投诉状态： <?php echo $report_msg ?><br><br>
+        投诉处理结果： <?php echo $result_msg ?><br><br>
+    </p>
+</div>
+<script>
+    var SysSecond;
+    var InterValObj;
+
+    $(document).ready(function() {
+        SysSecond = parseInt($("#remainSeconds").html()); //这里获取倒计时的起始时间
+        InterValObj = window.setInterval(SetRemainTime, 1000);
+    });
+
+    function SetRemainTime() {
+        if (SysSecond > 0) {
+            SysSecond = SysSecond - 1;
+            var second = Math.floor(SysSecond % 60);
+            var minite = Math.floor((SysSecond / 60) % 60);
+            var hour = Math.floor((SysSecond / 3600) % 24);
+            var day = Math.floor((SysSecond / 3600) / 24);
+
+            $("#remainTime").html(day + "天" + hour + "小时" + minite + "分" + second + "秒");
+        } else {
+            window.clearInterval(InterValObj);
+            //这里可以添加倒计时时间为0后需要执行的事件
+            $('#lesstime_span').html('投诉举证期结束');
+        }
+    }
+    // $('.talk_box').animate({scrollTop:$('.talk_box').height()+'px'},300);
+    // console.log($('.talk_box').height());
+</script>
+{include file="common/footer" /}

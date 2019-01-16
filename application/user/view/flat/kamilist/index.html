@@ -1,0 +1,159 @@
+{include file="common/header" /}
+<link rel="stylesheet" href="{$css}/style.css">
+<link rel="stylesheet" href="{$css}/page.css">
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<section class="box-right">
+    <div class="Journal">
+        <div class="jrl-title clear">虚拟卡列表</div>
+        <div class="goods-an clear">
+            <div class="col-sm-6">
+                <form class="form-inline" role="form" action="" method="get">
+                    <div class="form-group">
+                        <select name="goodlistid" class="form-controlzt" style="width: 710px;">
+                            {volist name="goodlist_arr" id="vo"}
+                            <option value="{$vo.goodlistid}" {:input('goodlistid')==$vo.goodlistid?"selected":'';}>{$vo.goodname}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <button type="button" onclick="export_kami()" class="btn btn-purple waves-effect waves-light" style="background-color: #ff5b5b !important;border: 1px solid #ff5b5b !important;"> 导出卡密</button>
+                    <button type="submit" class="btn btn-purple waves-effect waves-light" style="margin-right: 40px;"><i class="fa fa-search"></i> 搜索</button>
+                    <input type="hidden" name="do" value="search">
+                </form>
+            </div>
+            <div class="goods-btn goods-card-btn">
+                <button type="button" onclick="delall()" class="btn btn-purple1 waves-effect waves-light">删除卡密</button>
+            </div>
+        </div>
+        <div class="row">
+            <table class="table table-striped m-0">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" class="selectAllCheckbox"></th>
+                    <th>商品分类</th>
+                    <th>商品名称</th>
+                    <th>商品价格</th>
+                    <th>卡号</th>
+                    <th>卡密</th>
+                    <th>状态</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <form action="{:url('kamilist/delall')}" method="post" id="ajaxform">
+                {volist name="list" id="vo"}
+                <tr class="checked">
+                    <td>
+                        <input name="listid[]" type="checkbox" id="t{$vo.productid}" value="{$vo.productid}" >
+                        <label for="t{$vo.productid}"></label>
+                    </td>
+                    <td style="text-align: left">{$vo.goodname}</td>
+                    <td style="text-align: left">{$vo.goodname}</td>
+                    <td>￥{$vo.price}</td>
+                    <td style="text-align: left">{$vo.cardnumber}</td>
+                    <td style="text-align: left">{$vo.cardpassword}</td>
+                    <td>{$vo.is_state==1?'在售':'<span style="color: grey">已售</span>'}</td>
+                    <td style="text-align: left">{$vo.addtime}</td>
+                    <td onclick="del('{$vo.productid}')" style="cursor: pointer">
+                        删除
+                    </td>
+                </tr>
+                {/volist}
+                </form>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="pagination">
+        {$page}
+    </div>
+</section>
+<script>
+    function delall() {
+        layer.confirm('确认要删除选中卡密吗？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+            // var test = $("#ajaxform").serialize();
+            $.post(
+                "{:url('kamilist/delall')}",
+                $("#ajaxform").serialize(),
+                function (data) {
+                    console.log(data);
+                    data = eval("(" + data + ")");
+                    if (data.status == '1') {
+                        layer.msg(data.msg, {
+                            icon: 6,
+                            time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            window.parent.location.reload();
+                        });
+                    } else if(data.status=='0') {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                        });
+                    }
+                }
+                , "json"
+            );
+            }, function () {
+                layer.msg('容我三思', {
+                    time: 500 //20s后自动关闭
+                });
+            }
+        )
+    }
+
+    $('.selectAllCheckbox').click(function(){
+        if($(this).prop('checked')){
+            $('[type=checkbox]').prop('checked',true);
+        } else {
+            $('[type=checkbox]').prop('checked',false);
+        }
+    });
+</script>
+<script>
+    function del(id) {
+        $.post(
+            "{:url('kamilist/del')}",
+            {productid:id},
+            function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+            // , "json"
+        );
+    }
+</script>
+<script>
+    function export_kami() {
+        var goodlistid = $('select[name="goodlistid"]').val();
+        if(goodlistid==''||isNaN(goodlistid)){
+            layer.msg('请先选择商品，再进行导出卡密');
+        }else {
+            window.location.href = "{:url('kamilist/exportkami')}?goodlistid="+goodlistid;
+        }
+
+
+    }
+</script>
+{include file="common/footer" /}

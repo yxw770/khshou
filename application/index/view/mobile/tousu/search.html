@@ -1,0 +1,25 @@
+{include file="common/header" /}
+<script src="{$js}/saveFile.js"></script>
+<script src="{$layer}/layer.js"></script>
+
+	<body>
+	<div class="top_bg">
+		{include file="common/orhter_top_nav" /}
+	</div>
+		<div class="banner_bg">
+			<div class="container">
+				<h3>投诉查询 <span>/ Search</span></h3></div>
+		</div>
+			<form id="order-search" class="form-inline" action="{:url('tousu/searchResult')}" method="get">
+				<div class="sedd_card" style="margin-top: 60px;margin-bottom: 120px">
+					<div class="search_box3" style="margin-top: 0px">
+						<i class="iconfont icon-sousuo"></i>
+						<input type="text" value="" placeholder="请输入订单号查询" name="kw" class="order_input" id="orderid_input">
+						<button type="submit">立即查询</button>
+					</div>
+				</div>
+			</form>
+	{include file="common/footer" /}
+	</div>
+	</div>
+	{include file="common/footer_mobile" /}

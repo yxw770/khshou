@@ -1,0 +1,366 @@
+{include file="common/header" /}
+<script src="{$js}/bootstrap.min.js"></script>
+
+<link href="{$css}/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="{$css}/core.css" rel="stylesheet" type="text/css">
+<link href="{$css}/menu.css" rel="stylesheet" type="text/css">
+<link href="{$css}/nav.css" rel="stylesheet">
+<link href="{$css}/dropify.min.css" rel="stylesheet" type="text/css">
+
+<script src="{$js}/dropify.min.js"></script>
+<body class="fixed-left widescreen">
+<!-- Begin page -->
+<div id="wrapper">
+	{include file="common/top_nav" /}
+	{include file="common/left_nav" /}
+	<div class="content-page">
+		<!-- Start content -->
+		<div class="content">
+			<div class="container">
+				<div class="set-title clear">
+					<div>商户收款信息</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="card-box">
+							<div class="row">
+								<form class="form-horizontal" enctype="multipart/form-data" role="form" action="{:url('userinfo/edituserpaysave')}" method="post" id="ajaxform">
+									<!-- end col -->
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label class="col-md-3 control-label">商户编号</label>
+											<div class="col-md-9">
+												<p class="form-control-static">{:session('user.userid')}</p>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-3 control-label">用户名</label>
+											<div class="col-md-9">
+												<p class="form-control-static">{:session('user.username')}</p>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-3 control-label">收款方式</label>
+											<div class="col-md-9">
+												<select name="ptype" onchange="selectptype()" class="form-control" id="ptype">
+													<option value="1" {$userpay_row.ptype=="1"?"selected":'';}>支付宝收款</option>
+													<option value="2" {$userpay_row.ptype=="2"?"selected":'';}>银行卡收款</option>
+													<option value="3" {$userpay_row.ptype=="3"?"selected":'';}>微信收款</option>
+												</select>
+											</div>
+											<div class="col-sm-2"></div>
+										</div>
+										<div class="collect_type type_alipay" style="display: {$userpay_row.ptype=="1"?"":'none';}">
+											<div class="form-group">
+												<label class="col-md-3 control-label">支付宝账号</label>
+												<div class="col-md-9">
+													<input name="alipay" type="text" class="form-control" value="{$userpay_row.alipay?$userpay_row.alipay:'';}" placeholder="请认真填写收款帐号">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-md-3 control-label">支付宝二维码</label>
+												<div class="col-md-9" style="display: {$userpay_row.alipayimg?'':'none';}">
+													<img src="{$userpay_row.alipayimg?$userpay_row.alipayimg:'';}" width="320px" id="img_show" onclick="window.open('{$userpay_row.alipayimg?$userpay_row.alipayimg:'';}')">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-md-3 control-label">重设支付宝二维码</label>
+												<div class="col-md-9">
+													<input type="file" name="alipayimg" value="{$userpay_row.alipayimg?$userpay_row.alipayimg:'';}" class="dropify" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" id="alipayimg">
+												</div>
+											</div>
+										</div>
+										<div class="collect_type type_wxpay" style="height: auto;display: {$userpay_row.ptype=="3"?"":'none';}" id="weixin2">
+											<div class="form-group">
+												<label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  微信账号</label>
+												<div class="col-md-9">
+													<input name="weixin" type="text" class="form-control" value="{$userpay_row.weixin?$userpay_row.weixin:'';}">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-md-3 control-label">微信二维码</label>
+												<div class="col-md-9" style="display: {$userpay_row.weixinimg?'':'none';}">
+													<img src="{$userpay_row.weixinimg?$userpay_row.weixinimg:'';}" width="320px" id="img_show" onclick="window.open('{$userpay_row.weixinimg?$userpay_row.weixinimg:'';}')">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-md-3 control-label">重设微信二维码</label>
+												<div class="col-md-9">
+													<input type="file" name="weixinimg" value="{$userpay_row.weixinimg?$userpay_row.weixinimg:'';}" class="dropify" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" id="weixinimg">
+												</div>
+											</div>
+										</div>
+										<div class="collect_type type_bank" style="display: {$userpay_row.ptype=="2"?"":'none';}">
+											<div class="form-group">
+												<label class="col-md-3 control-label">开户地址</label>
+												<div class="col-md-9">
+													<input name="bankaddr" type="text" class="form-control" value="{$userpay_row.bankaddr?$userpay_row.bankaddr:'';}" placeholder="开户行请精确到市">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  银行卡号</label>
+												<div class="col-md-9">
+													<input name="card" type="text" class="form-control" value="{$userpay_row.card?$userpay_row.card:'';}" placeholder="请认真核对银行卡号">
+												</div>
+											</div>
+										</div>
+										<div class="collect_type">
+											<div class="form-group">
+												<label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  收款人姓名</label>
+												<div class="col-md-9">
+													<input name="realname" type="text" class="form-control" value="{$userpay_row.realname?$userpay_row.realname:'';}" placeholder="必须跟收款帐户名一致">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  身份证号</label>
+												<div class="col-md-9">
+													<input name="idcard" type="text" class="form-control idcard_number" value="{$userpay_row.idcard?$userpay_row.idcard:'';}" placeholder="请填写真实的身份证号" maxlength="18">
+												</div>
+											</div>
+										</div>
+
+										{if (cache('adminconfig')['is_sms_userpay']==1)}
+										<div class="collect_type">
+											<div class="form-group">
+												<label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  手机号</label>
+												<div class="col-md-6">
+													<input name="tel" type="text" class="form-control idcard_number" value="{$userdefine_row.tel}" readonly>
+												</div>
+												<div class="col-md-3">
+													<button type="button" class="btn btn-purple waves-effect waves-light" onclick="getCode();" id="click_checkcode">发送验证码</button>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-md-3 control-label" style="color: red;font-weight: normal;"> *  验证码</label>
+												<div class="col-md-9">
+													<input name="chkcode" type="text" class="form-control idcard_number" value="" placeholder="短信验证码">
+												</div>
+											</div>
+										</div>
+										<script>
+											function getCode(){
+												var phone=$('[name="tel"]').val();
+												var reg=/\d{11}/;
+												if(phone=='' || !reg.test(phone)){
+													layer.msg('请填写正确的手机号码！');
+													$('[name="tel"]').focus();
+													return false;
+												}
+												$.post(
+													"{:url('userinfo/sms_userinfo')}",
+													{phone:phone,t:new Date().getTime()},
+													function(data){
+														data = eval("(" + data + ")");
+														if (data.status == '1') {
+															layer.msg(data.msg);
+															$('#click_checkcode').removeAttr('onclick');
+															$('#click_checkcode').html('<i class="times">80</i>秒后重发');
+															timeC(80);
+														} else {
+															layer.msg(data.msg);
+															$('#click_checkcode').attr('onclick','getCode()');
+														}
+													},'json');
+											}
+
+											function timeC(t){
+												if(t==0){
+													$('#click_checkcode').attr('onclick','getCode()');
+													$('#click_checkcode').text('获取验证码');
+												} else {
+													t=t-1;
+													$('#click_checkcode .times').text(t);
+													setTimeout('timeC('+t+')',1000);
+												}
+											}
+										</script>
+										{/if}
+										<div class="form-group" style="display: flex; align-items: center; color: red;">
+											<label class="col-md-3 control-label">*</label>
+											<div class="col-md-9">
+												请您确认以上信息填写正确
+											</div>
+										</div>
+										<script>
+                                            var selectptype = function () {
+                                                var ptype = $('#ptype').val();
+                                                if (ptype == '1') {
+                                                    $('div.type_alipay').show();
+                                                    $('div.type_bank').hide();
+                                                    $('div.type_wxpay').hide();
+                                                } else if (ptype == '2') {
+                                                    $('div.type_alipay').hide();
+                                                    $('div.type_bank').show();
+                                                    $('div.type_wxpay').hide();
+                                                } else if (ptype == '3') {
+                                                    $('div.type_alipay').hide();
+                                                    $('div.type_bank').hide();
+                                                    $('div.type_wxpay').show();
+                                                }
+                                            }
+										</script>
+										<script>
+                                            $('#alipayimg').dropify({
+                                                messages: {
+                                                    'default': '点击上传二维码',
+                                                    'replace': '点击替换二维码',
+                                                    'remove': '删除',
+                                                    'error': '上传错误'
+                                                },
+                                                error: {
+                                                    'fileSize': '文件太大超过（2M）'
+                                                }
+                                            });
+                                            $('#weixinimg').dropify({
+                                                messages: {
+                                                    'default': '点击上传二维码',
+                                                    'replace': '点击替换二维码',
+                                                    'remove': '删除',
+                                                    'error': '上传错误'
+                                                },
+                                                error: {
+                                                    'fileSize': '文件太大超过（2M）'
+                                                }
+                                            });
+										</script>
+
+										<div class="form-group">
+											<label class="col-md-3 control-label"></label>
+											<div class="col-md-9">
+												<button type="button" onclick="submitform();return false;" class="btn btn-purple waves-effect waves-light">保存设置</button>
+											</div>
+										</div>
+									</div>
+								</form>
+								<!-- end col -->
+							</div>
+							<!-- end row -->
+						</div>
+					</div>
+					<!-- end col -->
+				</div>
+
+			</div>
+			<!-- container -->
+		</div>
+		<!-- content -->
+
+	</div>
+
+	<!-- ============================================================== -->
+	<!-- End Right content here -->
+	<!-- ============================================================== -->
+
+</div>
+
+<script>
+    function submitform() {
+
+        {if (cache('adminconfig')['is_sms_userpay']==1)}
+        var chkcode=$('[name="chkcode"]').val();
+        if(chkcode==''){
+            layer.msg('请输入短信验证码！');
+            $('[name="chkcode"]').focus();
+            return false;
+        }
+        {/if}
+
+        var ptype=$('[name="ptype"]').val();
+        if(ptype==''){
+            layer.msg('请选择收款方式！');
+            $('[name="ptype"]').focus();
+            return false;
+        }
+
+        if (ptype == '1') {
+            var alipay=$('[name="alipay"]').val();
+            if(alipay==''){
+                layer.msg('请填写支付宝账号！');
+                $('[name="alipay"]').focus();
+                return false;
+            }
+            var alipayimg=$('#alipayimg').attr('value');
+            var alipayimg_siblings = $('#alipayimg').siblings('div.dropify-preview').find('img').attr('src');
+            if(alipayimg==''||alipayimg==undefined||alipayimg==null){
+                if(alipayimg_siblings==''||alipayimg_siblings==undefined||alipayimg_siblings==null) {
+                    layer.msg('请上传支付宝二维码！');
+                    $('#alipayimg').focus();
+                    return false;
+                }
+            }
+        } else if (ptype == '2') {
+            var bankaddr=$('[name="bankaddr"]').val();
+            if(bankaddr==''){
+                layer.msg('请填写开户地址！');
+                $('[name="bankaddr"]').focus();
+                return false;
+            }
+            var card=$('[name="card"]').val();
+            if(card==''){
+                layer.msg('请填写银行卡号！');
+                $('[name="card"]').focus();
+                return false;
+            }
+        } else if (ptype == '3') {
+            var weixin=$('[name="weixin"]').val();
+            if(weixin==''){
+                layer.msg('请填写微信账号！');
+                $('[name="weixin"]').focus();
+                return false;
+            }
+            var weixinimg=$('#weixinimg').attr('value');
+            var weixinimg_siblings = $('#weixinimg').siblings('div.dropify-preview').find('img').attr('src');
+            if(weixinimg==''||weixinimg==undefined||weixinimg==null){
+                if(weixinimg_siblings==''||weixinimg_siblings==undefined||weixinimg_siblings==null) {
+                    layer.msg('请上传微信二维码！');
+                    $('#weixinimg').focus();
+                    return false;
+                }
+            }
+        }
+
+        var realname=$('[name="realname"]').val();
+        if(realname==''){
+            layer.msg('请填写正确的收款人姓名！');
+            $('[name="realname"]').focus();
+            return false;
+        }
+
+        var idcard=$('[name="idcard"]').val();
+        if(idcard==''){
+            layer.msg('请填写正确的身份证号！');
+            $('[name="idcard"]').focus();
+            return false;
+        }
+
+        var formData = new FormData($( "#ajaxform" )[0]);//找到input，作为参数传递给FormData构造函数
+        $.ajax({
+            url: "{:url('userinfo/edituserpaysave')}",
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                // console.log(data);
+                data = eval("(" + data + ")");
+                if (data.status == '1') {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        window.location.href = "{:url('/useruuserinfo')}";
+                        // window.parent.location.reload();
+                    });
+                } else if(data.status=='0') {
+                    layer.msg(data.msg, {
+                        icon: 5,
+                        time: 1000 //1.5秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            }
+        });
+    }
+</script>
+{include file="common/footer" /}

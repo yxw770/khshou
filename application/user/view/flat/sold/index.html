@@ -1,0 +1,86 @@
+{include file="common/header" /}
+<link rel="stylesheet" href="{$css}/style.css">
+<link rel="stylesheet" href="{$css}/page.css">
+<link href="{$open}/openin.css" rel="stylesheet">
+<link href="{$open}/open.css" rel="stylesheet">
+<script src="{$open}/open.js"></script>
+
+<body>
+{include file="common/top_nav" /}
+{include file="common/left_nav" /}
+<section class="box-right">
+    <div class="Journal">
+        <div class="jrl-title clear">已售出</div>
+        <div class="goods-an clear">
+            <div class="col-sm-6">
+                <form class="form-inline" role="form" name="search" action="" method="get">
+                    <div class="form-group">
+                        <select name="goodlistid" class="form-controlzt" style="width: 420px;">
+                            <option value="">全部商品</option>
+                            {volist name="goodlist_arr" id="vo"}
+                            <option value="{$vo.goodlistid}" {:input('goodlistid')==$vo.goodlistid?"selected":'';}>{$vo.goodname}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="ktype" class="form-controlzt">
+                            <option value="order" {:input('ktype')=='order'?"selected":'';}>订单号</option>
+                            <option value="contact" {:input('ktype')=='contact'?"selected":'';}>购买者信息</option>
+                        </select>&nbsp;&nbsp;
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="keyword" class="form-control" value="{:input('keyword')}">&nbsp;
+                    </div>
+                    <button type="button" class="btn btn-purple waves-effect waves-light" style="margin-left: 10px;background-color:#35b8e0 !important;border:1px solid #35b8e0 !important;" title="导出商品卡密" onclick="export_sold()">&nbsp;导出卡密</button>
+                    <button type="submit" class="btn btn-purple waves-effect waves-light"><i class="fa fa-search"></i> 搜索</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <table class="table table-striped m-0">
+                <thead>
+                <tr>
+                    <th>时间</th>
+                    <th>订单编号</th>
+                    <th>商品名称</th>
+                    <th>卡密信息</th>
+                    <th>支付方式</th>
+                    <th>购买者信息</th>
+                    <th>金额</th>
+                    <th>分成</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="list" id="vo"}
+                <tr class="lightbox" id="record_4357482">
+                    <td>{$vo.addtime}</td>
+                    <td style="cursor: pointer;color: #337ab7" class="blue" onclick="window.open('/orderquery?kw={$vo.orderid}')">{$vo.orderid} {$vo.is_sub==1?'<span style="background:#baddff;color:#fff;border-radius:999px;padding:2px 5px;">代理帮售</span>':''}</td>
+                    <td>{$vo.goodname}</td>
+                    <td>
+                        <a href="javascript:;" style="color:#000;text-decoration:underline" onclick="showContent('查看卡密','{:url('sold/link','orderlistid='.$vo.orderlistid)}','900px','289px')">{$vo.search_tips=='0'?'<label style="color: orangered">未提取卡密</label>':'查看卡密'}</a>(<span class="red">{$vo.quantity}</span>张)
+                    </td>
+                    <td>{$vo.channelname}</td>
+                    <td>{$vo.contact}</td>
+                    <td>￥{$vo.paymoney}</td>
+                    <td>￥{$vo.paymoney*$vo.userproportion}</td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="pagination">
+        {$page}
+    </div>
+</section>
+<script>
+    function export_sold() {
+        var goodlistid = $('select[name="goodlistid"]').val();
+        var ktype = $('select[name="ktype"]').val();
+        var keyword = $('input[name="keyword"]').val();
+        window.location.href = "{:url('sold/exportsold')}?goodlistid="+goodlistid+"&ktype="+ktype+"&keyword="+keyword;
+
+
+    }
+</script>
+{include file="common/footer" /}
